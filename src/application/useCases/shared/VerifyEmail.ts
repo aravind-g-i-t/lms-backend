@@ -1,4 +1,5 @@
 
+import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { IEmailService } from "@domain/interfaces/IEmailService";
@@ -11,7 +12,7 @@ import { AppError } from "shared/errors/AppError";
 import { generateOTP } from "shared/utils/generateOTP";
 
 
-export class VerifyEmailUseCase {
+export class VerifyEmailUseCase implements IVerifyEmailUseCase{
     constructor(
         private cacheService:ICacheService,
         private emailService:IEmailService,
@@ -20,7 +21,7 @@ export class VerifyEmailUseCase {
         private _businessRepository: IBusinessRepository
     ) {}
 
-    async execute(email:string,role:string){
+    async execute(email:string,role:string):Promise<Date>{
 
         let repository;
         switch (role) {

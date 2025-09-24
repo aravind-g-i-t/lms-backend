@@ -3,6 +3,18 @@ import { OTPVerificationResponseDTO } from "@application/dtos/shared/OTPVerifica
 import { RefreshTokenResponseDTO } from "@application/dtos/shared/RefreshToken";
 import { UserSigninResponseDTO } from "@application/dtos/shared/Signin";
 import { UserSignupResponseDTO } from "@application/dtos/shared/Signup";
+import { IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
+import { IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
+import { IInstructorGoogleSigninUseCase } from "@application/IUseCases/instructor/IGoogleSignin";
+import { IInstructorSigninUseCase } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
+import { ILearnerGoogleSigninUseCase } from "@application/IUseCases/learner/IGoogleSignin";
+import { ILearnerSigninUseCase } from "@application/IUseCases/learner/ILearnerSigninUseCase";
+import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
+import { IResendOTPUseCase } from "@application/IUseCases/shared/IResendOTPUseCase";
+import { IResetPasswordUseCase } from "@application/IUseCases/shared/IResetPassword";
+import { IUserSignupUseCase } from "@application/IUseCases/shared/ISignupUseCase";
+import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
+import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
@@ -34,27 +46,44 @@ import { AppError } from "shared/errors/AppError";
 
 export class UserAuthController {
     constructor(
-        private _userSignupUseCase: UserSignupUseCase,
-        private _learnerOTPVerificationUseCase: LearnerOTPVerificationUseCase,
-        private _instructorOTPVerificationUseCase: InstructorOTPVerificationUseCase,
-        private _businessOTPVerificationUseCase: BusinessOTPVerificationUseCase,
-        private _resendOTPUseCase: ResendOTPUseCase,
-        private _learnerSigninUseCase: LearnerSigninUseCase,
-        private _instructorSigninUseCase: InstructorSigninUseCase,
-        private _businessSigninUseCase: BusinessSigninUseCase,
-        private _userRefreshTokenUseCase: UserRefreshTokenUseCase,
-        private _learnerGoogleSigninUseCase: LearnerGoogleSigninUseCase,
-        private _instructorGoogleSigninUseCase: InstructorGoogleSigninUseCase,
-        private _businessGoogleSigninUseCase: BusinessGoogleSigninUseCase,
-        private _verifyEmailUseCase:VerifyEmailUseCase,
-        private _otpVerificationUseCase:OTPVerificationUseCase,
-        private _resetPasswordUseCase:ResetPasswordUseCase
+
+        private _userSignupUseCase: IUserSignupUseCase,
+
+        private _learnerOTPVerificationUseCase: IUserOTPVerificationUseCase,
+
+        private _instructorOTPVerificationUseCase: IUserOTPVerificationUseCase,
+
+        private _businessOTPVerificationUseCase: IUserOTPVerificationUseCase,
+
+        private _resendOTPUseCase: IResendOTPUseCase,
+
+        private _learnerSigninUseCase: ILearnerSigninUseCase,
+
+        private _instructorSigninUseCase: IInstructorSigninUseCase,
+
+        private _businessSigninUseCase: IBusinessSigninUseCase,
+
+        private _userRefreshTokenUseCase: IRefreshTokenUseCase,
+
+        private _learnerGoogleSigninUseCase: ILearnerGoogleSigninUseCase,
+
+        private _instructorGoogleSigninUseCase: IInstructorGoogleSigninUseCase,
+
+        private _businessGoogleSigninUseCase: IBusinessGoogleSigninUseCase,
+
+        private _verifyEmailUseCase:IVerifyEmailUseCase,
+
+        private _otpVerificationUseCase:IUserOTPVerificationUseCase,
+
+        private _resetPasswordUseCase:IResetPasswordUseCase
     ) { }
 
     signup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
 
             const result = await this._userSignupUseCase.execute(req.body);
+            console.log(req.body);
+            
             console.log(result)
             const response: UserSignupResponseDTO = {
                 success: true,
@@ -72,16 +101,18 @@ export class UserAuthController {
     verifyOTP = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { role } = req.body;
-            let result: OTPVerificationResponseDTO;
+            let message;
             if (role === 'learner') {
-                result = await this._learnerOTPVerificationUseCase.execute(req.body)
+                message=MESSAGES.LEARNER_CREATED
+                await this._learnerOTPVerificationUseCase.execute(req.body)
             } else if (role === 'instructor') {
-                result = await this._instructorOTPVerificationUseCase.execute(req.body)
+                message=MESSAGES.INSTRUCTOR_CREATED
+                await this._instructorOTPVerificationUseCase.execute(req.body)
             } else {
-                result = await this._businessOTPVerificationUseCase.execute(req.body)
+                message=MESSAGES.BUSINESS_CREATED
+                await this._businessOTPVerificationUseCase.execute(req.body)
             }
-            console.log(result)
-            res.status(STATUS_CODES.CREATED).json(result);
+            res.status(STATUS_CODES.CREATED).json({success:true,message});
 
         } catch (error) {
             next(error)
@@ -109,30 +140,46 @@ export class UserAuthController {
             console.log('req body', req.body);
 
             let result;
+            let user;
+
+
             switch (role) {
                 case "learner":
                     result = await this._learnerSigninUseCase.execute(req.body);
+                    user=LearnerDTOMapper.toSigninDTO(result.user)
                     break;
+                    
                 case "instructor":
                     result = await this._instructorSigninUseCase.execute(req.body);
+                    user=InstructorDTOMapper.toSigninDTO(result.user)
                     break;
                 case "business":
                     result = await this._businessSigninUseCase.execute(req.body);
+                    user=BusinessDTOMapper.toSigninDTO(result.user)
                     break;
+            }
+            console.log(result);
+            console.log(user);
+            
+            
+            if(!result || !user){
+                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             console.log('result', result);
 
-            res.cookie("userRefreshToken", result.refreshToken, {
+            res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
+            
+
             const response: UserSigninResponseDTO = {
                 success: true,
                 message: MESSAGES.LOGIN_SUCCESS,
-                user: result.user,
+                user,
                 accessToken: result.accessToken,
                 role: result.role
             }
@@ -147,7 +194,7 @@ export class UserAuthController {
 
     logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            if (!req.cookies?.userRefreshToken) {
+            if (!req.cookies?.refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
                     success: false,
                     message: MESSAGES.NO_SESSION,
@@ -155,7 +202,7 @@ export class UserAuthController {
                 return;
             }
 
-            res.clearCookie("userRefreshToken", {
+            res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
@@ -174,7 +221,7 @@ export class UserAuthController {
         try {
             console.log('entered refresh');
 
-            const refreshToken = req.cookies?.userRefreshToken
+            const refreshToken = req.cookies?.refreshToken
             console.log('token', refreshToken);
 
             if (!refreshToken) {
@@ -197,7 +244,7 @@ export class UserAuthController {
 
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
-            res.clearCookie("userRefreshToken", {
+            res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
@@ -246,7 +293,7 @@ export class UserAuthController {
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
-            res.cookie("userRefreshToken", result.refreshToken, {
+            res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",

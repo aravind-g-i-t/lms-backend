@@ -11,10 +11,12 @@ export const MESSAGES = {
     SESSION_EXPIRED:"Your session has expired. Please login again",
     INVALID_CREDENTIALS: "Invalid email or password.",
     UNAUTHORIZED: "You are not authorized to perform this action.",
-    USE_GOOGLE_SIGNIN_MESSAGE:"This account was created with Google. Please continue using Google Sign-In, or set a password first.",
+    USE_GOOGLE_SIGNIN_MESSAGE:"This account was created with Google. Please continue using Google Sign-In.",
     BLOCKED:"Your account has been blocked.",
     SIGNUP_TIMEOUT:"Process time-out. Please signup again",
     NO_ACCOUNT:"No account found with this email",
+    INCORRECT_PASSWORD:"Password is incorrect",
+    
 
     LEARNER_CREATED: "Learner account created successfully.",
     LEARNER_UPDATED: "Learner details updated successfully.",
@@ -22,7 +24,7 @@ export const MESSAGES = {
     LEARNERS_FETCHED:"Learners fetched successfully",
     LEARNER_NOT_CREATED:"Learner account creation failed. Please try again.",
     LEARNER_NOT_FOUND:"Learner not found",
-    LEARNER_NOT_UPDATED:"Profile not updated. Please try again",
+    LEARNER_NOT_UPDATED:"Failed to update learner details. Please try again",
 
     INSTRUCTOR_CREATED: "Instructor account created successfully.",
     INSTRUCTOR_UPDATED: "Instructor details updated successfully.",
@@ -30,6 +32,9 @@ export const MESSAGES = {
     INSTRUCTOR_FETCHED:"Instructor fetched successfully",
     INSTRUCTOR_NOT_CREATED:"Instructor account creation failed. Please try again.",
     INSTRUCTOR_NOT_FOUND:"Instructor not found",
+    INSTRUCTOR_NOT_UPDATED:"Failed to update instructor details. Please try again",
+    SEND_VERIFICATION_SUCCESS:"Verification request submitted successfully.",
+    INCOMPLETE_PROFILE:"Cannot apply for verification. Please complete your instructor profile before submitting.",
 
     BUSINESS_CREATED: "Business account created successfully.",
     BUSINESS_UPDATED: "Business details updated successfully.",
@@ -38,6 +43,7 @@ export const MESSAGES = {
     BUSINESS_NOT_CREATED:"Business account creation failed. Please try again.",
     BUSINESS_NOT_FOUND:"Business not found",
     NOT_COMPANY_EMAIL:"Please use the company email",
+    BUSINESS_NOT_UPDATED:"Failed to update business details. Please try again",
 
     BAD_REQUEST: "Invalid request. Please check your input.",
     FORBIDDEN: "You do not have permission to access this resource.",

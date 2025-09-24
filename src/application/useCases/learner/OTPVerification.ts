@@ -1,4 +1,5 @@
 
+import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -9,13 +10,13 @@ import { AppError } from "shared/errors/AppError";
 import { hashPassword } from "shared/utils/hash";
 
 
-export class LearnerOTPVerificationUseCase {
+export class LearnerOTPVerificationUseCase implements IUserOTPVerificationUseCase {
     constructor(
         private _cacheService: ICacheService,
         private _learnerRepository: ILearnerRepository
     ) { }
 
-    async execute(input: {otp:string,email:string}): Promise<{success:boolean,message:string}> {
+    async execute(input: {otp:string,email:string}): Promise<void> {
         const { email, otp } = input;
         const userOTP = await this._cacheService.get(`${email}:otp`)
         if (!userOTP) {
@@ -40,7 +41,7 @@ export class LearnerOTPVerificationUseCase {
             walletBalance: 0
         })
         if (learnerCreated) {
-            return { success: true, message: MESSAGES.LEARNER_CREATED }
+            return ;
         } else {
             throw new AppError(MESSAGES.LEARNER_NOT_CREATED, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }

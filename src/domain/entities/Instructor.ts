@@ -6,10 +6,13 @@ export interface Instructor{
     isVerified:boolean;
     walletBalance:number;
     joiningDate:Date;
-    password?:string;
-    profilePic?:string;
-    resume?:string;
-    googleId?:string;
-    website?:string;
-    bio?:string,
+    expertise:string[]
+    rating:number|null;
+    designation:string |null;
+    password:string|null;
+    profilePic:string|null;
+    resume:string|null;
+    googleId:string|null;
+    website:string|null;
+    bio:string|null;
 }

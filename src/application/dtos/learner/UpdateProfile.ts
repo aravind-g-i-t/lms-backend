@@ -3,7 +3,6 @@ import { z } from 'zod'
 
 export const UpdateLearnerProfileRequestSchema = z.object({
     body: z.object({
-        id: z.string(),
         data: z.object({
             name: z.string().optional(),
             imageURL: z.string().optional(), 
@@ -17,5 +16,5 @@ export interface UpdateLearnerProfileResponseDTO {
     success: boolean,
     message: string,
     name: string,
-    imageURL?:string
+    imageURL:string|null
 }

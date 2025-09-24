@@ -13,7 +13,9 @@ dotenv.config({path: `.env.${env}`});
 const app=express();
 
 app.use(cookieParser());
+
 app.use(morgan('dev'));
+
 app.use(cors({
     origin:process.env.CLIENT_URL,
     credentials:true

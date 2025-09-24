@@ -6,11 +6,15 @@ export interface BusinessDoc extends Document {
   name: string;
   email: string;
   isActive: boolean;
+  createdAt:Date;
+  employees: string[];
+  businessDomain?:string;
+  website?:string;
+  location?:string;
   planId?: string;
   planStartDate?: Date;
   planEndDate?: Date;
   maxEmployees?: number;
-  employees: string[];
   password?: string;
   profilePic?: string;
   googleId?:string;
@@ -22,13 +26,16 @@ const BusinessSchema: Schema<BusinessDoc> = new Schema(
     email: { type: String, required: true, unique: true },
     isActive: { type: Boolean, required: true, default: true },
     employees: {type: [String],required: true,default: [] }, 
+    businessDomain:{type:String},
+    website:{type:String},
+    location:{type:String},
     planId: { type: String },
     planStartDate: { type: Date },
     planEndDate: { type: Date },
     maxEmployees: { type: Number },
-    password: { type: String },
     profilePic: { type: String },
-    googleId:{type:String}
+    password: { type: String },
+    googleId:{type:String},
   },
   {
     timestamps: true,

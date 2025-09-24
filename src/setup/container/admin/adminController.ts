@@ -1,15 +1,15 @@
 import { AdminRefreshTokenUseCase } from "@application/useCases/admin/RefreshToken";
 import { AdminSigninUseCase } from "@application/useCases/admin/Signin";
 import { AdminRepository } from "@infrastructure/database/mongoDB/repositoriesImpl/AdminRepository";
-import { TokenService } from "@infrastructure/services/TokenService";
+
 import { AdminController } from "@presentation/controllers/AdminController";
+import { tokenService } from "../shared/tokenService";
 
 
 const adminRepository=new AdminRepository();
-export const adminTokenService= new TokenService(process.env.JWT_ADMIN_ACCESS_SECRET,process.env.JWT_ADMIN_REFRESH_SECRET)
 
-const adminSigninUseCase=new AdminSigninUseCase(adminRepository,adminTokenService);
+const adminSigninUseCase=new AdminSigninUseCase(adminRepository,tokenService);
 
-const adminRefreshTokenUseCase=new AdminRefreshTokenUseCase(adminTokenService,adminRepository)
+const adminRefreshTokenUseCase=new AdminRefreshTokenUseCase(tokenService,adminRepository)
 
 export const adminController=new AdminController(adminSigninUseCase,adminRefreshTokenUseCase);

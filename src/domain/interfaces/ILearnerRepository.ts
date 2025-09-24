@@ -1,5 +1,5 @@
 import { Learner } from "@domain/entities/Learner";
-import { findAllParams } from "./types";
+import { FindAllParams } from "./types";
 
 interface FindAllResponse{
     learners:Learner[],
@@ -8,12 +8,19 @@ interface FindAllResponse{
 }
 
 export interface ILearnerRepository{
-    create(learner:Partial<Learner>):Promise<Learner>;
-    findByEmail(email:string):Promise<Learner | null>;
-    findById(id:string):Promise<Learner |null>
-    findAll(params: findAllParams):Promise<FindAllResponse>;
-    updateStatus(id:string):Promise<void>;
-    update(id:string,learner:Partial<Learner>):Promise<Learner|null>
-    findOne(params:Partial<Learner>):Promise<Learner|null>;
+    findByEmail(email:string,allowPassword?:boolean):Promise<Learner | null>;
 
+    findOne(params:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>;
+
+    findById(id:string,allowPassword?:boolean):Promise<Learner |null>
+
+    findAll(params: FindAllParams,allowPassword?:boolean):Promise<FindAllResponse>;
+
+    create(learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner>;
+
+    updateStatus(id:string):Promise<void>;
+
+    findByIdAndUpdate(id:string,learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>,
+
+    updateOne(filter:Partial<Learner>,update:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>
 }

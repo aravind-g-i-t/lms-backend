@@ -1,3 +1,4 @@
+import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
 import { IAdminRepository } from "@domain/interfaces/IAdminRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -9,7 +10,7 @@ type TokenPayload={
     iat?:number,
     exp?:number
 }
-export class AdminRefreshTokenUseCase{
+export class AdminRefreshTokenUseCase implements IRefreshTokenUseCase{
     constructor(
         private _tokenService:ITokenService,
         private _adminRepository:IAdminRepository

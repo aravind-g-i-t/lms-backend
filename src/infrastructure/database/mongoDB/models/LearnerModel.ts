@@ -9,6 +9,8 @@ export interface LearnerDoc extends Document {
     password?: string;
     profilePic?: string;
     googleId?:string;
+    bio?:string;
+    createdAt:Date;
 }
 
 const LearnerSchema: Schema = new Schema(
@@ -19,7 +21,8 @@ const LearnerSchema: Schema = new Schema(
         isActive: { type: Boolean, required: true },
         password: { type: String },
         profilePic: { type: String },
-        googleId:{type:String}
+        googleId:{ type:String},
+        bio:{type:String}
     },
     { timestamps: true }
 );

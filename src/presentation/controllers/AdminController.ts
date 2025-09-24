@@ -1,15 +1,16 @@
 import { RefreshTokenResponseDTO } from "@application/dtos/shared/RefreshToken";
+import { IAdminSigninUseCase } from "@application/IUseCases/admin/ISignin";
+import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
 import { AdminRefreshTokenUseCase } from "@application/useCases/admin/RefreshToken";
 import { AdminSigninUseCase } from "@application/useCases/admin/Signin";
 import { NextFunction, Request, Response } from "express";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
-import { th } from "zod/v4/locales/index.cjs";
 
 export class AdminController{
     constructor(
-        private _adminSigninUseCase:AdminSigninUseCase,
-        private _refreshTokenUseCase:AdminRefreshTokenUseCase
+        private _adminSigninUseCase:IAdminSigninUseCase,
+        private _refreshTokenUseCase:IRefreshTokenUseCase
     ){}
 
     signin = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
@@ -18,7 +19,7 @@ export class AdminController{
 
             console.log('result', result);
 
-            res.cookie("adminRefreshToken", result.refreshToken, {
+            res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
@@ -41,7 +42,7 @@ export class AdminController{
 
     logout = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
         try {
-            if (!req.cookies?.adminRefreshToken) {
+            if (!req.cookies?.refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
                     success: false,
                     message: MESSAGES.NO_SESSION,
@@ -49,7 +50,7 @@ export class AdminController{
                 return;
             }
 
-            res.clearCookie("adminRefreshToken", {
+            res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",

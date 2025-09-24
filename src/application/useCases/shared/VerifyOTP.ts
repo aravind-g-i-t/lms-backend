@@ -1,4 +1,5 @@
 
+import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -9,7 +10,7 @@ import { AppError } from "shared/errors/AppError";
 import { hashPassword } from "shared/utils/hash";
 
 
-export class OTPVerificationUseCase {
+export class OTPVerificationUseCase implements IUserOTPVerificationUseCase{
     constructor(
         private _cacheService: ICacheService,
     ) { }

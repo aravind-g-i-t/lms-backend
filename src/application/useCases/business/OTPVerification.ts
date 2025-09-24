@@ -1,4 +1,4 @@
-import { OTPVerificationRequestDTO, OTPVerificationResponseDTO } from "@application/dtos/shared/OTPVerification";
+
 import { ICacheService } from "@domain/interfaces/ICacheService";
 
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
@@ -6,15 +6,18 @@ import { hashPassword } from "shared/utils/hash";
 import { AppError } from "shared/errors/AppError";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 
 
-export class BusinessOTPVerificationUseCase {
+
+
+export class BusinessOTPVerificationUseCase implements IUserOTPVerificationUseCase{
     constructor(
         private _cacheService: ICacheService,
         private _businessRepository: IBusinessRepository
     ) { }
 
-    async execute(input: OTPVerificationRequestDTO): Promise<OTPVerificationResponseDTO> {            
+    async execute(input: {email:string,otp:string}): Promise<void> {            
         const { email, otp } = input;
         const userOTP = await this._cacheService.get(`${email}:otp`)
         if (!userOTP) {
@@ -35,10 +38,10 @@ export class BusinessOTPVerificationUseCase {
             name: user.name,
             password: hashedPassword,
             employees:[],
-            isActive:true
+            isActive:true,
         })
         if(businessCreated){
-            return {success:true,message:'Business account created. Please login to enter'}
+            return 
         }else{
             throw new AppError(MESSAGES.BUSINESS_NOT_CREATED,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }

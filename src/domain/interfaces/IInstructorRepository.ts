@@ -1,6 +1,6 @@
 
 import { Instructor } from "@domain/entities/Instructor";
-import { findAllParams } from "./types";
+import { FindAllParams } from "./types";
 
 interface FindAllResponse{
     instructors:Instructor[],
@@ -9,11 +9,21 @@ interface FindAllResponse{
 }
 
 export interface IInstructorRepository{
-    create(instructor:Partial<Instructor>):Promise<Instructor>;
-    findByEmail(email:string):Promise<Instructor | null>;
-    findById(id:string):Promise<Instructor |null>;
-    findAll(params:findAllParams):Promise<FindAllResponse>;
+    
+    findByEmail(email:string,allowPassword?:boolean):Promise<Instructor | null>;
+    
+    findById(id:string,allowPassword?:boolean):Promise<Instructor |null>;
+    
+    findAll(params:FindAllParams,allowPassword?:boolean):Promise<FindAllResponse>;
+    
+    findByIdAndUpdate(id:string,instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>;
+
+    findOne(params:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>;
+
+    updateOne(filter:Partial<Instructor>,update:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>
+
     updateStatus(id:string):Promise<void>;
-    update(id:string,instructor:Partial<Instructor>):Promise<Instructor|null>;
-    findOne(params:Partial<Instructor>):Promise<Instructor|null>;
+
+    create(instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor>;
+
 }

@@ -5,7 +5,7 @@ export interface GetLearnersDTO {
     name: string;
     email: string;
     isActive: boolean;
-    profilePic?: string;
+    profilePic: string|null;
 }
 
 

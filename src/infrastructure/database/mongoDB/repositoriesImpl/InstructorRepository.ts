@@ -8,28 +8,32 @@ import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 
 export class InstructorRepositoryImpl implements IInstructorRepository {
-    async findByEmail(email: string): Promise<Instructor | null> {
+    async findByEmail(email: string, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findOne({ email }).lean();
-        return doc ? InstructorMapper.toDomain(doc as any) : null;
+        if (!doc) {
+            return null
+        }
+        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
-    async create(instructorInput: Instructor): Promise<Instructor> {
+    async create(instructorInput: Instructor, allowPassword: false): Promise<Instructor> {
         const doc = new InstructorModel(instructorInput);
         await doc.save();
-        return InstructorMapper.toDomain(doc)!;
+
+        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
 
-    async findById(id: string): Promise<Instructor | null> {
+    async findById(id: string, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findById(id);
-        if (doc) {
-            return InstructorMapper.toDomain(doc);
+        if (!doc) {
+            return null
         }
-        return null;
+        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
 
-    async findAll(params: { page: number; search?: string; status?: string; limit: number; }) {
+    async findAll(params: { page: number; search?: string; status?: string; limit: number; }, allowPassword: false) {
         let { page, search, status, limit } = params;
         const query: any = {};
         if (status) {
@@ -67,20 +71,30 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
         await instructor.save()
     }
 
-    async update(id: string, learner: Partial<Instructor>): Promise<Instructor | null> {
+    async findByIdAndUpdate(id: string, learner: Partial<Instructor>, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findByIdAndUpdate(id, { $set: learner }, { new: true }).lean();
 
-        if (doc) {
-            return InstructorMapper.toDomain(doc)
+        if (!doc) {
+            return null
         }
-        return null;
+        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
-    async findOne(params: Partial<Instructor>): Promise<Instructor | null> {
-        const doc = await InstructorModel.findOne(params);
-        if (doc) {
-            return InstructorMapper.toDomain(doc)
+    async findOne(params: Partial<Instructor>, allowPassword: false): Promise<Instructor | null> {
+        const doc = await InstructorModel.findOne(params).lean();
+        if (!doc) {
+            return null
         }
-        return null;
+        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
+    }
+
+    async updateOne(filter: Partial<Instructor>, update: Partial<Instructor>, allowPassword: false): Promise<Instructor | null> {
+        const doc = await InstructorModel.findOneAndUpdate(filter, { $set: update }, { new: true });
+        if (!doc) {
+            return null
+        }
+        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 }
+
+

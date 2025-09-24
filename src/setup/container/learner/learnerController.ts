@@ -3,20 +3,25 @@ import { LearnerController } from "@presentation/controllers/LearnerController";
 import { GetLearnersUseCase } from "@application/useCases/learner/GetLearners";
 import { learnerRepository } from "./learnerRepository";
 import { UpdateLearnerStatusUseCase } from "@application/useCases/learner/UpdateLearnerStatus";
-import { UpdateLearnerProfileUseCase } from "@application/useCases/learner/UpdateProfile";
+
 import { UpdateLearnerPasswordUseCase } from "@application/useCases/learner/UpdatePassword";
+import { GetLearnerDataUseCase } from "@application/useCases/learner/GetLearnerData";
+import { UpdateLearnerDataUseCase } from "@application/useCases/learner/UpdateLearnerData";
 
 const getLearnersUseCase=new GetLearnersUseCase(learnerRepository)
 
 const updateLearnerStatusUseCase=new UpdateLearnerStatusUseCase(learnerRepository)
 
-const updateLearnerProfileUseCase=new UpdateLearnerProfileUseCase(learnerRepository);
+const updateLearnerDataUseCase=new UpdateLearnerDataUseCase(learnerRepository);
 
 const updateLearnerPasswordUseCase=new UpdateLearnerPasswordUseCase(learnerRepository)
+
+const getLeanerDataUseCase=new GetLearnerDataUseCase(learnerRepository);
 
 export const learnerController= new LearnerController(
     getLearnersUseCase,
     updateLearnerStatusUseCase,
-    updateLearnerProfileUseCase,
-    updateLearnerPasswordUseCase
+    updateLearnerDataUseCase,
+    updateLearnerPasswordUseCase,
+    getLeanerDataUseCase
 );

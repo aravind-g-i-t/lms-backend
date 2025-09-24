@@ -1,4 +1,5 @@
 import { AdminSigninRequestDTO } from "@application/dtos/admin/Signin";
+import { IAdminSigninUseCase } from "@application/IUseCases/admin/ISignin";
 import { IAdminRepository } from "@domain/interfaces/IAdminRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -6,7 +7,7 @@ import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 import { comparePassword } from "shared/utils/hash";
 
-export class AdminSigninUseCase{
+export class AdminSigninUseCase implements IAdminSigninUseCase{
     constructor(
         private _adminRepository:IAdminRepository,
         private _tokenService:ITokenService

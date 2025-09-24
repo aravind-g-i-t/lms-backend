@@ -4,7 +4,8 @@ export interface Learner{
     email:string;
     isActive:boolean;
     walletBalance:number;
-    password?:string;
-    profilePic?:string;
-    googleId?:string
+    password:string|null;
+    profilePic:string|null;
+    googleId:string|null;
+    joiningDate:Date|null;
 }

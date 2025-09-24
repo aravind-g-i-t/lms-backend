@@ -1,38 +1,13 @@
 import { z } from "zod";
 import { Role } from "shared/types/common";
 
-export interface LearnerSigninDTO {
+export interface UserSigninDTO {
     id: string;
     name: string;
-    email: string;
-    walletBalance: number;
-    profilePic?: string;
+    profilePic: string|null;
 
 }
 
-export interface InstructorSigninDTO {
-    id: string;
-    name: string;
-    email: string;
-    isVerified: boolean;
-    walletBalance: number;
-    profilePic?: string;
-    resume?: string;
-    website?:string;
-    bio?:string;
-}
-
-export interface BusinessSigninDTO {
-    id: string;
-    name: string;
-    email: string;
-    planId?: string;
-    planStartDate?: Date;
-    planEndDate?: Date;
-    maxEmployees?: number;
-    profilePic?: string;
-
-}
 
 
 export const UserSigninRequestSchema = z.object({
@@ -47,7 +22,7 @@ export interface UserSigninResponseDTO {
     success: boolean;
     message: string;
     role: Role;
-    user: BusinessSigninDTO | LearnerSigninDTO | InstructorSigninDTO;
+    user:  UserSigninDTO;
     accessToken: string;
 }
 

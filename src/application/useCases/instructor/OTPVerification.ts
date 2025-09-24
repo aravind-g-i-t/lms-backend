@@ -1,4 +1,5 @@
 
+import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -10,13 +11,13 @@ import { AppError } from "shared/errors/AppError";
 import { hashPassword } from "shared/utils/hash";
 
 
-export class InstructorOTPVerificationUseCase {
+export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUseCase{
     constructor(
         private _cacheService: ICacheService,
         private _instructorRepository: IInstructorRepository
     ) { }
 
-    async execute(input: {email:string,otp:string}){
+    async execute(input: {email:string,otp:string}):Promise<void>{
         const { email, otp } = input;
         const userOTP = await this._cacheService.get(`${email}:otp`)
         if (!userOTP) {
@@ -37,10 +38,11 @@ export class InstructorOTPVerificationUseCase {
             password: hashedPassword,
             isActive:true,
             walletBalance:0,
-            isVerified:false
+            isVerified:false,
+            expertise:[],
         })
         if(instructorCreated){
-            return {success:true,message:'Instructor account created. Please login to enter'}
+            return;
         }else{
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }

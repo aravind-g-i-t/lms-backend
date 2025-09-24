@@ -21,3 +21,7 @@ export interface GetBusinessesOutput {
   totalPages: number;
   totalCount: number;
 }
+
+export interface IGetBusinessesUseCase{
+    execute(input:GetBusinessesInput):Promise<GetBusinessesOutput>
+}

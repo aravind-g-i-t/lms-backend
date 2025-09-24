@@ -1,3 +1,4 @@
+import { IUserSignupUseCase } from "@application/IUseCases/shared/ISignupUseCase";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { IEmailService } from "@domain/interfaces/IEmailService";
@@ -9,7 +10,7 @@ import { AppError } from "shared/errors/AppError";
 import { generateOTP } from "shared/utils/generateOTP";
 
 
-export class UserSignupUseCase {
+export class UserSignupUseCase implements IUserSignupUseCase{
     constructor(
         private learnerRepository:ILearnerRepository,
         private instructorRepository: IInstructorRepository,
@@ -34,9 +35,12 @@ export class UserSignupUseCase {
                             }
                 repository=this.businessRepositoty;
             }
-            const emailExists=await repository.findByEmail(email);
-            if(emailExists){
+            const emailExists=await repository.findByEmail(email,true);
+            if(emailExists &&emailExists?.password){
                 throw new AppError(MESSAGES.EMAIL_EXISTS,STATUS_CODES.CONFLICT);
+            }
+            if(emailExists){
+                throw new AppError(MESSAGES.USE_GOOGLE_SIGNIN_MESSAGE,STATUS_CODES.CONFLICT)
             }
             const otp=generateOTP();
             console.log(otp);

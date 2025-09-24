@@ -3,12 +3,16 @@ export interface Business{
     name:string;
     email:string;
     isActive:boolean;
-    planId?:string;
-    planStartDate?:Date;
-    planEndDate?:Date;
-    maxEmployees?:number;
     employees:string[];
-    password?:string;
-    profilePic?:string;
-    googleId?:string;
+    joiningDate:Date;
+    businessDomain:string|null;
+    website:string|null;
+    location:string|null;
+    planId:string|null;
+    planStartDate:Date|null;
+    planEndDate:Date|null;
+    maxEmployees:number|null;
+    password:string|null;
+    profilePic:string|null;
+    googleId:string|null;
 }

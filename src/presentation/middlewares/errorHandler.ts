@@ -16,7 +16,7 @@ export const errorHandler = (
     });
   }
 
-  console.error("Unexpected Error:", err);
+  console.log(err.message);
 
   return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
     success: false,

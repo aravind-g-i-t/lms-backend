@@ -5,19 +5,26 @@ import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
+import { BusinessGoogleSigninOutput, IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
 
-export class BusinessGoogleSigninUseCase {
+export class BusinessGoogleSigninUseCase implements IBusinessGoogleSigninUseCase{
     constructor(
         private _businessRepository: IBusinessRepository,
         private _tokenService: ITokenService,
         private _googleAuthService: IGoogleAuthService,
     ) { }
 
-    async execute(token: string) {
+    async execute(token: string):Promise<BusinessGoogleSigninOutput> {
         const userInfo = await this._googleAuthService.getUserInfo(token);
         const { sub, email, name, picture } = userInfo
         console.log(userInfo);
         let business = await this._businessRepository.findByEmail(email);
+        if(business && !business.isActive){
+            throw new AppError(MESSAGES.BLOCKED,STATUS_CODES.UNAUTHORIZED)
+        }
+        if(business && !business.googleId){
+            business=await this._businessRepository.findByIdAndUpdate(business.id,{googleId:sub});
+        }
         if (!business) {
             const emailValid = this.isBusinessEmail(email);
             if (!emailValid) {
@@ -28,15 +35,13 @@ export class BusinessGoogleSigninUseCase {
                 email,
                 profilePic: picture,
                 isActive: true,
-                employees: []
+                employees: [],
+                googleId:sub
             })
         }
 
         if (!business) {
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED, STATUS_CODES.UNAUTHORIZED);
-        }
-        if (!business.isActive) {
-            throw new AppError(MESSAGES.BLOCKED, STATUS_CODES.FORBIDDEN);
         }
         const role = 'business'
 

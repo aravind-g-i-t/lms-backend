@@ -8,22 +8,38 @@ export class LearnerMapper {
       id: doc._id.toString(), 
       name: doc.name,
       email: doc.email,
+      joiningDate:doc.createdAt,
       walletBalance: doc.walletBalance,
       isActive: doc.isActive,
-      password: doc.password,
-      profilePic: doc.profilePic,
-      googleId:doc.googleId
+      password: doc.password||null,
+      profilePic: doc.profilePic||null,
+      googleId:doc.googleId||null,
     };
   }
 
-  static toPersistence(entity: Learner): Partial<LearnerDoc> {
+  static toSecureDomain(doc: LearnerDoc): Learner {
+    
     return {
-      name: entity.name,
-      email: entity.email,
-      walletBalance: entity.walletBalance,
-      isActive: entity.isActive,
-      password: entity.password,
-      profilePic: entity.profilePic,
+      id: doc._id.toString(), 
+      name: doc.name,
+      email: doc.email,
+      joiningDate:doc.createdAt,
+      walletBalance: doc.walletBalance,
+      isActive: doc.isActive,
+      password:null,
+      profilePic: doc.profilePic||null,
+      googleId:doc.googleId||null,
     };
   }
+
+  // static toPersistence(entity: Learner): Partial<LearnerDoc> {
+  //   return {
+  //     name: entity.name,
+  //     email: entity.email,
+  //     walletBalance: entity.walletBalance,
+  //     isActive: entity.isActive,
+  //     password: entity.password,
+  //     profilePic: entity.profilePic,
+  //   };
+  // }
 }

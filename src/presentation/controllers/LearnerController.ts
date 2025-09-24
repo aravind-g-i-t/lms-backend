@@ -1,22 +1,24 @@
 
 import { NextFunction, Request, Response } from "express";
-import { GetLearnersUseCase } from "@application/useCases/learner/GetLearners";
 import { GetLearnersRequestSchema, GetLearnersResponseDTO } from "@application/dtos/learner/GetLearners";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
-import { UpdateLearnerStatusUseCase } from "@application/useCases/learner/UpdateLearnerStatus";
-import { th } from "zod/v4/locales/index.cjs";
-import { UpdateLearnerProfileUseCase } from "@application/useCases/learner/UpdateProfile";
 import { UpdateLearnerProfileResponseDTO } from "@application/dtos/learner/UpdateProfile";
-import { UpdateLearnerPasswordUseCase } from "@application/useCases/learner/UpdatePassword";
+import { IGetLearnerDataUseCase } from "@application/IUseCases/learner/IGetLearnerData";
+import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
+import { IUpdateLearnerDataUseCase } from "@application/IUseCases/learner/IUpdateLearnerData";
+import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
+import { IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners";
+import { GetLearnerProfileResponseDTO } from "@application/dtos/learner/GetProfile";
 
 export class LearnerController {
     constructor(
-        private _getLearnersUseCase: GetLearnersUseCase,
-        private _updateLearnerStatusUseCase:UpdateLearnerStatusUseCase,
-        private _updateProfile:UpdateLearnerProfileUseCase,
-        private _updatePassword:UpdateLearnerPasswordUseCase
+        private _getLearnersUseCase: IGetLearnersUseCase,
+        private _updateLearnerStatusUseCase:IUpdateUserStatusUseCase,
+        private _updateLearnerDataUseCase:IUpdateLearnerDataUseCase,
+        private _updatePassword:IUpdateUserPassword,
+        private _getLearnerData:IGetLearnerDataUseCase,
     ) { }
 
     getLearners = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -48,7 +50,7 @@ export class LearnerController {
 
     updateLearnerStatus=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const {id}=req.body;
+            let id=req.body.id
             await this._updateLearnerStatusUseCase.execute(id);
             res.status(STATUS_CODES.OK).json({success:true,message:MESSAGES.LEARNER_UPDATED})
         } catch (error) {
@@ -58,24 +60,62 @@ export class LearnerController {
 
     updateProfile=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const {id,data}=req.body;
-            const result=await this._updateProfile.execute(id,data);
-            const response:UpdateLearnerProfileResponseDTO={success:true,message:MESSAGES.LEARNER_UPDATED,name:result.name,imageURL:result.profilePic};
-            console.log(response);
+
+            const {data}=req.body;
+            let id=(req as any).user.id
             
+            const result=await this._updateLearnerDataUseCase.execute(id,data);
+            const response={success:true,message:MESSAGES.LEARNER_UPDATED};
+            console.log(response);
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next (error)
         }
     }
 
+    updateProfileImage = async (req: Request, res: Response, next: NextFunction) => {
+            try {
+    
+                const { imageURL } = req.body;
+                console.log(imageURL);
+                
+                let id = (req as any).user.id
+                console.log('req-user', (req as any).user);
+    
+                await this._updateLearnerDataUseCase.execute(id, {profilePic:imageURL});
+                const response = { success: true, message: MESSAGES.LEARNER_UPDATED};
+                console.log(response);
+                res.status(STATUS_CODES.OK).json(response)
+            } catch (error) {
+                next(error)
+            }
+        }
+
     updatePassword=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const {id,currentPassword,newPassword}=req.body;
-            console.log(typeof id,typeof currentPassword,typeof newPassword);
+            let id=(req as any).user.id
+            const {currentPassword,newPassword}=req.body;
             
             await this._updatePassword.execute(id,currentPassword,newPassword);
             res.status(STATUS_CODES.OK).json({success:true,message:MESSAGES.LEARNER_UPDATED})
+        } catch (error) {
+            next (error)
+        }
+    }
+
+    getLearnerProfile=async(req:Request,res:Response,next:NextFunction)=>{
+        try {
+            let id=(req as any).user.id
+            console.log('req-user',(req as any).user);
+            
+            const result=await this._getLearnerData.execute(id);
+            const response:GetLearnerProfileResponseDTO={
+                success:true,
+                message:MESSAGES.LEARNER_UPDATED,
+                learner:LearnerDTOMapper.toProfileDTO(result)
+            };
+            console.log(response);
+            res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next (error)
         }

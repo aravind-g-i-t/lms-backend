@@ -1,3 +1,4 @@
+import { IResetPasswordUseCase } from "@application/IUseCases/shared/IResetPassword";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
@@ -6,14 +7,14 @@ import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 import { hashPassword } from "shared/utils/hash";
 
-export class ResetPasswordUseCase {
+export class ResetPasswordUseCase implements IResetPasswordUseCase{
     constructor(
         private _learnerRepository: ILearnerRepository,
         private _instructorRepository: IInstructorRepository,
         private _businessRepository: IBusinessRepository
     ) { }
 
-    async execute(role:string,email: string, password: string) {
+    async execute(role:string,email: string, password: string):Promise<void> {
         let repository;
         switch (role) {
             case 'learner':
@@ -31,6 +32,6 @@ export class ResetPasswordUseCase {
             throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         const hashedPassword=await hashPassword(password);
-        await repository.update(user.id,{password:hashedPassword});
+        await repository.findByIdAndUpdate(user.id,{password:hashedPassword});
     }
 }

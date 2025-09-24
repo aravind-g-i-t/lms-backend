@@ -1,4 +1,5 @@
 
+import { ILearnerSigninUseCase, LearnerSigninUseCaseOutput } from "@application/IUseCases/learner/ILearnerSigninUseCase";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -6,15 +7,15 @@ import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 import { comparePassword } from "shared/utils/hash";
 
-export class LearnerSigninUseCase {
+export class LearnerSigninUseCase implements ILearnerSigninUseCase{
     constructor(
         private _learnerRepository: ILearnerRepository,
         private _tokenService: ITokenService
     ) { }
 
-    async execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}) {
+    async execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}):Promise<LearnerSigninUseCaseOutput> {
         const { email, password, role } = input;
-        const learnerEntity = await this._learnerRepository.findByEmail(email);
+        const learnerEntity = await this._learnerRepository.findByEmail(email,true);
         if (!learnerEntity) {
             throw new AppError(MESSAGES.INVALID_CREDENTIALS,STATUS_CODES.UNAUTHORIZED);
         }

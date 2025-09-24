@@ -1,5 +1,9 @@
 import { Learner } from "@domain/entities/Learner";
 
+
+
+
+
 export interface GetLearnersInput {
   page: number;
   limit: number;
@@ -11,4 +15,8 @@ export interface GetLearnersOutput {
   learners: Learner[];   
   totalPages: number;
   totalCount: number;
+}
+
+export interface IGetLearnersUseCase{
+    execute(input:GetLearnersInput):Promise<GetLearnersOutput>
 }

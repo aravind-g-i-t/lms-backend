@@ -8,24 +8,34 @@ import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
 export class BusinessRepositoryImpl implements IBusinessRepository {
-    async findByEmail(email: string): Promise<Business | null> {
+
+    async findByEmail(email: string,allowPassword:false): Promise<Business | null> {
         const doc = await BusinessModel.findOne({ email }).lean();
-        return doc ? BusinessMapper.toEntity(doc) : null;
+        if(!doc){
+            return null
+        }
+        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 
-    async create(businessInput: Business): Promise<Business> {
+    async create(businessInput: Business,allowPassword:false): Promise<Business> {
+
         const doc = new BusinessModel(businessInput);
+
         await doc.save();
-        return BusinessMapper.toEntity(doc)!;
+
+        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 
 
-    async findById(id: string): Promise<Business | null> {
+    async findById(id: string,allowPassword:false): Promise<Business | null> {
         const doc = await BusinessModel.findById(id);
-        return doc ? BusinessMapper.toEntity(doc) : null;
+        if(!doc){
+            return null
+        }
+        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 
-    async findAll(params: { page: number; search?: string; status?: string; limit: number; }) {
+    async findAll(params: { page: number; search?: string; status?: string; limit: number; },allowPassword:false) {
         let { page, search, status, limit } = params;
         const query: any = {};
         if (status) {
@@ -63,6 +73,7 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
                                 profilePic: 1,
                                 employeeCount: { $size: "$employees" },
                                 planName: "$plan.name"
+
                             }
                         }
                     ],
@@ -95,20 +106,28 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
         await business.save()
     }
 
-    async update(id: string, learner: Partial<Business>): Promise<Business | null> {
+    async findByIdAndUpdate(id: string, learner: Partial<Business>,allowPassword:false): Promise<Business | null> {
         const doc = await BusinessModel.findByIdAndUpdate(id, { $set: learner }, { new: true }).lean();
 
-        if (doc) {
-            return BusinessMapper.toEntity(doc)
+        if(!doc){
+            return null
         }
-        return null;
+        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 
-    async findOne(params: Partial<Business>): Promise<Business | null> {
+    async findOne(params: Partial<Business>,allowPassword:false): Promise<Business | null> {
         const doc = await BusinessModel.findOne(params);
-        if (doc) {
-            return BusinessMapper.toEntity(doc)
+        if(!doc){
+            return null
         }
-        return null;
+        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+    }
+
+    async updateOne(filter: Partial<Business>, update: Partial<Business>,allowPassword:false): Promise<Business | null> {
+        const doc = await BusinessModel.findOneAndUpdate(filter, { $set: update }, { new: true });
+        if(!doc){
+            return null
+        }
+        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 }

@@ -1,11 +1,10 @@
 
-import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
-import { GetBusinessesInput, GetBusinessesOutput } from "./types";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
+import { GetBusinessesInput, GetBusinessesOutput, IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
 
 
 
-export class GetBusinessesUseCase{
+export class GetBusinessesUseCase implements IGetBusinessesUseCase{
     constructor(
         private _businessRepository:IBusinessRepository
     ){}

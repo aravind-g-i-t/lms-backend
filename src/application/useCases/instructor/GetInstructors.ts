@@ -1,10 +1,11 @@
 
+import { GetInstructorsInput, GetInstructorsOutput, IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
-import { GetInstructorsInput, GetInstructorsOutput } from "./types";
 
 
 
-export class GetInstructorsUseCase{
+
+export class GetInstructorsUseCase implements IGetInstructorsUseCase {
     constructor(
         private _instructorRepository:IInstructorRepository
     ){}

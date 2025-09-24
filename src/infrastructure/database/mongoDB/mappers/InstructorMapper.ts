@@ -11,13 +11,38 @@ export class InstructorMapper {
             isActive: doc.isActive,
             isVerified: doc.isVerified,
             walletBalance: doc.walletBalance,
-            password: doc.password,
-            profilePic: doc.profilePic,
-            resume: doc.resume,
-            googleId:doc.googleId,
+            expertise:doc.expertise,
+            rating:doc.rating||null,
+            designation:doc.designation||null,
+            password: doc.password||null,
+            profilePic: doc.profilePic||null,
+            resume: doc.resume||null,
+            googleId:doc.googleId||null,
             joiningDate:doc.createdAt,
-            website:doc.website,
-            bio:doc.bio
+            website:doc.website||null,
+            bio:doc.bio||null,
+        };
+    }
+
+    static toSecureDomain(doc: InstructorDoc ): Instructor  {
+
+        return {
+            id: doc._id.toString(),
+            name: doc.name,
+            email: doc.email,
+            isActive: doc.isActive,
+            isVerified: doc.isVerified,
+            walletBalance: doc.walletBalance,
+            expertise:doc.expertise,
+            rating:doc.rating||null,
+            designation:doc.designation||null,
+            password:null,
+            profilePic: doc.profilePic||null,
+            resume: doc.resume||null,
+            googleId:doc.googleId||null,
+            joiningDate:doc.createdAt,
+            website:doc.website||null,
+            bio:doc.bio||null,
         };
     }
 }

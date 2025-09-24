@@ -1,12 +1,20 @@
 import { Business } from "@domain/entities/Business";
-import { findAllParams } from "./types";
+import { FindAllParams } from "./types";
 
 export interface IBusinessRepository{
-    create(business:Partial<Business>):Promise<Business>;
-    findByEmail(email:string):Promise<Business | null>;
-    findAll(params:findAllParams):Promise<any>;
+    findById(id:string,allowPassword?:boolean):Promise<Business |null>;
+
+    findByEmail(email:string,allowPassword?:boolean):Promise<Business | null>;
+
+    findOne(params:Partial<Business>,allowPassword?:boolean):Promise<Business|null>;
+
+    findAll(params:FindAllParams,allowPassword?:boolean):Promise<any>;
+
+    findByIdAndUpdate(id:string,learner:Partial<Business>,allowPassword?:boolean):Promise<Business|null>;
+
+    create(business:Partial<Business>,allowPassword?:boolean):Promise<Business>;
+
     updateStatus(id:string):Promise<void>;
-    findById(id:string):Promise<Business |null>;
-    update(id:string,learner:Partial<Business>):Promise<Business|null>;
-    findOne(params:Partial<Business>):Promise<Business|null>;
-}
+
+    updateOne(filter:Partial<Business>,update:Partial<Business>,allowPassword?:boolean):Promise<Business|null>
+};

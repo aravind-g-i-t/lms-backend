@@ -2,18 +2,21 @@ import mongoose,{ Schema, model, Document } from "mongoose";
 
 export interface InstructorDoc extends Document {
     _id:mongoose.Types.ObjectId,
-    name: string;
-    email: string;
-    isActive: boolean;
-    isVerified: boolean;
-    walletBalance: number;
-    password?: string;
-    profilePic?: string;
-    resume?: string;
+    name:string;
+    email:string;
+    isActive:boolean;
+    isVerified:boolean;
+    walletBalance:number;
+    expertise:string[]
+    rating?:number;
+    designation?:string ;
+    password?:string;
+    profilePic?:string;
+    resume?:string;
     googleId?:string;
     website?:string;
     bio?:string;
-    createdAt:Date
+    createdAt:Date;
 
 }
 
@@ -23,6 +26,9 @@ const InstructorSchema = new Schema<InstructorDoc>({
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
     walletBalance: { type: Number, default: 0 },
+    expertise:{type: [String],required: true,default: [] },
+    rating:{type:Number},
+    designation:{type:String},
     password: { type: String },
     profilePic: { type: String },
     resume: { type: String },

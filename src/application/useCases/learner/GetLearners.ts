@@ -1,10 +1,10 @@
 
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
-import { GetLearnersInput, GetLearnersOutput } from "./types";
+import { GetLearnersInput, GetLearnersOutput, IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners";
 
 
 
-export class GetLearnersUseCase{
+export class GetLearnersUseCase implements IGetLearnersUseCase{
     constructor(
         private _learnerRepository:ILearnerRepository
     ){}

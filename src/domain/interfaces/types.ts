@@ -1,4 +1,3 @@
-import { InstructorVerification } from "@domain/entities/InstructorVerification";
 
 export interface FindAllParams{
     page: number; 
@@ -8,8 +7,17 @@ export interface FindAllParams{
 }
 
 
-export interface FindAllInstructorVerification{
-    instructors:InstructorVerification[],
+export interface FindAllInstructorVerifications{
+    instructorVerifications:InstructorVerification[],
     totalPages:number,
     totalCount:number,
+}
+
+interface InstructorVerification{
+    id: string;
+    name: string;
+    email: string;
+    status: "Pending"| "Verified" | "Rejected";
+    appliedOn: Date;
+    profilePic: string | null;
 }

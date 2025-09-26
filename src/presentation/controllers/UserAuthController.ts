@@ -18,23 +18,8 @@ import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail"
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
-import { BusinessGoogleSigninUseCase } from "@application/useCases/business/GoogleSignin";
-import { BusinessOTPVerificationUseCase } from "@application/useCases/business/OTPVerification";
-import { BusinessSigninUseCase } from "@application/useCases/business/Signin";
-import { InstructorGoogleSigninUseCase } from "@application/useCases/instructor/GoogleSignin";
-import { InstructorOTPVerificationUseCase } from "@application/useCases/instructor/OTPVerification";
-import { InstructorSigninUseCase } from "@application/useCases/instructor/Signin";
-import { LearnerGoogleSigninUseCase } from "@application/useCases/learner/GoogleSignin";
-import { LearnerOTPVerificationUseCase } from "@application/useCases/learner/OTPVerification";
-import { LearnerSigninUseCase } from "@application/useCases/learner/Signin";
-import { UserRefreshTokenUseCase } from "@application/useCases/shared/RefreshToken";
-import { ResendOTPUseCase } from "@application/useCases/shared/ResendOTP";
-import { ResetPasswordUseCase } from "@application/useCases/shared/ResetPassword";
-import { UserSignupUseCase } from "@application/useCases/shared/Signup";
-import { VerifyEmailUseCase } from "@application/useCases/shared/VerifyEmail";
-import { OTPVerificationUseCase } from "@application/useCases/shared/VerifyOTP";
-import { BusinessMapper } from "@infrastructure/database/mongoDB/mappers/BusinessMapper";
-import { LearnerMapper } from "@infrastructure/database/mongoDB/mappers/LearnerMapper";
+import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
+
 import { Request, Response, NextFunction } from "express"
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
@@ -78,13 +63,11 @@ export class UserAuthController {
         private _resetPasswordUseCase:IResetPasswordUseCase
     ) { }
 
-    signup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    signup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
 
             const result = await this._userSignupUseCase.execute(req.body);
-            console.log(req.body);
             
-            console.log(result)
             const response: UserSignupResponseDTO = {
                 success: true,
                 message: MESSAGES.OTP_SENT,
@@ -98,7 +81,7 @@ export class UserAuthController {
         }
     }
 
-    verifyOTP = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    verifyOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { role } = req.body;
             let message;
@@ -119,7 +102,7 @@ export class UserAuthController {
         }
     }
 
-    resendOTP = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    resendOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const email = req.body.email;
             let result = await this._resendOTPUseCase.execute(email)
@@ -134,10 +117,9 @@ export class UserAuthController {
         }
     }
 
-    signin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const role: 'learner' | 'instructor' | 'business' = req.body.role;
-            console.log('req body', req.body);
 
             let result;
             let user;
@@ -158,14 +140,12 @@ export class UserAuthController {
                     user=BusinessDTOMapper.toSigninDTO(result.user)
                     break;
             }
-            console.log(result);
-            console.log(user);
+
             
             
             if(!result || !user){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            console.log('result', result);
 
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
@@ -192,7 +172,7 @@ export class UserAuthController {
         }
     }
 
-    logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logout = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             if (!req.cookies?.refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
@@ -217,12 +197,10 @@ export class UserAuthController {
         }
     }
 
-    refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            console.log('entered refresh');
 
             const refreshToken = req.cookies?.refreshToken
-            console.log('token', refreshToken);
 
             if (!refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
@@ -234,7 +212,6 @@ export class UserAuthController {
 
 
             const accessToken = await this._userRefreshTokenUseCase.execute(refreshToken);
-            console.log('accessToken', accessToken);
 
             const response: RefreshTokenResponseDTO = {
                 success: true,
@@ -254,10 +231,9 @@ export class UserAuthController {
     }
 
 
-    googleSignin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    googleSignin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const {role,token}= req.body
-            console.log('req body', req.body);
 
             let result;
 
@@ -266,7 +242,7 @@ export class UserAuthController {
                     const learnerResult = await this._learnerGoogleSigninUseCase.execute(token);
                     result = {
                         ...learnerResult,
-                        user: LearnerDTOMapper.toSigninDTO(learnerResult.user), // DTO here
+                        user: LearnerDTOMapper.toSigninDTO(learnerResult.user), 
                     };
                     break;
                 }
@@ -288,7 +264,6 @@ export class UserAuthController {
                 }
             }
 
-            console.log('result', result);
             if(!result){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -314,7 +289,7 @@ export class UserAuthController {
         }
     };
 
-    verifyEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    verifyEmail = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const {email,role} = req.body;
             let result = await this._verifyEmailUseCase.execute(email,role)
@@ -329,7 +304,7 @@ export class UserAuthController {
         }
     }
 
-    verifyResetOTP = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    verifyResetOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const {email,otp} = req.body;
             await this._otpVerificationUseCase.execute({otp,email})
@@ -343,7 +318,7 @@ export class UserAuthController {
         }
     }
 
-    resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    resetPassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const {email,role,password} = req.body;
             await this._resetPasswordUseCase.execute(role,email,password)
@@ -356,5 +331,4 @@ export class UserAuthController {
             next(error)
         }
     }
-
 }

@@ -4,10 +4,24 @@ import { MESSAGES } from "shared/constants/messages";
 import { IAuthorizationService } from "@domain/interfaces/IAuthorizationService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 
+export interface AuthenticatedRequest extends Request{
+  user?:{
+    id:string;
+    role:string;
+  }
+}
+
+interface DecodedToken {
+  id: string;
+  role: string;
+  exp?: number;
+  iat?: number;
+}
+
 
 
 export const createAuthMiddleware = (tokenService: ITokenService,authorizationService:IAuthorizationService) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
       
     const authHeader = req.headers["authorization"];
     if (!authHeader?.startsWith("Bearer ")) {
@@ -15,7 +29,7 @@ export const createAuthMiddleware = (tokenService: ITokenService,authorizationSe
     }
     const token = authHeader.split(" ")[1];
     console.log('token in middleware',token);
-    let decoded:any
+    let decoded:DecodedToken
 
     try{
         decoded  = await tokenService.verifyAccessToken(token);
@@ -24,15 +38,19 @@ export const createAuthMiddleware = (tokenService: ITokenService,authorizationSe
     }
     console.log(decoded.role);
     
-    if(decoded.role!=="Admin"){
+    if(decoded.role!=="admin"){
       const isActive = await authorizationService.checkUserActive(decoded.id, decoded.role);
       if (!isActive) {
         return res.status(STATUS_CODES.FORBIDDEN).json({ message: MESSAGES.BLOCKED });
       }
 
     }
-
-    (req as any).user = decoded;
+    console.log(decoded);
+    
+    req.user = {
+      id:decoded.id,
+      role:decoded.role
+    }
     next();
   };
 };

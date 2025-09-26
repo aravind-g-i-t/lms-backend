@@ -25,10 +25,10 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
             throw new AppError(MESSAGES.INVALID_CREDENTIALS,STATUS_CODES.UNAUTHORIZED)
 
         }
-        const accessToken= await this._tokenService.generateAccessToken({role:'Admin',id:admin.id});
+        const accessToken= await this._tokenService.generateAccessToken({role:'admin',id:admin.id});
         console.log(accessToken);
         
-        const refreshToken=await this._tokenService.generateRefreshToken({role:'Admin',id:admin.id});
+        const refreshToken=await this._tokenService.generateRefreshToken({role:'admin',id:admin.id});
         console.log(refreshToken);
         
         return {id:admin.id,email:admin.email,accessToken,refreshToken}

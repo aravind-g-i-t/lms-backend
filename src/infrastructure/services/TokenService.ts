@@ -1,8 +1,14 @@
-import jwt from 'jsonwebtoken';
+import jwt , {SignOptions} from 'jsonwebtoken';
 import { ITokenService } from '@domain/interfaces/ITokenService';
 import { AppError } from 'shared/errors/AppError';
 import { MESSAGES } from 'shared/constants/messages';
 import { STATUS_CODES } from 'shared/constants/httpStatus';
+
+
+const accessTokenMaxAge = (process.env.ACCESS_TOKEN_MAX_AGE || "1m") as SignOptions["expiresIn"];
+const refreshTokenMaxAge = (process.env.REFRESH_TOKEN_MAX_AGE || "7d") as SignOptions["expiresIn"];
+
+
 
 
 export class TokenService implements ITokenService {
@@ -16,13 +22,13 @@ export class TokenService implements ITokenService {
         console.log(this.accessSecret);
         
 
-        return jwt.sign(payload, this.accessSecret, { expiresIn: '1m' });
+        return jwt.sign(payload, this.accessSecret, { expiresIn: accessTokenMaxAge });
     }
 
 
     async generateRefreshToken(payload: object): Promise<string> {
         console.log(this.accessSecret);
-        return jwt.sign(payload, this.refreshSecret, { expiresIn: '7d' });
+        return jwt.sign(payload, this.refreshSecret, { expiresIn: refreshTokenMaxAge });
     }
 
     async verifyAccessToken<T>(token: string): Promise<T> {

@@ -4,12 +4,13 @@ import adminRouter from './adminRouter';
 import learnerRouter from './learnerRouter';
 import businessRouter from './businessRoutes';
 import instructorRouter from './instructotRoutes';
+import { ROUTES } from 'shared/constants/routes';
 const router = express.Router();
 
-router.use('/auth',userAuthRouter)
-router.use('/admin',adminRouter);
-router.use('/learner',learnerRouter);
-router.use('/instructor',instructorRouter);
-router.use('/business',businessRouter);
+router.use(ROUTES.AUTH,userAuthRouter)
+router.use(ROUTES.ADMIN,adminRouter);
+router.use(ROUTES.LEARNER,learnerRouter);
+router.use(ROUTES.INSTRUCTOR,instructorRouter);
+router.use(ROUTES.BUSINESS,businessRouter);
 
 export default router;

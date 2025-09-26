@@ -1,0 +1,31 @@
+
+export const ROUTES = {
+    AUTH:"/auth",
+    LEARNER:"/learner",
+    INSTRUCTOR:"/instructor",
+    BUSINESS:"/business",
+    ADMIN:"/admin",
+    SIGNUP: "/signup",
+    SEND_OTP:"/otp/send",
+    RESEND_OPT:"/otp/resend",
+    SIGNIN: "/signin",
+    GOOGLE_AUTH:"/google",
+    RESET_EMAIL_VERIFICATION:"/reset/email",
+    RESET_OTP_VERIFICATION:"/reset/otp",
+    RESET_PASSWORD:"/reset",
+    LOGOUT: "/logout",
+    PROFILE: "/profile",
+    IMAGE:"/profile/image",
+    EXPERTISE:"/profile/expertise",
+    RESUME:"/profile/resume",
+    PASSWORD:"/password",
+    VERIFICATION:"/verification",
+    
+    INSTRUCTORS: "/instructors",
+    LEARNERS: "/learners",
+    BUSINESSES:"/businesses",
+    LEARNER_STATUS:"/learner/status",
+    INSTRUCTOR_STATUS:"/instructor/status",
+    BUSINESS_STATUS:"/business/status",
+    REFRESH:"/refresh"
+} as const;

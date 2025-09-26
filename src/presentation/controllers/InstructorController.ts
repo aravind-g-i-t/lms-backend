@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { GetInstructorsRequestSchema, GetInstructorsResponseDTO } from "@application/dtos/instructor/GetInstructors";
 import { GetInstructorsUseCase } from "@application/useCases/instructor/GetInstructors";
 import { MESSAGES } from "shared/constants/messages";
@@ -13,6 +13,10 @@ import { GetInstructorProfileDTO, GetInstructorProfileResponseDTO } from "@appli
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { IUpdateInstructorDataUseCase } from "@application/IUseCases/instructor/IUpdateInstructorData";
 import { IInstructorApplyForVeficationUseCase } from "@application/IUseCases/instructor/IApplyForVerification";
+import { AppError } from "shared/errors/AppError";
+import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
+import { IGetInstructorVerificationsUseCase } from "@application/IUseCases/instructor/IGetInstructorVerifications";
+import { GetInstructorVerificationsRequestSchema, GetInstructorVerificationsResponseDTO } from "@application/dtos/instructor/IGetInstructorVerifications";
 
 export class InstructorController {
     constructor(
@@ -21,12 +25,13 @@ export class InstructorController {
         private _getInstructorData: IGetInstructorDataUseCase,
         private _updateInstructorDataUseCase: IUpdateInstructorDataUseCase,
         private _updateInstructorPasswordUseCase: IUpdateUserPassword,
-        private _applyForVerificationUseCase:IInstructorApplyForVeficationUseCase
+        private _applyForVerificationUseCase: IInstructorApplyForVeficationUseCase,
+        private _getInstructorVerifications:IGetInstructorVerificationsUseCase
 
 
     ) { }
 
-    getInstructors = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    getInstructors = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { query } = GetInstructorsRequestSchema.parse(req);
 
@@ -52,9 +57,12 @@ export class InstructorController {
         }
     }
 
-    updateInstructorStatus = async (req: Request, res: Response, next: NextFunction) => {
+    updateInstructorStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            const { id } = req.body;
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
             await this._updateInstructorStatusUseCase.execute(id);
             res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.INSTRUCTOR_UPDATED })
         } catch (error) {
@@ -62,9 +70,12 @@ export class InstructorController {
         }
     }
 
-    getInstructorProfile = async (req: Request, res: Response, next: NextFunction) => {
+    getInstructorProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            let id = (req as any).user.id
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
 
             const result = await this._getInstructorData.execute(id);
             const response: GetInstructorProfileResponseDTO = {
@@ -72,7 +83,6 @@ export class InstructorController {
                 message: MESSAGES.INSTRUCTOR_UPDATED,
                 instructor: InstructorDTOMapper.toGetInstructorProfile(result)
             };
-            console.log(response);
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next(error)
@@ -80,17 +90,18 @@ export class InstructorController {
     }
 
 
-    updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+    updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
 
             const { data } = req.body;
-            console.log(data);
 
-            let id = (req as any).user.id
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
 
             await this._updateInstructorDataUseCase.execute(id, data);
             const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
-            console.log(response);
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next(error)
@@ -98,63 +109,67 @@ export class InstructorController {
     }
 
 
-    updateProfileImage = async (req: Request, res: Response, next: NextFunction) => {
+    updateProfileImage = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
 
             const { imageURL } = req.body;
-            console.log(imageURL);
-            
-            let id = (req as any).user.id
-            console.log('req-user', (req as any).user);
 
-            await this._updateInstructorDataUseCase.execute(id, {profilePic:imageURL});
-            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED};
-            console.log(response);
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            await this._updateInstructorDataUseCase.execute(id, { profilePic: imageURL });
+            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next(error)
         }
     }
 
-    updateExpertise = async (req: Request, res: Response, next: NextFunction) => {
+    updateExpertise = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
 
             const { expertise } = req.body;
-            console.log(expertise);
-            
-            let id = (req as any).user.id
-            console.log('req-user', (req as any).user);
 
-            await this._updateInstructorDataUseCase.execute(id, {expertise});
-            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED};
-            console.log(response);
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            await this._updateInstructorDataUseCase.execute(id, { expertise });
+            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next(error)
         }
     }
 
-    updateResume = async (req: Request, res: Response, next: NextFunction) => {
+    updateResume = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
 
             const { resume } = req.body;
-            
-            let id = (req as any).user.id
-            console.log('req-user', (req as any).user);
 
-            await this._updateInstructorDataUseCase.execute(id, {resume});
-            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED};
-            console.log(response);
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            await this._updateInstructorDataUseCase.execute(id, { resume });
+            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next(error)
         }
     }
 
-    updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+    updatePassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             const { currentPassword, newPassword } = req.body;
-            let id = (req as any).user.id
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
             await this._updateInstructorPasswordUseCase.execute(id, currentPassword, newPassword);
             res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.INSTRUCTOR_UPDATED })
         } catch (error) {
@@ -162,22 +177,47 @@ export class InstructorController {
         }
     }
 
-    applyForVerification = async (req: Request, res: Response, next: NextFunction) => {
-        try {   
-            console.log('entered contri');
-                
-            let id = (req as any).user.id
-            console.log('req-user', (req as any).user);
+    applyForVerification = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+
+            let id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
 
             await this._applyForVerificationUseCase.execute(id);
-            console.log('fddfd');
-            
-            const response = { success: true, message: MESSAGES.SEND_VERIFICATION_SUCCESS};
-            console.log(response);
+
+            const response = { success: true, message: MESSAGES.SEND_VERIFICATION_SUCCESS };
             res.status(STATUS_CODES.CREATED).json(response)
         } catch (error) {
             next(error)
         }
     }
 
+    getInstructorVerifications = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+
+          const { query } = GetInstructorVerificationsRequestSchema.parse(req);
+
+            const { page, search, status, limit } = query
+            const result = await this._getInstructorVerifications.execute({
+                page,
+                search,
+                status,
+                limit
+            });
+
+            const response :GetInstructorVerificationsResponseDTO= {
+                 success: true,
+                 message: MESSAGES.SEND_VERIFICATION_SUCCESS ,
+                 instructorVerifications:result.instructorVerifications,
+                 totalCount:result.totalCount,
+                 totalPages:result.totalPages
+                };
+            res.status(STATUS_CODES.CREATED).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
+

@@ -1,5 +1,5 @@
 
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { GetLearnersRequestSchema, GetLearnersResponseDTO } from "@application/dtos/learner/GetLearners";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -11,6 +11,8 @@ import { IUpdateLearnerDataUseCase } from "@application/IUseCases/learner/IUpdat
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
 import { IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners";
 import { GetLearnerProfileResponseDTO } from "@application/dtos/learner/GetProfile";
+import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
+import { AppError } from "shared/errors/AppError";
 
 export class LearnerController {
     constructor(
@@ -21,8 +23,9 @@ export class LearnerController {
         private _getLearnerData:IGetLearnerDataUseCase,
     ) { }
 
-    getLearners = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    getLearners = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            let user = req.user
             const { query } = GetLearnersRequestSchema.parse(req);
 
             const { page, search, status, limit } = query
@@ -48,7 +51,7 @@ export class LearnerController {
     }
 
 
-    updateLearnerStatus=async(req:Request,res:Response,next:NextFunction)=>{
+    updateLearnerStatus=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
             let id=req.body.id
             await this._updateLearnerStatusUseCase.execute(id);
@@ -58,42 +61,47 @@ export class LearnerController {
         }
     }
 
-    updateProfile=async(req:Request,res:Response,next:NextFunction)=>{
+    updateProfile=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
 
             const {data}=req.body;
-            let id=(req as any).user.id
+            let id = req.user?.id
+            if(!id){
+                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
             
             const result=await this._updateLearnerDataUseCase.execute(id,data);
             const response={success:true,message:MESSAGES.LEARNER_UPDATED};
-            console.log(response);
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next (error)
         }
     }
 
-    updateProfileImage = async (req: Request, res: Response, next: NextFunction) => {
+    updateProfileImage = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
             try {
     
                 const { imageURL } = req.body;
-                console.log(imageURL);
                 
-                let id = (req as any).user.id
-                console.log('req-user', (req as any).user);
+                let id = req.user?.id
+            if(!id){
+                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
     
                 await this._updateLearnerDataUseCase.execute(id, {profilePic:imageURL});
                 const response = { success: true, message: MESSAGES.LEARNER_UPDATED};
-                console.log(response);
                 res.status(STATUS_CODES.OK).json(response)
             } catch (error) {
                 next(error)
             }
         }
 
-    updatePassword=async(req:Request,res:Response,next:NextFunction)=>{
+    updatePassword=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-            let id=(req as any).user.id
+            let id = req.user?.id
+            if(!id){
+                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
             const {currentPassword,newPassword}=req.body;
             
             await this._updatePassword.execute(id,currentPassword,newPassword);
@@ -103,10 +111,12 @@ export class LearnerController {
         }
     }
 
-    getLearnerProfile=async(req:Request,res:Response,next:NextFunction)=>{
+    getLearnerProfile=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-            let id=(req as any).user.id
-            console.log('req-user',(req as any).user);
+            let id = req.user?.id
+            if(!id){
+                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
             
             const result=await this._getLearnerData.execute(id);
             const response:GetLearnerProfileResponseDTO={
@@ -114,10 +124,11 @@ export class LearnerController {
                 message:MESSAGES.LEARNER_UPDATED,
                 learner:LearnerDTOMapper.toProfileDTO(result)
             };
-            console.log(response);
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             next (error)
         }
     }
+
+    
 }

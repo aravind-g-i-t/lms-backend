@@ -38,9 +38,8 @@ export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUse
             password: hashedPassword,
             isActive:true,
             walletBalance:0,
-            isVerified:false,
             expertise:[],
-        })
+        });
         if(instructorCreated){
             return;
         }else{

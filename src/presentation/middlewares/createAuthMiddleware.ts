@@ -45,7 +45,7 @@ export const createAuthMiddleware = (tokenService: ITokenService,authorizationSe
       }
 
     }
-    console.log(decoded);
+    
     
     req.user = {
       id:decoded.id,

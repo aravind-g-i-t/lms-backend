@@ -1,14 +1,12 @@
 import { Learner } from "@domain/entities/Learner";
 
 
-
-
-
 export interface GetLearnersInput {
   page: number;
   limit: number;
   search?: string;
   status?: "Active" | "Blocked";
+  verificationStatus?:"Not Submitted"|"Under Review"|"Verified"|"Rejected";
 }
 
 export interface GetLearnersOutput {

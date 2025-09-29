@@ -5,7 +5,6 @@ export interface GetInstructorsDTO {
     name: string;
     email: string;
     isActive: boolean;
-    isVerified:boolean;
     joiningDate:Date;
     profilePic?: string;
     

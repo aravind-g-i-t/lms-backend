@@ -1,6 +1,7 @@
 
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { GetBusinessesInput, GetBusinessesOutput, IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
+import { escapeRegExp } from "shared/utils/escapeRegExp";
 
 
 
@@ -10,7 +11,19 @@ export class GetBusinessesUseCase implements IGetBusinessesUseCase{
     ){}
 
     async execute(input:GetBusinessesInput):Promise<GetBusinessesOutput>{
-        const result=await this._businessRepository.findAll(input);
+        const {page,search,status,limit,verificationStatus}=input;
+                
+                const query:any={};
+                if(status){
+                    query.isActive=status==="Active"
+                }
+                if(search?.trim()){
+                    query.name={$regex:escapeRegExp(search.trim()).slice(0, 100), $options: "i"}
+                }
+                if(verificationStatus){
+                    query["verification.status"]=verificationStatus
+                }
+                const result=await this._businessRepository.findAll(query,{page,limit});
         
         const {businesses,totalPages,totalCount}=result;
         

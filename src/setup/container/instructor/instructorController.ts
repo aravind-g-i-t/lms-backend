@@ -6,8 +6,6 @@ import { GetInstructorDataUseCase } from "@application/useCases/instructor/GetIn
 import { UpdateInstructorPasswordUseCase } from "@application/useCases/instructor/UpdatePassword";
 import { UpdateInstructorDataUseCase } from "@application/useCases/instructor/UpdateInstructorData";
 import { InstructorApplyForVeficationUseCase } from "@application/useCases/instructor/ApplyForVerification";
-import { instructorVerificationRepository } from "./instructorVerificationRepository";
-import { GetInstructorVerificationsUseCase } from "@application/useCases/instructor/GetInstructorVerifications";
 
 const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository);
 
@@ -19,11 +17,10 @@ const updateInstructorPasswordUseCase=new UpdateInstructorPasswordUseCase(instru
 
 const updateInstructorDataUseCase=new UpdateInstructorDataUseCase(instructorRepository)
 
-const applyForVerificationUseCase=new InstructorApplyForVeficationUseCase(instructorRepository,instructorVerificationRepository);
-
-const getInstructorVerificationsUseCAse=new GetInstructorVerificationsUseCase(instructorVerificationRepository);
+const applyForVerificationUseCase=new InstructorApplyForVeficationUseCase(instructorRepository);
 
 
 
 
-export const instructorController=new InstructorController(getInstructorsUseCase,updateInstructorStatusUseCase,getInstructorDataUseCase,updateInstructorDataUseCase,updateInstructorPasswordUseCase,applyForVerificationUseCase,getInstructorVerificationsUseCAse)
+
+export const instructorController=new InstructorController(getInstructorsUseCase,updateInstructorStatusUseCase,getInstructorDataUseCase,updateInstructorDataUseCase,updateInstructorPasswordUseCase,applyForVerificationUseCase)

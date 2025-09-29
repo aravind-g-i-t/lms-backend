@@ -16,7 +16,7 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
-    async create(instructorInput: Instructor, allowPassword: false): Promise<Instructor> {
+    async create(instructorInput: Partial<Instructor>, allowPassword: false): Promise<Instructor> {
         const doc = new InstructorModel(instructorInput);
         await doc.save();
 
@@ -33,17 +33,16 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
     }
 
 
-    async findAll(params: { page: number; search?: string; status?: string; limit: number; }, allowPassword: false) {
-        let { page, search, status, limit } = params;
-        const query: any = {};
-        if (status) {
-            query.isActive = (status === 'Active') ? true : false;
-        }
-        if (search && search.trim().length) {
-            const safe = escapeRegExp(search.trim()).slice(0, 100);
-            query.name = { $regex: safe, $options: "i" }
-        }
+    async findAll(
+        query: Record<string, any>,
+        options: { page: number; limit: number }
+    ) {
+        console.log("Entered findAll in instructorRepository");
+        console.log(query,options);
+        
+        const { page, limit } = options;
         const skip = (page - 1) * limit;
+
         const [docs, totalCount] = await Promise.all([
             InstructorModel.find(query)
                 .select("-password -__v -updatedAt")
@@ -52,17 +51,18 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
                 .limit(limit)
                 .lean(),
             InstructorModel.countDocuments(query)
-        ])
+        ]);
+        
         console.log(docs);
         const instructors = docs.map(doc => InstructorMapper.toDomain(doc));
-
-
+        
         return {
             instructors,
             totalPages: Math.ceil(totalCount / limit),
             totalCount
-        }
+        };
     }
+
 
     async updateStatus(id: string): Promise<void> {
         const instructor = await InstructorModel.findById(id).select("isActive");

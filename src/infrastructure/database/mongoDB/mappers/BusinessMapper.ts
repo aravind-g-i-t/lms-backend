@@ -11,6 +11,10 @@ export class BusinessMapper {
       isActive: doc.isActive,
       joiningDate:doc.createdAt,
       employees: doc.employees,
+      verification: {
+        status: doc.verification.status,
+        remarks: doc.verification.remarks ,
+      },
       location:doc.location||null,
       businessDomain:doc.businessDomain||null,
       website:doc.website||null,
@@ -31,6 +35,10 @@ export class BusinessMapper {
       isActive: doc.isActive,
       joiningDate:doc.createdAt,
       employees: doc.employees,
+      verification: {
+        status: doc.verification.status,
+        remarks: doc.verification.remarks,
+      },
       location:doc.location||null,
       businessDomain:doc.businessDomain||null,
       website:doc.website||null,

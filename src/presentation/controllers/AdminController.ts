@@ -9,20 +9,17 @@ import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
-export class AdminController{
+export class AdminController {
     constructor(
-        private _adminSigninUseCase:IAdminSigninUseCase,
-        private _refreshTokenUseCase:IRefreshTokenUseCase
-    ){}
+        private _adminSigninUseCase: IAdminSigninUseCase,
+        private _refreshTokenUseCase: IRefreshTokenUseCase
+    ) { }
 
-    signin = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<void> => {
+    signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            let id = req.user?.id
-                        if (!id) {
-                            throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
-                        }
-            
-            let result= await this._adminSigninUseCase.execute(req.body);
+            const {email,password}=req.body;
+
+            let result = await this._adminSigninUseCase.execute({email,password});
 
 
             res.cookie("refreshToken", result.refreshToken, {
@@ -37,14 +34,14 @@ export class AdminController{
                 message: MESSAGES.LOGIN_SUCCESS,
                 id: result.id,
                 accessToken: result.accessToken,
-                email:result.email
+                email: result.email
             });
         } catch (error) {
             next(error)
         }
     }
 
-    logout = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<void> => {
+    logout = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             if (!req.cookies?.refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
@@ -69,11 +66,11 @@ export class AdminController{
         }
     }
 
-    refreshToken = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<void> => {
+    refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            
-            const refreshToken=req.cookies?.adminRefreshToken
-            
+
+            const refreshToken = req.cookies?.adminRefreshToken
+
             if (!refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
                     success: false,
@@ -83,14 +80,14 @@ export class AdminController{
             }
 
 
-            const accessToken=await this._refreshTokenUseCase.execute(refreshToken);
-            
-            const response:RefreshTokenResponseDTO={
-                success:true,
-                message:MESSAGES.REFRESH_TOKEN_SUCCESS,
+            const accessToken = await this._refreshTokenUseCase.execute(refreshToken);
+
+            const response: RefreshTokenResponseDTO = {
+                success: true,
+                message: MESSAGES.REFRESH_TOKEN_SUCCESS,
                 accessToken
             }
-            
+
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
             res.clearCookie("adminRefreshToken", {
@@ -101,6 +98,6 @@ export class AdminController{
             next(error)
         }
     }
-    
+
 
 }

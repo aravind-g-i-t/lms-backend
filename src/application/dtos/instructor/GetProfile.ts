@@ -7,11 +7,14 @@ export interface GetInstructorProfileResponseDTO {
 export interface GetInstructorProfileDTO{
     name:string;
     email:string;
+    verification:{
+        status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
+        remarks:string|null;
+    };
     profilePic:string|null;
     joiningDate:Date|null;
     website:string|null;
     bio:string|null;
-    isVerified:boolean;
     hasPassword:boolean;
     designation:string|null;
     expertise:string[];

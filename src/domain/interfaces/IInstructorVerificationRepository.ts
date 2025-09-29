@@ -9,5 +9,5 @@ export interface IInstructorVerificationRepository{
 
     findByIdAndUpdate(id:string,update:Partial<InstructorVerification>):Promise<InstructorVerification|null>;
 
-    deleteById(id:string):Promise<void>;
+    find(params:Partial<InstructorVerification>):Promise<InstructorVerification|null>;
 }

@@ -14,7 +14,10 @@ export interface ILearnerRepository{
 
     findById(id:string,allowPassword?:boolean):Promise<Learner |null>
 
-    findAll(params: FindAllParams,allowPassword?:boolean):Promise<FindAllResponse>;
+    findAll(
+        query: Record<string, any>, 
+        options: { page: number; limit: number }
+    ):Promise<FindAllResponse>;
 
     create(learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner>;
 
@@ -23,4 +26,4 @@ export interface ILearnerRepository{
     findByIdAndUpdate(id:string,learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>,
 
     updateOne(filter:Partial<Learner>,update:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>
-}
+};

@@ -8,7 +8,10 @@ export interface IBusinessRepository{
 
     findOne(params:Partial<Business>,allowPassword?:boolean):Promise<Business|null>;
 
-    findAll(params:FindAllParams,allowPassword?:boolean):Promise<any>;
+    findAll(
+        query: Record<string, any>, 
+        options: { page: number; limit: number }
+    ):Promise<any>;
 
     findByIdAndUpdate(id:string,learner:Partial<Business>,allowPassword?:boolean):Promise<Business|null>;
 

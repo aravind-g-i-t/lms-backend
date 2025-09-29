@@ -14,7 +14,10 @@ export interface IInstructorRepository{
     
     findById(id:string,allowPassword?:boolean):Promise<Instructor |null>;
     
-    findAll(params:FindAllParams,allowPassword?:boolean):Promise<FindAllResponse>;
+    findAll(
+        query: Record<string, any>, 
+        options: { page: number; limit: number }
+    ):Promise<FindAllResponse>;
     
     findByIdAndUpdate(id:string,instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>;
 

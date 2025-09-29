@@ -3,10 +3,13 @@ export interface Instructor{
     name:string;
     email:string;
     isActive:boolean;
-    isVerified:boolean;
     walletBalance:number;
     joiningDate:Date;
-    expertise:string[]
+    expertise:string[];
+    verification:{
+        status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
+        remarks:string|null;
+    };
     rating:number|null;
     designation:string |null;
     password:string|null;

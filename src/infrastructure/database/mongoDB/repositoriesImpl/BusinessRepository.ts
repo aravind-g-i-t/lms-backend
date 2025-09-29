@@ -17,7 +17,7 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
         return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 
-    async create(businessInput: Business,allowPassword:false): Promise<Business> {
+    async create(businessInput: Partial<Business>,allowPassword:false): Promise<Business> {
 
         const doc = new BusinessModel(businessInput);
 
@@ -35,16 +35,9 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
         return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
     }
 
-    async findAll(params: { page: number; search?: string; status?: string; limit: number; },allowPassword:false) {
-        let { page, search, status, limit } = params;
-        const query: any = {};
-        if (status) {
-            query.isActive = (status === 'Active') ? true : false;
-        }
-        if (search && search.trim().length) {
-            const safe = escapeRegExp(search.trim()).slice(0, 100);
-            query.name = { $regex: safe, $options: "i" }
-        }
+    async findAll(query: Record<string, any>,
+        options: { page: number; limit: number }) {
+        const { page, limit } = options;
         const skip = (page - 1) * limit;
         const result = await BusinessModel.aggregate([
             { $match: query },
@@ -72,8 +65,8 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
                                 isActive: 1,
                                 profilePic: 1,
                                 employeeCount: { $size: "$employees" },
-                                planName: "$plan.name"
-
+                                planName: "$plan.name",
+                                verification:1
                             }
                         }
                     ],

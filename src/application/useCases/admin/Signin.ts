@@ -14,6 +14,8 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
     ){}
 
     async execute({email,password}:AdminSigninRequestDTO){
+        console.log("entered adminSignin useCase");
+        
         const admin=await this._adminRepository.findByEmail(email);
         
         if(!admin){

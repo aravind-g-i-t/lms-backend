@@ -9,6 +9,10 @@ export interface GetBusinessProfileDTO{
     name:string;
     email:string;
     joiningDate:Date;
+    verification:{
+        status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
+        remarks:string|null;
+    };
     businessDomain:string|null;
     website:string|null;
     location:string|null;

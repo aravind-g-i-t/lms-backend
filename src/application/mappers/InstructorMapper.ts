@@ -16,7 +16,6 @@ export class InstructorDTOMapper {
             name: entity.name,
             email: entity.email,
             isActive: entity.isActive,
-            isVerified: entity.isVerified,
             joiningDate: entity.joiningDate,
             profilePic: entity.profilePic,
 
@@ -28,10 +27,10 @@ export class InstructorDTOMapper {
         return {
             name: entity.name,
             email: entity.email,
-            isVerified: entity.isVerified,
             joiningDate: entity.joiningDate,
             profilePic: entity.profilePic,
             website:entity.website,
+            verification:entity.verification,
             hasPassword:entity.password?true:false,
             bio:entity.bio,
             designation:entity.designation,

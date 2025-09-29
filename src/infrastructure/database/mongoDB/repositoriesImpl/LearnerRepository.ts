@@ -21,7 +21,7 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
 
     }
 
-    async create(signupInput: Learner, allowPassword: false): Promise<Learner> {
+    async create(signupInput: Partial<Learner>, allowPassword: false): Promise<Learner> {
         const doc = new LearnerModel(signupInput);
         await doc.save();
         return allowPassword ? LearnerMapper.toDomain(doc) : LearnerMapper.toSecureDomain(doc);
@@ -37,17 +37,11 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
         return allowPassword ? LearnerMapper.toDomain(doc) : LearnerMapper.toSecureDomain(doc);
     }
 
-    async findAll(params: { page: number; search?: string; status?: string; limit: number; }, allowPassword: false) {
-        let { page, search, status, limit } = params;
-        const query: any = {};
-        if (status) {
-            query.isActive = (status === 'Active') ? true : false;
-        }
-        if (search && search.trim().length) {
-            const safe = escapeRegExp(search.trim()).slice(0, 100);
-            query.name = { $regex: safe, $options: "i" }
-        }
+    async findAll(query: Record<string, any>,
+        options: { page: number; limit: number }) {
+        const { page, limit } = options;
         const skip = (page - 1) * limit;
+
         const [docs, totalCount] = await Promise.all([
             LearnerModel.find(query)
                 .select("-password -__v -updatedAt")
@@ -56,25 +50,21 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
                 .limit(limit)
                 .lean(),
             LearnerModel.countDocuments(query)
-        ])
-        let learners;
-        if(allowPassword){
-            learners = docs.map(doc => LearnerMapper.toDomain(doc));
-        }else{
-            learners = docs.map(doc => LearnerMapper.toSecureDomain(doc));
-        }
+        ]);
 
+        console.log(docs);
+        const learners = docs.map(doc => LearnerMapper.toDomain(doc));
 
         return {
             learners,
             totalPages: Math.ceil(totalCount / limit),
             totalCount
-        }
+        };
     }
 
     async updateStatus(id: string): Promise<void> {
-        console.log('learner-id',id);
-        
+        console.log('learner-id', id);
+
         const learner = await LearnerModel.findById(id).select("isActive");
         if (!learner) {
             throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND, false)

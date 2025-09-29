@@ -1,10 +1,8 @@
 import { Response, NextFunction } from "express";
 import { GetInstructorsRequestSchema, GetInstructorsResponseDTO } from "@application/dtos/instructor/GetInstructors";
-import { GetInstructorsUseCase } from "@application/useCases/instructor/GetInstructors";
 import { MESSAGES } from "shared/constants/messages";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { STATUS_CODES } from "shared/constants/httpStatus";
-import { UpdateInstructorStatusUseCase } from "@application/useCases/instructor/UpdateInstructorStatus";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
 import { IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
 import { IGetInstructorDataUseCase } from "@application/IUseCases/instructor/IGetInstructorData";
@@ -15,8 +13,6 @@ import { IUpdateInstructorDataUseCase } from "@application/IUseCases/instructor/
 import { IInstructorApplyForVeficationUseCase } from "@application/IUseCases/instructor/IApplyForVerification";
 import { AppError } from "shared/errors/AppError";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
-import { IGetInstructorVerificationsUseCase } from "@application/IUseCases/instructor/IGetInstructorVerifications";
-import { GetInstructorVerificationsRequestSchema, GetInstructorVerificationsResponseDTO } from "@application/dtos/instructor/IGetInstructorVerifications";
 
 export class InstructorController {
     constructor(
@@ -26,14 +22,14 @@ export class InstructorController {
         private _updateInstructorDataUseCase: IUpdateInstructorDataUseCase,
         private _updateInstructorPasswordUseCase: IUpdateUserPassword,
         private _applyForVerificationUseCase: IInstructorApplyForVeficationUseCase,
-        private _getInstructorVerifications:IGetInstructorVerificationsUseCase
-
 
     ) { }
 
     getInstructors = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { query } = GetInstructorsRequestSchema.parse(req);
+            console.log(query);
+            
 
             const { page, search, status, limit } = query
             const result = await this._getInstructorsUseCase.execute({
@@ -77,11 +73,11 @@ export class InstructorController {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
-            const result = await this._getInstructorData.execute(id);
+            const instructorData = await this._getInstructorData.execute(id);
             const response: GetInstructorProfileResponseDTO = {
                 success: true,
                 message: MESSAGES.INSTRUCTOR_UPDATED,
-                instructor: InstructorDTOMapper.toGetInstructorProfile(result)
+                instructor: InstructorDTOMapper.toGetInstructorProfile(instructorData)
             };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
@@ -194,30 +190,6 @@ export class InstructorController {
         }
     }
 
-    getInstructorVerifications = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-        try {
-
-          const { query } = GetInstructorVerificationsRequestSchema.parse(req);
-
-            const { page, search, status, limit } = query
-            const result = await this._getInstructorVerifications.execute({
-                page,
-                search,
-                status,
-                limit
-            });
-
-            const response :GetInstructorVerificationsResponseDTO= {
-                 success: true,
-                 message: MESSAGES.SEND_VERIFICATION_SUCCESS ,
-                 instructorVerifications:result.instructorVerifications,
-                 totalCount:result.totalCount,
-                 totalPages:result.totalPages
-                };
-            res.status(STATUS_CODES.CREATED).json(response)
-        } catch (error) {
-            next(error)
-        }
-    }
+    
 }
 

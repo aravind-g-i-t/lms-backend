@@ -29,6 +29,7 @@ export class BusinessDTOMapper{
                 name:entity.name,
                 email:entity.email,
                 profilePic:entity.profilePic,
+                verification:entity.verification,
                 hasPassword:entity.password?true:false,
                 joiningDate:entity.joiningDate,
                 businessDomain:entity.businessDomain,

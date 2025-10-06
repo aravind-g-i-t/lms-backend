@@ -1,4 +1,3 @@
-import { InstructorVerificationStatus } from "@domain/types/InstructorVerificationStatus";
 
 export interface InstructorVerification{
     id:string;

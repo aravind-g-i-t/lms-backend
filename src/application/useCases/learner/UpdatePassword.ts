@@ -1,6 +1,5 @@
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
-import { userAuthController } from "@setup/container/shared/userAuthController";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";

@@ -4,7 +4,6 @@ import { GetLearnersRequestSchema, GetLearnersResponseDTO } from "@application/d
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
-import { UpdateLearnerProfileResponseDTO } from "@application/dtos/learner/UpdateProfile";
 import { IGetLearnerDataUseCase } from "@application/IUseCases/learner/IGetLearnerData";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { IUpdateLearnerDataUseCase } from "@application/IUseCases/learner/IUpdateLearnerData";
@@ -25,16 +24,10 @@ export class LearnerController {
 
     getLearners = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            let user = req.user
             const { query } = GetLearnersRequestSchema.parse(req);
 
             const { page, search, status, limit } = query
-            const result = await this._getLearnersUseCase.execute({
-                page,
-                search,
-                status,
-                limit
-            });
+            const result = await this._getLearnersUseCase.execute({page,search,status,limit});
 
             const response: GetLearnersResponseDTO = {
                 success: true,
@@ -43,7 +36,6 @@ export class LearnerController {
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
             }
-
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
             next(error)
@@ -53,7 +45,7 @@ export class LearnerController {
 
     updateLearnerStatus=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-            let id=req.body.id
+            const id=req.body.id
             await this._updateLearnerStatusUseCase.execute(id);
             res.status(STATUS_CODES.OK).json({success:true,message:MESSAGES.LEARNER_UPDATED})
         } catch (error) {
@@ -63,14 +55,13 @@ export class LearnerController {
 
     updateProfile=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-
-            const {data}=req.body;
-            let id = req.user?.id
+            const {name}=req.body;
+            
+            const id = req.user?.id
             if(!id){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            
-            const result=await this._updateLearnerDataUseCase.execute(id,data);
+            await this._updateLearnerDataUseCase.execute(id,{name});
             const response={success:true,message:MESSAGES.LEARNER_UPDATED};
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
@@ -83,7 +74,7 @@ export class LearnerController {
     
                 const { imageURL } = req.body;
                 
-                let id = req.user?.id
+                const id = req.user?.id
             if(!id){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -98,7 +89,7 @@ export class LearnerController {
 
     updatePassword=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-            let id = req.user?.id
+            const id = req.user?.id
             if(!id){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -113,7 +104,27 @@ export class LearnerController {
 
     getLearnerProfile=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-            let id = req.user?.id
+            const id = req.user?.id
+            if(!id){
+                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            
+            const result=await this._getLearnerData.execute(id);
+            const response:GetLearnerProfileResponseDTO={
+                success:true,
+                message:MESSAGES.LEARNER_UPDATED,
+                learner:LearnerDTOMapper.toProfileDTO(result)
+            };
+            res.status(STATUS_CODES.OK).json(response)
+        } catch (error) {
+            next (error)
+        }
+    }
+
+
+    getLearnerDataForAdmin=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
+        try {
+            const id = req.params.id
             if(!id){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }

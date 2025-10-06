@@ -26,6 +26,8 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
-        "skipLibCheck": true
-    }
+        "skipLibCheck": true,
+        
+    },
+  "exclude": ["eslint.config.ts", "node_modules"]
 }

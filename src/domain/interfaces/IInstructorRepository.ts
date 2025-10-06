@@ -1,6 +1,11 @@
 
 import { Instructor } from "@domain/entities/Instructor";
-import { FindAllParams } from "./types";
+
+type InstructorQuery = {
+  isActive?: boolean;
+  name?: { $regex: string; $options: string };
+  "verification.status"?: string;
+};
 
 interface FindAllResponse{
     instructors:Instructor[],
@@ -15,7 +20,7 @@ export interface IInstructorRepository{
     findById(id:string,allowPassword?:boolean):Promise<Instructor |null>;
     
     findAll(
-        query: Record<string, any>, 
+        query: InstructorQuery, 
         options: { page: number; limit: number }
     ):Promise<FindAllResponse>;
     
@@ -25,7 +30,7 @@ export interface IInstructorRepository{
 
     updateOne(filter:Partial<Instructor>,update:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>
 
-    updateStatus(id:string):Promise<void>;
+    updateStatus(id:string):Promise<Instructor|null>;
 
     create(instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor>;
 

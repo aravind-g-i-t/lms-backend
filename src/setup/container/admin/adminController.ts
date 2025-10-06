@@ -6,10 +6,10 @@ import { AdminController } from "@presentation/controllers/AdminController";
 import { tokenService } from "../shared/tokenService";
 
 
-const adminRepository=new AdminRepository();
+export const adminRepository=new AdminRepository();
 
 const adminSigninUseCase=new AdminSigninUseCase(adminRepository,tokenService);
 
 const adminRefreshTokenUseCase=new AdminRefreshTokenUseCase(tokenService,adminRepository)
 
-export const adminController=new AdminController(adminSigninUseCase,adminRefreshTokenUseCase);
+export const adminController=new AdminController(adminSigninUseCase,adminRefreshTokenUseCase,);

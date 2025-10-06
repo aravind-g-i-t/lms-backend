@@ -12,16 +12,17 @@ export interface BusinessDoc extends Document {
     status: "Not Submitted" | "Under Review" | "Verified" | "Rejected",
     remarks: string | null;
   };
-  businessDomain?: string;
-  website?: string;
-  location?: string;
-  planId?: string;
-  planStartDate?: Date;
-  planEndDate?: Date;
-  maxEmployees?: number;
-  password?: string;
-  profilePic?: string;
-  googleId?: string;
+  businessDomain: string|null;
+  website: string|null;
+  location: string|null;
+  license:string|null;
+  planId: string|null;
+  planStartDate: Date|null;
+  planEndDate: Date|null;
+  maxEmployees: number|null;
+  password: string|null;
+  profilePic: string|null;
+  googleId: string|null;
 }
 
 const BusinessSchema: Schema<BusinessDoc> = new Schema(
@@ -37,21 +38,19 @@ const BusinessSchema: Schema<BusinessDoc> = new Schema(
         required: true,
         default: "Not Submitted"
       },
-      remarks: {
-        type: String,
-        default: null
-      }
+      remarks: {type: String, default: null}
     },
-    businessDomain: { type: String },
-    website: { type: String },
-    location: { type: String },
-    planId: { type: String },
-    planStartDate: { type: Date },
-    planEndDate: { type: Date },
-    maxEmployees: { type: Number },
-    profilePic: { type: String },
-    password: { type: String },
-    googleId: { type: String },
+    businessDomain: { type: String, default: null },
+    website: { type: String , default: null},
+    location: { type: String, default: null },
+    planId: { type: String, default: null },
+    planStartDate: { type: Date, default: null },
+    planEndDate: { type: Date, default: null },
+    maxEmployees: { type: Number, default: null },
+    profilePic: { type: String, default: null },
+    password: { type: String, default: null },
+    googleId: { type: String, default: null },
+    license: { type: String, default: null },
   },
   {
     timestamps: true,

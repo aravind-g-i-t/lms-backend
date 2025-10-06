@@ -1,5 +1,9 @@
 import { Learner } from "@domain/entities/Learner";
-import { FindAllParams } from "./types";
+
+type LearnerQuery = {
+  isActive?: boolean;
+  name?: { $regex: string; $options: string };
+};
 
 interface FindAllResponse{
     learners:Learner[],
@@ -15,7 +19,7 @@ export interface ILearnerRepository{
     findById(id:string,allowPassword?:boolean):Promise<Learner |null>
 
     findAll(
-        query: Record<string, any>, 
+        query:LearnerQuery, 
         options: { page: number; limit: number }
     ):Promise<FindAllResponse>;
 

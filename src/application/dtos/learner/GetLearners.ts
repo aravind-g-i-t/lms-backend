@@ -12,7 +12,7 @@ export interface GetLearnersDTO {
 export interface GetLearnersResponseDTO {
     success: boolean;
     message: string;
-    learners?: GetLearnersDTO[];
+    learners: GetLearnersDTO[];
     totalPages: number;
     totalCount: number;
 }

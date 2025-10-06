@@ -6,13 +6,13 @@ import { STATUS_CODES } from "shared/constants/httpStatus";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
 import { IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
 import { IGetInstructorDataUseCase } from "@application/IUseCases/instructor/IGetInstructorData";
-import { GetLearnerProfileResponseDTO } from "@application/dtos/learner/GetProfile";
-import { GetInstructorProfileDTO, GetInstructorProfileResponseDTO } from "@application/dtos/instructor/GetProfile";
+import { GetInstructorProfileResponseDTO } from "@application/dtos/instructor/GetProfile";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { IUpdateInstructorDataUseCase } from "@application/IUseCases/instructor/IUpdateInstructorData";
 import { IInstructorApplyForVeficationUseCase } from "@application/IUseCases/instructor/IApplyForVerification";
 import { AppError } from "shared/errors/AppError";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
+import { IUpdateBusinessVerificationStatusUseCase } from "@application/IUseCases/business/IUpdateVerificationStatus";
 
 export class InstructorController {
     constructor(
@@ -22,6 +22,7 @@ export class InstructorController {
         private _updateInstructorDataUseCase: IUpdateInstructorDataUseCase,
         private _updateInstructorPasswordUseCase: IUpdateUserPassword,
         private _applyForVerificationUseCase: IInstructorApplyForVeficationUseCase,
+        private _updateVerificationStatusUseCase:IUpdateBusinessVerificationStatusUseCase
 
     ) { }
 
@@ -31,13 +32,8 @@ export class InstructorController {
             console.log(query);
             
 
-            const { page, search, status, limit } = query
-            const result = await this._getInstructorsUseCase.execute({
-                page,
-                search,
-                status,
-                limit
-            });
+            const { page, search, status, limit ,verificationStatus} = query
+            const result = await this._getInstructorsUseCase.execute({page,search,status,limit,verificationStatus});
 
             const response: GetInstructorsResponseDTO = {
                 success: true,
@@ -55,7 +51,9 @@ export class InstructorController {
 
     updateInstructorStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            let id = req.user?.id
+            const id = req.body.id;
+            console.log(id);
+            
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -68,7 +66,7 @@ export class InstructorController {
 
     getInstructorProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -88,15 +86,14 @@ export class InstructorController {
 
     updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            const { name,designation,website,bio } = req.body;
 
-            const { data } = req.body;
-
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
-            await this._updateInstructorDataUseCase.execute(id, data);
+            await this._updateInstructorDataUseCase.execute(id, {name,designation,website,bio});
             const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
@@ -110,7 +107,7 @@ export class InstructorController {
 
             const { imageURL } = req.body;
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -128,7 +125,7 @@ export class InstructorController {
 
             const { expertise } = req.body;
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -146,7 +143,7 @@ export class InstructorController {
 
             const { resume } = req.body;
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -159,10 +156,28 @@ export class InstructorController {
         }
     }
 
+    updateIDProof = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+
+            const { identityProof } = req.body;
+
+            const id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            await this._updateInstructorDataUseCase.execute(id, { identityProof });
+            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
+            res.status(STATUS_CODES.OK).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
     updatePassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             const { currentPassword, newPassword } = req.body;
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -176,7 +191,7 @@ export class InstructorController {
     applyForVerification = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -190,6 +205,36 @@ export class InstructorController {
         }
     }
 
-    
+    getInstructorProfileForAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            const instructorData = await this._getInstructorData.execute(id);
+            const response: GetInstructorProfileResponseDTO = {
+                success: true,
+                message: MESSAGES.INSTRUCTOR_UPDATED,
+                instructor: InstructorDTOMapper.toGetInstructorProfile(instructorData)
+            };
+            res.status(STATUS_CODES.OK).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    updateVerificationStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const { id, status, remarks } = req.body;
+            await this._updateVerificationStatusUseCase.execute({ id, status, remarks });
+
+            const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
+            res.status(STATUS_CODES.CREATED).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
+
 

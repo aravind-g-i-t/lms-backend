@@ -9,10 +9,12 @@ export interface UserSignupResponseDTO {
 }
 
 export const UserSignupRequestSchema = z.object({
-    role: z.enum(["learner", "instructor", "business"]),
-    name: z.string().min(1, "Name is required"),
-    email: z.email("Invalid email format"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    body: z.object({
+        role: z.enum(["learner", "instructor", "business"]),
+        name: z.string().min(1, "Name is required"),
+        email: z.email("Invalid email format"),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+    })
 });
 
 export type UserSignupRequestDTO = z.infer<typeof UserSignupRequestSchema>;

@@ -1,12 +1,16 @@
 
-interface Business{
+export interface BusinessForListing{
     id: string;
     name: string;
     email: string;
     isActive: boolean;
-    planName:string;
+    planName?:string;
     employeeCount:number;
     profilePic?: string;
+    verification:{
+      status:string,
+      remarks:string|null
+    }
 }
 
 export interface GetBusinessesInput {
@@ -18,7 +22,7 @@ export interface GetBusinessesInput {
 }
 
 export interface GetBusinessesOutput {
-  businesses: Business[];   
+  businesses: BusinessForListing[];   
   totalPages: number;
   totalCount: number;
 }

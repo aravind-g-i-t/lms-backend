@@ -11,16 +11,16 @@ export interface InstructorDoc extends Document {
         status: "Not Submitted" | "Under Review" | "Verified" | "Rejected",
         remarks: string|null;
     };
-    rating?: number;
-    designation?: string;
-    password?: string;
-    profilePic?: string;
-    resume?: string;
-    googleId?: string;
-    website?: string;
-    bio?: string;
     createdAt: Date;
-
+    rating: number|null;
+    designation: string|null;
+    password: string|null;
+    profilePic: string|null;
+    resume: string|null;
+    googleId: string|null;
+    website: string|null;
+    bio: string|null;
+    identityProof:string|null;
 }
 
 const InstructorSchema = new Schema<InstructorDoc>({
@@ -41,14 +41,15 @@ const InstructorSchema = new Schema<InstructorDoc>({
             default:null
         }
     },
-    rating: { type: Number },
-    designation: { type: String },
-    password: { type: String },
-    profilePic: { type: String },
-    resume: { type: String },
-    googleId: { type: String },
-    website: { type: String },
-    bio: { type: String },
+    rating: { type: Number, default: null },
+    designation: { type: String, default: null },
+    password: { type: String, default: null },
+    profilePic: { type: String, default: null },
+    resume: { type: String, default: null },
+    googleId: { type: String, default: null },
+    website: { type: String, default: null },
+    bio: { type: String, default: null },
+    identityProof: { type: String, default: null }
 }, { timestamps: true });
 
 export const InstructorModel = model<InstructorDoc>("Instructor", InstructorSchema);

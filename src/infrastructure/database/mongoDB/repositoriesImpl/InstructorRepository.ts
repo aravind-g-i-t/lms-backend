@@ -2,10 +2,13 @@ import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository"
 import { InstructorModel } from "../models/InstructorModel";
 import { Instructor } from "@domain/entities/Instructor";
 import { InstructorMapper } from "../mappers/InstructorMapper";
-import { escapeRegExp } from "shared/utils/escapeRegExp";
-import { AppError } from "shared/errors/AppError";
-import { MESSAGES } from "shared/constants/messages";
-import { STATUS_CODES } from "shared/constants/httpStatus";
+
+
+type InstructorQuery = {
+  isActive?: boolean;
+  name?: { $regex: string; $options: string };
+  "verification.status"?: string;
+};
 
 export class InstructorRepositoryImpl implements IInstructorRepository {
     async findByEmail(email: string, allowPassword: false): Promise<Instructor | null> {
@@ -34,7 +37,7 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
 
 
     async findAll(
-        query: Record<string, any>,
+        query: InstructorQuery,
         options: { page: number; limit: number }
     ) {
         console.log("Entered findAll in instructorRepository");
@@ -64,11 +67,24 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
     }
 
 
-    async updateStatus(id: string): Promise<void> {
-        const instructor = await InstructorModel.findById(id).select("isActive");
-        if (!instructor) throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED, STATUS_CODES.NOT_FOUND, false)
+    async updateStatus(id: string): Promise<Instructor|null> {
+        console.log("entered repo");
+        
+        const instructor = await InstructorModel.findById(id);
+
+        console.log(instructor);
+        
+        if (!instructor){
+            return null
+        }
         instructor.isActive = !instructor.isActive;
-        await instructor.save()
+        await instructor.save();
+        if(!instructor){
+            return null
+        }
+        console.log(instructor);
+        
+        return InstructorMapper.toDomain(instructor);
     }
 
     async findByIdAndUpdate(id: string, learner: Partial<Instructor>, allowPassword: false): Promise<Instructor | null> {

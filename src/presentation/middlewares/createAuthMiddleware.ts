@@ -33,7 +33,7 @@ export const createAuthMiddleware = (tokenService: ITokenService,authorizationSe
 
     try{
         decoded  = await tokenService.verifyAccessToken(token);
-    }catch(err){
+    }catch{
         return res.status(401).json({ message: MESSAGES.INVALID_TOKEN });
     }
     console.log(decoded.role);

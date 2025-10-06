@@ -10,6 +10,7 @@ export interface Instructor{
         status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
         remarks:string|null;
     };
+    identityProof:string|null;
     rating:number|null;
     designation:string |null;
     password:string|null;
@@ -18,4 +19,5 @@ export interface Instructor{
     googleId:string|null;
     website:string|null;
     bio:string|null;
+
 }

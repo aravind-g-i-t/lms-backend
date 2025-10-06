@@ -19,5 +19,6 @@ export interface GetInstructorProfileDTO{
     designation:string|null;
     expertise:string[];
     resume:string|null;
-    rating:number|null
+    rating:number|null;
+    identityProof:string|null;
 }

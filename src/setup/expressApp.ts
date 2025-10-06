@@ -1,5 +1,5 @@
 import express from 'express';
-import type {Request,Response,NextFunction} from 'express'
+import type {Request,Response} from 'express'
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';

@@ -25,6 +25,7 @@ export class BusinessMapper {
       password: doc.password||null,
       profilePic: doc.profilePic||null,
       googleId:doc.googleId||null,
+      license:doc.license||null
     };
   }
   static toSecureDomain(doc: BusinessDoc): Business {
@@ -49,6 +50,7 @@ export class BusinessMapper {
       password:null,
       profilePic: doc.profilePic||null,
       googleId:doc.googleId||null,
+      license:doc.license||null
     };
   }
 

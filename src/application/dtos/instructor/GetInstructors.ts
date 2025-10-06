@@ -6,7 +6,11 @@ export interface GetInstructorsDTO {
     email: string;
     isActive: boolean;
     joiningDate:Date;
-    profilePic?: string;
+    profilePic: string|null;
+    verification:{
+        status:string,
+        remarks:string|null
+    }
     
 }
 
@@ -14,7 +18,7 @@ export interface GetInstructorsDTO {
 export interface GetInstructorsResponseDTO {
     success: boolean;
     message: string;
-    instructors?: GetInstructorsDTO[];
+    instructors: GetInstructorsDTO[];
     totalPages: number;
     totalCount: number;
 }
@@ -27,7 +31,11 @@ export const GetInstructorsRequestSchema = z.object({
         status: z.enum(["All","Active", "Blocked"]).transform((val) => {
             if (val === 'All') return undefined;
             if (val === "Active" || val === "Blocked") return val;
-        })
+        }),
+        verificationStatus: z.enum(["All","Not Submitted","Under Review","Verified","Rejected"]).transform((val) => {
+            if (val === 'All') return undefined;
+            if (val === "Not Submitted" || val === "Under Review"|| val === "Verified"|| val === "Rejected") return val;
+        }),
     }),
 });
 

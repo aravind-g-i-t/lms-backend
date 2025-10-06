@@ -35,7 +35,7 @@ export class VerifyEmailUseCase implements IVerifyEmailUseCase{
                 repository=this._businessRepository;
                 break;
         }
-        let user=await repository.findByEmail(email);
+        const user=await repository.findByEmail(email);
         if(!user){
             throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }

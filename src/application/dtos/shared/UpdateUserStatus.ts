@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 export const UpdateUserStatusRequestSchema = z.object({
-  id: z.string(), 
+  body: z.object({
+        id: z.string().min(1, "id is required")    
+    }),
 });
 
 

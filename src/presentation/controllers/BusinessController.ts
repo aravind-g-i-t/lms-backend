@@ -1,10 +1,8 @@
 import { Response, NextFunction } from "express";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
-import { GetBusinessesUseCase } from "@application/useCases/business/GetBusinesses";
 import { GetBusinessesRequestSchema, GetBusinessesResponseDTO } from "@application/dtos/business/GetBusinesses";
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
-import { UpdateBusinessStatusUseCase } from "@application/useCases/business/UpdateBusinessStatus";
 import { IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
 import { GetBusinessProfileResponseDTO } from "@application/dtos/business/GetProfile";
@@ -12,7 +10,10 @@ import { IGetBusinessDataUseCase } from "@application/IUseCases/business/IGetBus
 import { IUpdateBusinessDataUseCase } from "@application/IUseCases/business/IUpdateBusinessData";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
+
 import { AppError } from "shared/errors/AppError";
+import { IApplyForBusinessVeficationUseCase } from "@application/IUseCases/business/IBusinessApplyForVerification";
+import { IUpdateBusinessVerificationStatusUseCase } from "@application/IUseCases/business/IUpdateVerificationStatus";
 
 export class BusinessController {
     constructor(
@@ -20,29 +21,28 @@ export class BusinessController {
         private _updateBusinessStatusUseCase: IUpdateUserStatusUseCase,
         private _getBusinessDataUseCase: IGetBusinessDataUseCase,
         private _updateBusinessDataUseCase: IUpdateBusinessDataUseCase,
-        private _updateBusinessPasswordUseCase: IUpdateUserPassword
+        private _updateBusinessPasswordUseCase: IUpdateUserPassword,
+        private _applyForVerificationUseCase: IApplyForBusinessVeficationUseCase,
+        private _updateVerificationStatusUseCase: IUpdateBusinessVerificationStatusUseCase
     ) { }
 
     getBusinesses = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { query } = GetBusinessesRequestSchema.parse(req);
 
-            const { page, search, status, limit } = query
-            const result = await this._getBusinessesUseCase.execute({
-                page,
-                search,
-                status,
-                limit
-            });
+            const { page, search, status, limit, verificationStatus } = query
+            const result = await this._getBusinessesUseCase.execute({ page,search,status,limit,verificationStatus });
+            console.log(result);
 
-            const response = {
+
+
+            const response:GetBusinessesResponseDTO = {
                 success: true,
                 message: MESSAGES.BUSINESS_FETCHED,
                 businesses: result.businesses.map(business => BusinessDTOMapper.toGetBusinessesDTO(business)),
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
             }
-
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
             next(error)
@@ -51,11 +51,10 @@ export class BusinessController {
 
     updateBusinessStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            let id = req.user?.id
+            const id = req.body.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-
             await this._updateBusinessStatusUseCase.execute(id);
             res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.BUSINESS_UPDATED })
         } catch (error) {
@@ -65,7 +64,7 @@ export class BusinessController {
 
     getBusinessProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -84,14 +83,16 @@ export class BusinessController {
     updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
 
-            const { data } = req.body;
+            const { name,businessDomain,website,location } = req.body;
+            console.log("req.body",req.body);
+            
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
-            await this._updateBusinessDataUseCase.execute(id, data);
+            await this._updateBusinessDataUseCase.execute(id, {name,businessDomain,website,location});
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
@@ -104,12 +105,28 @@ export class BusinessController {
 
             const { imageURL } = req.body;
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-
             await this._updateBusinessDataUseCase.execute(id, { profilePic: imageURL });
+            const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            res.status(STATUS_CODES.OK).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    updateLicense = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+
+            const { license } = req.body;
+
+            const id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            await this._updateBusinessDataUseCase.execute(id, { license });
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
@@ -121,7 +138,7 @@ export class BusinessController {
         try {
             const { currentPassword, newPassword } = req.body;
 
-            let id = req.user?.id
+            const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -131,4 +148,54 @@ export class BusinessController {
             next(error)
         }
     }
+
+
+    applyForVerification = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+
+            const id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            await this._applyForVerificationUseCase.execute(id);
+
+            const response = { success: true, message: MESSAGES.SEND_VERIFICATION_SUCCESS };
+            res.status(STATUS_CODES.CREATED).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    getBusinessDataForAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            const result = await this._getBusinessDataUseCase.execute(id);
+            const response: GetBusinessProfileResponseDTO = {
+                success: true,
+                message: MESSAGES.BUSINESS_UPDATED,
+                business: BusinessDTOMapper.toGetBusinessProfileDTO(result)
+            };
+            res.status(STATUS_CODES.OK).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    updateVerificationStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const { id, status, remarks } = req.body;
+            await this._updateVerificationStatusUseCase.execute({ id, status, remarks });
+
+            const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            res.status(STATUS_CODES.CREATED).json(response)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }

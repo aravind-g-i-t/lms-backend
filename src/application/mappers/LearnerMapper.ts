@@ -1,5 +1,5 @@
 import { GetLearnersDTO } from "@application/dtos/learner/GetLearners";
-import { GetLearnerProfileDTO, GetLearnerProfileResponseDTO } from "@application/dtos/learner/GetProfile";
+import { GetLearnerProfileDTO } from "@application/dtos/learner/GetProfile";
 import {  UserSigninDTO } from "@application/dtos/shared/Signin";
 import { Learner } from "@domain/entities/Learner";
 

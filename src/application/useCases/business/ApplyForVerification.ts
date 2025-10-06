@@ -1,10 +1,10 @@
-import { IBusinessApplyForVeficationUseCase } from "@application/IUseCases/business/IBusinessApplyForVerification";
+import { IApplyForBusinessVeficationUseCase } from "@application/IUseCases/business/IBusinessApplyForVerification";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
-export class BusinessApplyForVeficationUseCase implements IBusinessApplyForVeficationUseCase{
+export class ApplyForBusinessVerificationUseCase implements IApplyForBusinessVeficationUseCase{
     constructor(
         private _businessRepository:IBusinessRepository
     ){}
@@ -14,7 +14,7 @@ export class BusinessApplyForVeficationUseCase implements IBusinessApplyForVefic
         if(!business){
             throw new AppError(MESSAGES.BUSINESS_NOT_FOUND,STATUS_CODES.NOT_FOUND,false)
         }
-        if(!business.name|| !business.businessDomain||!business.website|| !business.location){
+        if(!business.name|| !business.businessDomain||!business.website|| !business.location || !business.license){
             throw new AppError(MESSAGES.INCOMPLETE_PROFILE,STATUS_CODES.BAD_REQUEST)
         }
         const updated=await this._businessRepository.findByIdAndUpdate(id,{verification:{

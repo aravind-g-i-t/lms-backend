@@ -34,7 +34,7 @@ export const MESSAGES = {
     INSTRUCTOR_NOT_FOUND:"Instructor not found",
     INSTRUCTOR_NOT_UPDATED:"Failed to update instructor details. Please try again",
     SEND_VERIFICATION_SUCCESS:"Verification request submitted successfully.",
-    INCOMPLETE_PROFILE:"Cannot apply for verification. Please complete your instructor profile before submitting.",
+    INCOMPLETE_PROFILE:"Cannot apply for verification. Please complete your profile before submitting.",
 
     BUSINESS_CREATED: "Business account created successfully.",
     BUSINESS_UPDATED: "Business details updated successfully.",

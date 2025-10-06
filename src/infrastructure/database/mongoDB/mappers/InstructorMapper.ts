@@ -24,6 +24,7 @@ export class InstructorMapper {
             joiningDate: doc.createdAt,
             website: doc.website || null,
             bio: doc.bio || null,
+            identityProof:doc.identityProof||null
         };
     }
 
@@ -49,6 +50,7 @@ export class InstructorMapper {
             joiningDate: doc.createdAt,
             website: doc.website || null,
             bio: doc.bio || null,
+            identityProof:doc.identityProof||null
         };
     }
 }

@@ -20,7 +20,7 @@ export const connectMongoDB = async (): Promise<void> => {
         await mongoose.connect(uri);
 
     } catch (err) {
-        console.error('Mongo connection error');
+        console.error('Mongo connection error',err);
         process.exit(1);
     }
 };

@@ -7,7 +7,6 @@ import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 
-import { hashPassword } from "shared/utils/hash";
 
 
 export class OTPVerificationUseCase implements IUserOTPVerificationUseCase{

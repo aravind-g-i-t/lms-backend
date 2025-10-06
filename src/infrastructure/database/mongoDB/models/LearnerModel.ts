@@ -6,11 +6,11 @@ export interface LearnerDoc extends Document {
     email: string;
     walletBalance: number;
     isActive: boolean;
-    password?: string;
-    profilePic?: string;
-    googleId?:string;
-    bio?:string;
     createdAt:Date;
+    password: string|null;
+    profilePic: string|null;
+    googleId:string|null;
+    bio:string|null;
 }
 
 const LearnerSchema: Schema = new Schema(
@@ -19,10 +19,10 @@ const LearnerSchema: Schema = new Schema(
         email: { type: String, required: true, unique: true },
         walletBalance: { type: Number, required: true },
         isActive: { type: Boolean, required: true },
-        password: { type: String },
-        profilePic: { type: String },
-        googleId:{ type:String},
-        bio:{type:String}
+        password: { type: String ,default:null},
+        profilePic: { type: String ,default:null},
+        googleId:{ type:String,default:null},
+        bio:{type:String,default:null}
     },
     { timestamps: true }
 );

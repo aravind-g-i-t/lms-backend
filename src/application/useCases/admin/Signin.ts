@@ -1,4 +1,3 @@
-import { AdminSigninRequestDTO } from "@application/dtos/admin/Signin";
 import { IAdminSigninUseCase } from "@application/IUseCases/admin/ISignin";
 import { IAdminRepository } from "@domain/interfaces/IAdminRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
@@ -13,7 +12,7 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
         private _tokenService:ITokenService
     ){}
 
-    async execute({email,password}:AdminSigninRequestDTO){
+    async execute({email,password}:{email:string,password:string}){
         console.log("entered adminSignin useCase");
         
         const admin=await this._adminRepository.findByEmail(email);

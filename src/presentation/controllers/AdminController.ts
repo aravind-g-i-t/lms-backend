@@ -1,13 +1,11 @@
-import { RefreshTokenResponseDTO } from "@application/dtos/shared/RefreshToken";
+import { AdminSigninResponseDTO } from "@application/dtos/admin/Signin";
 import { IAdminSigninUseCase } from "@application/IUseCases/admin/ISignin";
 import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
 
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 import { NextFunction, Response } from "express";
-import { log } from "node:console";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
-import { AppError } from "shared/errors/AppError";
 
 export class AdminController {
     constructor(
@@ -19,7 +17,7 @@ export class AdminController {
         try {
             const {email,password}=req.body;
 
-            let result = await this._adminSigninUseCase.execute({email,password});
+            const result:AdminSigninResponseDTO = await this._adminSigninUseCase.execute({email,password});
 
 
             res.cookie("refreshToken", result.refreshToken, {
@@ -66,38 +64,36 @@ export class AdminController {
         }
     }
 
-    refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-        try {
+    // refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    //     try {
 
-            const refreshToken = req.cookies?.adminRefreshToken
+    //         const refreshToken = req.cookies?.adminRefreshToken
 
-            if (!refreshToken) {
-                res.status(STATUS_CODES.BAD_REQUEST).json({
-                    success: false,
-                    message: MESSAGES.SESSION_EXPIRED,
-                });
-                return;
-            }
-
-
-            const accessToken = await this._refreshTokenUseCase.execute(refreshToken);
-
-            const response: RefreshTokenResponseDTO = {
-                success: true,
-                message: MESSAGES.REFRESH_TOKEN_SUCCESS,
-                accessToken
-            }
-
-            res.status(STATUS_CODES.OK).json(response);
-        } catch (error) {
-            res.clearCookie("adminRefreshToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-            next(error)
-        }
-    }
+    //         if (!refreshToken) {
+    //             res.status(STATUS_CODES.BAD_REQUEST).json({
+    //                 success: false,
+    //                 message: MESSAGES.SESSION_EXPIRED,
+    //             });
+    //             return;
+    //         }
 
 
+    //         const accessToken = await this._refreshTokenUseCase.execute(refreshToken);
+
+    //         const response: RefreshTokenResponseDTO = {
+    //             success: true,
+    //             message: MESSAGES.REFRESH_TOKEN_SUCCESS,
+    //             accessToken
+    //         }
+
+    //         res.status(STATUS_CODES.OK).json(response);
+    //     } catch (error) {
+    //         res.clearCookie("adminRefreshToken", {
+    //             httpOnly: true,
+    //             secure: process.env.NODE_ENV === "production",
+    //             sameSite: "strict",
+    //         });
+    //         next(error)
+    //     }
+    // }
 }

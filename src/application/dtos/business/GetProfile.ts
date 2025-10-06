@@ -18,6 +18,7 @@ export interface GetBusinessProfileDTO{
     location:string|null;
     profilePic:string|null;
     hasPassword:boolean;
+    license:string|null
 }
 
 

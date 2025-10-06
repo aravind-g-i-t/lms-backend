@@ -13,7 +13,7 @@ export class CacheService implements ICacheService{
         })
     }
 
-    async get<T = any>(key: string): Promise<T | null> {
+    async get<T>(key: string): Promise<T | null> {
         const data=await this.redisClient.get(key);
         return data?JSON.parse(data) as T:null
     }

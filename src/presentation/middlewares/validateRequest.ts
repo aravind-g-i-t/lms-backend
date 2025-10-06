@@ -1,6 +1,5 @@
 import { ZodType, ZodError, TypeOf } from "zod";
 import { Request, Response, NextFunction } from "express";
-import { MESSAGES } from "shared/constants/messages";
 
 export const validateRequest =
   <T extends ZodType<any, any>>(schema: T) =>
@@ -11,10 +10,6 @@ export const validateRequest =
         query: req.query,
         params: req.params,
       });
-
-      // req.body = parsed.body ?? req.body;
-      // req.query = parsed.query ?? req.query;
-      // req.params = parsed.params ?? req.params;
 
 
        if (parsed.body) Object.assign(req.body, parsed.body);
@@ -29,8 +24,7 @@ export const validateRequest =
         
         return res.status(400).json({
           success: false,
-          message:MESSAGES.SERVER_ERROR,
-          error: err.message,
+          message:err.message,
         });
       }
       next(err);

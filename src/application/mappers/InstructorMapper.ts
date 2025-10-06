@@ -10,7 +10,7 @@ export class InstructorDTOMapper {
             profilePic: entity.profilePic,
         }
     }
-    static toGetInstructorsDTO(entity: any): GetInstructorsDTO {
+    static toGetInstructorsDTO(entity: Instructor): GetInstructorsDTO {
         return {
             id: entity.id,
             name: entity.name,
@@ -18,8 +18,7 @@ export class InstructorDTOMapper {
             isActive: entity.isActive,
             joiningDate: entity.joiningDate,
             profilePic: entity.profilePic,
-
-
+            verification: entity.verification
         }
     }
 
@@ -29,14 +28,15 @@ export class InstructorDTOMapper {
             email: entity.email,
             joiningDate: entity.joiningDate,
             profilePic: entity.profilePic,
-            website:entity.website,
-            verification:entity.verification,
-            hasPassword:entity.password?true:false,
-            bio:entity.bio,
-            designation:entity.designation,
-            expertise:entity.expertise,
-            resume:entity.resume,
-            rating:entity.rating
+            website: entity.website,
+            verification: entity.verification,
+            hasPassword: entity.password ? true : false,
+            bio: entity.bio,
+            designation: entity.designation,
+            expertise: entity.expertise,
+            resume: entity.resume,
+            rating: entity.rating,
+            identityProof: entity.identityProof
         }
     }
 }

@@ -18,6 +18,8 @@ export const ROUTES = {
     IMAGE:"/profile/image",
     EXPERTISE:"/profile/expertise",
     RESUME:"/profile/resume",
+    ID_PROOF:"/profile/identity-proof",
+    LICENSE:"/profile/license",
     PASSWORD:"/password",
     VERIFICATION:"/verification",
     
@@ -27,5 +29,11 @@ export const ROUTES = {
     LEARNER_STATUS:"/learner/status",
     INSTRUCTOR_STATUS:"/instructor/status",
     BUSINESS_STATUS:"/business/status",
-    REFRESH:"/refresh"
+    INSTRUCTOR_VERIFICATION:"/instructor/verification",
+    BUSINESS_VERIFICATION:"/business/verification",
+    REFRESH:"/refresh",
+    LEARNER_DATA:"/learner/:id",
+    INSTRUCTOR_DATA:"/instructor/:id",
+    BUSINESS_DATA:"/business/:id",
+
 } as const;

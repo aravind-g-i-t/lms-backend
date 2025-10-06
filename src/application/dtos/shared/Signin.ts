@@ -4,16 +4,18 @@ import { Role } from "shared/types/common";
 export interface UserSigninDTO {
     id: string;
     name: string;
-    profilePic: string|null;
+    profilePic: string | null;
 
 }
 
 
 
 export const UserSigninRequestSchema = z.object({
-    role: z.enum(["learner", "instructor", "business"]),
-    email: z.email("Invalid email format"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    body: z.object({
+        role: z.enum(["learner", "instructor", "business"]),
+        email: z.email("Invalid email format"),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+    })
 });
 
 
@@ -22,7 +24,7 @@ export interface UserSigninResponseDTO {
     success: boolean;
     message: string;
     role: Role;
-    user:  UserSigninDTO;
+    user: UserSigninDTO;
     accessToken: string;
 }
 

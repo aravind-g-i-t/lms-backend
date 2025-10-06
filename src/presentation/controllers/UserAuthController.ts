@@ -1,5 +1,4 @@
 
-import { OTPVerificationResponseDTO } from "@application/dtos/shared/OTPVerification";
 import { RefreshTokenResponseDTO } from "@application/dtos/shared/RefreshToken";
 import { UserSigninResponseDTO } from "@application/dtos/shared/Signin";
 import { UserSignupResponseDTO } from "@application/dtos/shared/Signup";
@@ -20,7 +19,7 @@ import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 
-import { Request, Response, NextFunction } from "express"
+import { Response, NextFunction } from "express"
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
@@ -81,19 +80,21 @@ export class UserAuthController {
         }
     }
 
+
     verifyOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { role } = req.body;
+            
+            const { role,email,otp } = req.body;
             let message;
             if (role === 'learner') {
                 message=MESSAGES.LEARNER_CREATED
-                await this._learnerOTPVerificationUseCase.execute(req.body)
+                await this._learnerOTPVerificationUseCase.execute({email,otp})
             } else if (role === 'instructor') {
                 message=MESSAGES.INSTRUCTOR_CREATED
-                await this._instructorOTPVerificationUseCase.execute(req.body)
+                await this._instructorOTPVerificationUseCase.execute({email,otp})
             } else {
                 message=MESSAGES.BUSINESS_CREATED
-                await this._businessOTPVerificationUseCase.execute(req.body)
+                await this._businessOTPVerificationUseCase.execute({email,otp})
             }
             res.status(STATUS_CODES.CREATED).json({success:true,message});
 
@@ -105,7 +106,7 @@ export class UserAuthController {
     resendOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const email = req.body.email;
-            let result = await this._resendOTPUseCase.execute(email)
+            const result = await this._resendOTPUseCase.execute(email)
             res.status(STATUS_CODES.OK).json({
                 success: true,
                 message: true,
@@ -292,7 +293,7 @@ export class UserAuthController {
     verifyEmail = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             const {email,role} = req.body;
-            let result = await this._verifyEmailUseCase.execute(email,role)
+            const result = await this._verifyEmailUseCase.execute(email,role)
             res.status(STATUS_CODES.OK).json({
                 success: true,
                 message: 'Email verification successful.',
@@ -306,6 +307,7 @@ export class UserAuthController {
 
     verifyResetOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            
             const {email,otp} = req.body;
             await this._otpVerificationUseCase.execute({otp,email})
             res.status(STATUS_CODES.OK).json({

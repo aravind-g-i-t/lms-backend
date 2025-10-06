@@ -11,6 +11,7 @@ export interface Business{
     };
     businessDomain:string|null;
     website:string|null;
+    license:string|null;
     location:string|null;
     planId:string|null;
     planStartDate:Date|null;

@@ -3,10 +3,7 @@ import { z } from 'zod'
 
 export const UpdateLearnerProfileRequestSchema = z.object({
     body: z.object({
-        data: z.object({
-            name: z.string().optional(),
-            imageURL: z.string().optional(), 
-        }),
+        name: z.string().optional(),
     }),
 });
 

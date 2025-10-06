@@ -2,11 +2,14 @@ import { ILearnerRepository } from '@domain/interfaces/ILearnerRepository';
 import { LearnerModel } from '../models/LearnerModel';
 import { Learner } from '@domain/entities/Learner';
 import { LearnerMapper } from '../mappers/LearnerMapper';
-import { escapeRegExp } from 'shared/utils/escapeRegExp';
 import { AppError } from 'shared/errors/AppError';
 import { MESSAGES } from 'shared/constants/messages';
 import { STATUS_CODES } from 'shared/constants/httpStatus';
 
+type LearnerQuery = {
+  isActive?: boolean;
+  name?: { $regex: string; $options: string };
+};
 
 export class LearnerRepositoryImpl implements ILearnerRepository {
     async findByEmail(email: string, allowPassword: false): Promise<Learner | null> {
@@ -37,7 +40,7 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
         return allowPassword ? LearnerMapper.toDomain(doc) : LearnerMapper.toSecureDomain(doc);
     }
 
-    async findAll(query: Record<string, any>,
+    async findAll(query: LearnerQuery,
         options: { page: number; limit: number }) {
         const { page, limit } = options;
         const skip = (page - 1) * limit;

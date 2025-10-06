@@ -3,7 +3,11 @@ import { GetInstructorsInput, GetInstructorsOutput, IGetInstructorsUseCase } fro
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
-
+type InstructorQuery = {
+  isActive?: boolean;
+  name?: { $regex: string; $options: string };
+  "verification.status"?: string;
+};
 
 
 export class GetInstructorsUseCase implements IGetInstructorsUseCase {
@@ -13,8 +17,10 @@ export class GetInstructorsUseCase implements IGetInstructorsUseCase {
 
     async execute(input:GetInstructorsInput):Promise<GetInstructorsOutput>{
         const {page,search,status,limit,verificationStatus}=input;
+        console.log("useCase input:",input);
         
-        const query:any={};
+        
+        const query:InstructorQuery={};
         if(status){
             query.isActive=status==="Active"
         }

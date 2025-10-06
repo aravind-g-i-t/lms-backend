@@ -6,7 +6,7 @@ export interface GetLearnersInput {
   limit: number;
   search?: string;
   status?: "Active" | "Blocked";
-  verificationStatus?:"Not Submitted"|"Under Review"|"Verified"|"Rejected";
+
 }
 
 export interface GetLearnersOutput {

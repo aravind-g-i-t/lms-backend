@@ -5,6 +5,8 @@ import { UpdateBusinessStatusUseCase } from "@application/useCases/business/Upda
 import { GetBusinessDataUseCase } from "@application/useCases/business/GetBusinessData";
 import { UpdateBusinessDataUseCase } from "@application/useCases/business/UpdateBusinessData";
 import { UpdateBusinessPasswordUseCase } from "@application/useCases/business/UpdatePassword";
+import { ApplyForBusinessVerificationUseCase } from "@application/useCases/business/ApplyForVerification";
+import { UpdateBusinessVerificationStatusUseCase } from "@application/useCases/business/UpdateVerificationStatus";
 
 const getBusinessesUseCase=new GetBusinessesUseCase(businessRepository)
 
@@ -14,6 +16,10 @@ const getBusinessesDataUseCase=new GetBusinessDataUseCase(businessRepository);
 
 const updateBususinessDataUseCase=new UpdateBusinessDataUseCase(businessRepository);
 
-const updateBusinessPasswordUseCase=new UpdateBusinessPasswordUseCase(businessRepository)
+const updateBusinessPasswordUseCase=new UpdateBusinessPasswordUseCase(businessRepository);
 
-export const businessController=new BusinessController(getBusinessesUseCase,updateBusinessStatusUseCase,getBusinessesDataUseCase,updateBususinessDataUseCase,updateBusinessPasswordUseCase);
+const applyForBusinessVerificaton=new ApplyForBusinessVerificationUseCase(businessRepository);
+
+const updateVerificationStatusUseCase=new UpdateBusinessVerificationStatusUseCase(businessRepository)
+
+export const businessController=new BusinessController(getBusinessesUseCase,updateBusinessStatusUseCase,getBusinessesDataUseCase,updateBususinessDataUseCase,updateBusinessPasswordUseCase,applyForBusinessVerificaton,updateVerificationStatusUseCase);

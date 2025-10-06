@@ -2,41 +2,60 @@ import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { BusinessModel } from "../models/BusinessModel";
 import { Business } from "@domain/entities/Business";
 import { BusinessMapper } from "../mappers/BusinessMapper";
-import { escapeRegExp } from "shared/utils/escapeRegExp";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
+type BusinessQuery = {
+    isActive?: boolean;
+    name?: { $regex: string; $options: string };
+    "verification.status"?: string;
+};
+
+interface GetAllBusiness {
+    id: string;
+    name: string;
+    email: string;
+    isActive: boolean;
+    planName?: string;
+    employeeCount: number;
+    profilePic?: string;
+    verification: {
+        status: string,
+        remarks: string | null
+    }
+}
+
 export class BusinessRepositoryImpl implements IBusinessRepository {
 
-    async findByEmail(email: string,allowPassword:false): Promise<Business | null> {
+    async findByEmail(email: string, allowPassword: false): Promise<Business | null> {
         const doc = await BusinessModel.findOne({ email }).lean();
-        if(!doc){
+        if (!doc) {
             return null
         }
-        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+        return allowPassword ? BusinessMapper.toDomain(doc) : BusinessMapper.toSecureDomain(doc);
     }
 
-    async create(businessInput: Partial<Business>,allowPassword:false): Promise<Business> {
+    async create(businessInput: Partial<Business>, allowPassword: false): Promise<Business> {
 
         const doc = new BusinessModel(businessInput);
 
         await doc.save();
 
-        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+        return allowPassword ? BusinessMapper.toDomain(doc) : BusinessMapper.toSecureDomain(doc);
     }
 
 
-    async findById(id: string,allowPassword:false): Promise<Business | null> {
+    async findById(id: string, allowPassword: false): Promise<Business | null> {
         const doc = await BusinessModel.findById(id);
-        if(!doc){
+        if (!doc) {
             return null
         }
-        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+        return allowPassword ? BusinessMapper.toDomain(doc) : BusinessMapper.toSecureDomain(doc);
     }
 
-    async findAll(query: Record<string, any>,
-        options: { page: number; limit: number }) {
+    async findAll(query: BusinessQuery,
+        options: { page: number; limit: number }):Promise<{businesses: GetAllBusiness[]; totalPages: number; totalCount: number }> {
         const { page, limit } = options;
         const skip = (page - 1) * limit;
         const result = await BusinessModel.aggregate([
@@ -66,7 +85,7 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
                                 profilePic: 1,
                                 employeeCount: { $size: "$employees" },
                                 planName: "$plan.name",
-                                verification:1
+                                verification: 1
                             }
                         }
                     ],
@@ -99,28 +118,28 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
         await business.save()
     }
 
-    async findByIdAndUpdate(id: string, learner: Partial<Business>,allowPassword:false): Promise<Business | null> {
+    async findByIdAndUpdate(id: string, learner: Partial<Business>, allowPassword: false): Promise<Business | null> {
         const doc = await BusinessModel.findByIdAndUpdate(id, { $set: learner }, { new: true }).lean();
 
-        if(!doc){
+        if (!doc) {
             return null
         }
-        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+        return allowPassword ? BusinessMapper.toDomain(doc) : BusinessMapper.toSecureDomain(doc);
     }
 
-    async findOne(params: Partial<Business>,allowPassword:false): Promise<Business | null> {
+    async findOne(params: Partial<Business>, allowPassword: false): Promise<Business | null> {
         const doc = await BusinessModel.findOne(params);
-        if(!doc){
+        if (!doc) {
             return null
         }
-        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+        return allowPassword ? BusinessMapper.toDomain(doc) : BusinessMapper.toSecureDomain(doc);
     }
 
-    async updateOne(filter: Partial<Business>, update: Partial<Business>,allowPassword:false): Promise<Business | null> {
+    async updateOne(filter: Partial<Business>, update: Partial<Business>, allowPassword: false): Promise<Business | null> {
         const doc = await BusinessModel.findOneAndUpdate(filter, { $set: update }, { new: true });
-        if(!doc){
+        if (!doc) {
             return null
         }
-        return allowPassword ? BusinessMapper.toDomain(doc) :BusinessMapper.toSecureDomain(doc) ;
+        return allowPassword ? BusinessMapper.toDomain(doc) : BusinessMapper.toSecureDomain(doc);
     }
 }

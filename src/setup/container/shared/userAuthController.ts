@@ -19,9 +19,9 @@ import { GoogleAuthService } from "@infrastructure/services/GoogleAuthService";
 import { InstructorGoogleSigninUseCase } from "@application/useCases/instructor/GoogleSignin";
 import { BusinessGoogleSigninUseCase } from "@application/useCases/business/GoogleSignin";
 import { VerifyEmailUseCase } from "@application/useCases/shared/VerifyEmail";
-import { email } from "zod";
 import { OTPVerificationUseCase } from "@application/useCases/shared/VerifyOTP";
 import { ResetPasswordUseCase } from "@application/useCases/shared/ResetPassword";
+import { adminRepository } from "../admin/adminController";
 
 
 
@@ -42,7 +42,7 @@ const instructorSigninUseCase=new InstructorSigninUseCase(instructorRepository,t
 
 const businessSigninUseCase=new BusinessSigninUseCase(businessRepository,tokenService);
 
-const userRefreshTokenUseCase=new UserRefreshTokenUseCase(tokenService,learnerRepository,instructorRepository,businessRepository);
+const userRefreshTokenUseCase=new UserRefreshTokenUseCase(tokenService,learnerRepository,instructorRepository,businessRepository,adminRepository);
 
 const googleAuthService=new GoogleAuthService()
 

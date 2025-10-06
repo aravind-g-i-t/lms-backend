@@ -11,7 +11,7 @@ export class InstructorApplyForVeficationUseCase implements IInstructorApplyForV
 
     async execute(id: string): Promise<void> {
         const instructor =await this._instructorRepository.findById(id);
-        if(!instructor?.name|| !instructor.expertise.length||!instructor.designation|| !instructor.resume|| !instructor.website||!instructor.bio){
+        if(!instructor?.name|| !instructor.expertise.length||!instructor.designation|| !instructor.resume|| !instructor.website||!instructor.bio||!instructor.identityProof){
             throw new AppError(MESSAGES.INCOMPLETE_PROFILE,STATUS_CODES.BAD_REQUEST)
         }
         const updated=await this._instructorRepository.findByIdAndUpdate(id,{verification:{

@@ -7,6 +7,7 @@ export class CacheService implements ICacheService{
         private redisClient:RedisClientType
     ){}
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async set(key: string, value: any, ttlSeconds: number): Promise<void> {
         await this.redisClient.set(key,JSON.stringify(value),{
             EX:ttlSeconds

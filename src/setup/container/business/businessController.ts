@@ -10,6 +10,7 @@ import { UpdateBusinessVerificationStatusUseCase } from "@application/useCases/b
 
 const getBusinessesUseCase=new GetBusinessesUseCase(businessRepository)
 
+
 const updateBusinessStatusUseCase=new UpdateBusinessStatusUseCase(businessRepository);
 
 const getBusinessesDataUseCase=new GetBusinessDataUseCase(businessRepository);

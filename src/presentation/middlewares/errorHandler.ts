@@ -10,6 +10,7 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
+  
   if (err instanceof AppError && err.isOperational) {
     return res.status(err.statusCode).json({
       success: false,

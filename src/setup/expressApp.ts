@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import router from '@presentation/routes/appRouter';
 import { errorHandler } from '@presentation/middlewares/errorHandler';
 
+
 const env=process.env.NODE_ENV || 'production'
 dotenv.config({path: `.env.${env}`});
 
@@ -27,6 +28,7 @@ app.use('/api/v1',router);
 app.use((req:Request,res:Response)=>{
     res.status(404).json({message:'Route not found'})
 })
+
 
 app.use(errorHandler);
 

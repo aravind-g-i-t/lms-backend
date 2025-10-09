@@ -10,6 +10,9 @@ import { AppError } from "shared/errors/AppError";
 import { generateOTP } from "shared/utils/generateOTP";
 
 
+const OTP_TTL = parseInt(process.env.OTP_TTL_SECONDS || "120", 10);
+const SIGNUPDATA_TTL = parseInt(process.env.SIGNUPDATA_TTL_SECONDS || "600", 10);
+
 export class UserSignupUseCase implements IUserSignupUseCase{
     constructor(
         private learnerRepository:ILearnerRepository,
@@ -54,8 +57,8 @@ export class UserSignupUseCase implements IUserSignupUseCase{
             const signupDataKey=`${email}:signup`;
             console.log(this.cacheService);
             
-            await this.cacheService.set(signupDataKey,signupInput,600);
-            await this.cacheService.set(otpKey,otp,120);
+            await this.cacheService.set(signupDataKey,signupInput,SIGNUPDATA_TTL);
+            await this.cacheService.set(otpKey,otp,OTP_TTL);
             const otpExpiresAt=new Date(Date.now() + 2 * 60 * 1000)
             return {email,otpExpiresAt,role}
 

@@ -23,11 +23,8 @@ export class OTPVerificationUseCase implements IUserOTPVerificationUseCase{
             throw new AppError(MESSAGES.OTP_EXPIRED, STATUS_CODES.GONE)
 
         }
-    
         if (otp !== userOTP) {
             throw new AppError(MESSAGES.INVALID_OTP, STATUS_CODES.UNAUTHORIZED)
         }
-        
     }
-
 }

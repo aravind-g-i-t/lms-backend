@@ -9,7 +9,11 @@ import { STATUS_CODES } from "shared/constants/httpStatus";
 import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 
 
-
+interface SignupData{
+    name:string,
+    email:string,
+    password:string
+}
 
 export class BusinessOTPVerificationUseCase implements IUserOTPVerificationUseCase{
     constructor(
@@ -19,11 +23,11 @@ export class BusinessOTPVerificationUseCase implements IUserOTPVerificationUseCa
 
     async execute(input: {email:string,otp:string}): Promise<void> {            
         const { email, otp } = input;
-        const userOTP = await this._cacheService.get(`${email}:otp`)
+        const userOTP = await this._cacheService.get<string>(`${email}:otp`)
         if (!userOTP) {
             throw new AppError(MESSAGES.OTP_EXPIRED,STATUS_CODES.GONE);
         }
-        const user = await this._cacheService.get(`${email}:signup`)
+        const user = await this._cacheService.get<SignupData>(`${email}:signup`)
         if (!user) {
             throw new AppError(MESSAGES.SIGNUP_TIMEOUT,STATUS_CODES.REQUEST_TIMEOUT);
         }

@@ -2,6 +2,7 @@ import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository"
 import { InstructorModel } from "../models/InstructorModel";
 import { Instructor } from "@domain/entities/Instructor";
 import { InstructorMapper } from "../mappers/InstructorMapper";
+import { logger } from "@infrastructure/logging/Logger";
 
 
 type InstructorQuery = {
@@ -14,15 +15,22 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
     async findByEmail(email: string, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findOne({ email }).lean();
         if (!doc) {
+            logger.warn("Failed to fetch Instructor")
             return null
         }
+        logger.info("Failed to fetch Instructor." )
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
-    async create(instructorInput: Partial<Instructor>, allowPassword: false): Promise<Instructor> {
+    async create(instructorInput: Partial<Instructor>, allowPassword: false): Promise<Instructor|null> {
         const doc = new InstructorModel(instructorInput);
         await doc.save();
+        if(!doc){
 
+            logger.warn("Instructor creation failed.")
+            return null;
+        }
+        logger.info("Instructor created successfully")
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
@@ -30,6 +38,7 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
     async findById(id: string, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findById(id);
         if (!doc) {
+            logger.warn("Failed to fetch Instructor")
             return null
         }
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
@@ -40,8 +49,6 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
         query: InstructorQuery,
         options: { page: number; limit: number }
     ) {
-        console.log("Entered findAll in instructorRepository");
-        console.log(query,options);
         
         const { page, limit } = options;
         const skip = (page - 1) * limit;
@@ -56,9 +63,8 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
             InstructorModel.countDocuments(query)
         ]);
         
-        console.log(docs);
         const instructors = docs.map(doc => InstructorMapper.toDomain(doc));
-        
+        logger.info("Instructors fetched successfully")
         return {
             instructors,
             totalPages: Math.ceil(totalCount / limit),
@@ -68,21 +74,20 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
 
 
     async updateStatus(id: string): Promise<Instructor|null> {
-        console.log("entered repo");
         
         const instructor = await InstructorModel.findById(id);
 
-        console.log(instructor);
         
         if (!instructor){
+            logger.warn("Failed to fetch Instructor for status update")
             return null
         }
         instructor.isActive = !instructor.isActive;
         await instructor.save();
         if(!instructor){
+            logger.info('Instructor status updated successfully')
             return null
         }
-        console.log(instructor);
         
         return InstructorMapper.toDomain(instructor);
     }
@@ -91,25 +96,32 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
         const doc = await InstructorModel.findByIdAndUpdate(id, { $set: learner }, { new: true }).lean();
 
         if (!doc) {
+            logger.warn("Failed to update instructor")
             return null
         }
+        logger.info("Updated instructor successfully")
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
     async findOne(params: Partial<Instructor>, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findOne(params).lean();
         if (!doc) {
-            return null
+            logger.warn("Failed to fetch insturctor.")
+            return null;
         }
+        logger.info("Instructor fetched successfully")
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
     async updateOne(filter: Partial<Instructor>, update: Partial<Instructor>, allowPassword: false): Promise<Instructor | null> {
         const doc = await InstructorModel.findOneAndUpdate(filter, { $set: update }, { new: true });
         if (!doc) {
-            return null
+            logger.warn('Failed to update Instructor')
+            return null;
         }
-        return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
+        logger.info("Updated instructor successfully")
+        return allowPassword
+         ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 }
 

@@ -10,16 +10,13 @@ export class UpdateLearnerPasswordUseCase implements IUpdateUserPassword{
         private _learnerRepository:ILearnerRepository
     ){}
     async execute(id:string,currentPassword:string,newPassword:string):Promise<void>{
-        console.log(id,currentPassword,newPassword);
         
         const learner=await this._learnerRepository.findById(id,true);
-        console.log('learner',learner);
         
         if(!learner?.password){
             throw new AppError(MESSAGES.UNAUTHORIZED,STATUS_CODES.UNAUTHORIZED)
         }
         const passwordMatch= await comparePassword(currentPassword,learner?.password);
-        console.log('passwordMatch',passwordMatch);
         if(!passwordMatch){
             throw new AppError(MESSAGES.INCORRECT_PASSWORD,STATUS_CODES.UNAUTHORIZED)
         }

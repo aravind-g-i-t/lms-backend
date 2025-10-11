@@ -6,7 +6,7 @@ import { GetInstructorDataUseCase } from "@application/useCases/instructor/GetIn
 import { UpdateInstructorPasswordUseCase } from "@application/useCases/instructor/UpdatePassword";
 import { UpdateInstructorDataUseCase } from "@application/useCases/instructor/UpdateInstructorData";
 import { InstructorApplyForVeficationUseCase } from "@application/useCases/instructor/ApplyForVerification";
-import { UpdateInstructorVerificationStatusUseCase } from "@application/useCases/instructor/updateVerificationStatus";
+import { UpdateInstructorVerificationStatusUseCase } from "@application/useCases/instructor/UpdateVerificationStatus";
 
 const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository);
 

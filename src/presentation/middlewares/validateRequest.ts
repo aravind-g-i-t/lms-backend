@@ -2,6 +2,7 @@ import { ZodType, ZodError, TypeOf } from "zod";
 import { Request, Response, NextFunction } from "express";
 
 export const validateRequest =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   <T extends ZodType<any, any>>(schema: T) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -19,9 +20,6 @@ export const validateRequest =
       next();
     } catch (err) {
       if (err instanceof ZodError) {
-        console.log(err);
-        
-        
         return res.status(400).json({
           success: false,
           message:err.message,

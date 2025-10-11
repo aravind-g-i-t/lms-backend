@@ -15,7 +15,6 @@ export class BusinessSigninUseCase implements IBusinessSigninUseCase{
     ) { }
 
     async execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}):Promise<BusinessSigninUseCaseOutput> {
-            console.log('usecase');
 
             const {email,password,role}=input;
 

@@ -14,6 +14,7 @@ import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddle
 import { AppError } from "shared/errors/AppError";
 import { IApplyForBusinessVeficationUseCase } from "@application/IUseCases/business/IBusinessApplyForVerification";
 import { IUpdateBusinessVerificationStatusUseCase } from "@application/IUseCases/business/IUpdateVerificationStatus";
+import { logger } from "@infrastructure/logging/Logger";
 
 export class BusinessController {
     constructor(
@@ -28,13 +29,11 @@ export class BusinessController {
 
     getBusinesses = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("Request recieved to get businesses for listing");
             const { query } = GetBusinessesRequestSchema.parse(req);
 
             const { page, search, status, limit, verificationStatus } = query
             const result = await this._getBusinessesUseCase.execute({ page,search,status,limit,verificationStatus });
-            console.log(result);
-
-
 
             const response:GetBusinessesResponseDTO = {
                 success: true,
@@ -43,27 +42,34 @@ export class BusinessController {
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
             }
+            logger.info("Business fetched for listing successfully.")
             res.status(STATUS_CODES.OK).json(response);
+
         } catch (error) {
+            logger.warn("Failed to fetch businesses for listing.")
             next(error)
         }
     }
 
     updateBusinessStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            logger.info("Request recieved to update business status");
             const id = req.body.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             await this._updateBusinessStatusUseCase.execute(id);
+            logger.info("Updated business status successfully.");
             res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.BUSINESS_UPDATED })
         } catch (error) {
+        logger.warn("Failed to update business status")
             next(error)
         }
     }
 
     getBusinessProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            logger.info("Request recieved to get business data for profile.");
             const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -74,18 +80,18 @@ export class BusinessController {
                 message: MESSAGES.BUSINESS_UPDATED,
                 business: BusinessDTOMapper.toGetBusinessProfileDTO(result)
             };
+            logger.info("Business data fetched successfully");
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
+            logger.warn("Failed to get business data for profile.")
             next(error)
         }
     }
 
     updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-
-            const { name,businessDomain,website,location } = req.body;
-            console.log("req.body",req.body);
-            
+            logger.info("Request recieved to update business profile");
+            const { name,businessDomain,website,location } = req.body;            
 
             const id = req.user?.id
             if (!id) {
@@ -94,15 +100,17 @@ export class BusinessController {
 
             await this._updateBusinessDataUseCase.execute(id, {name,businessDomain,website,location});
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            logger.info("Business profile updated successfully");
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
+            logger.warn("Failed to update business profile")
             next(error)
         }
     }
 
     updateProfileImage = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-
+            logger.info("Request recieved to update business profile image.");
             const { imageURL } = req.body;
 
             const id = req.user?.id
@@ -111,15 +119,17 @@ export class BusinessController {
             }
             await this._updateBusinessDataUseCase.execute(id, { profilePic: imageURL });
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            logger.info("Business profile image updated successfully");
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
+            logger.warn("Failed to update business profile image.")
             next(error)
         }
     }
 
     updateLicense = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-
+            logger.info("Request recieved to update business license.")
             const { license } = req.body;
 
             const id = req.user?.id
@@ -128,14 +138,17 @@ export class BusinessController {
             }
             await this._updateBusinessDataUseCase.execute(id, { license });
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            logger.info("Business license updated successfully.")
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
+            logger.warn("Failed to update business license.")
             next(error)
         }
     }
 
     updatePassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            logger.info("Request recieved to update business password.");
             const { currentPassword, newPassword } = req.body;
 
             const id = req.user?.id
@@ -143,8 +156,10 @@ export class BusinessController {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             await this._updateBusinessPasswordUseCase.execute(id, currentPassword, newPassword);
+            logger.info("Business password updated successfully");
             res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.BUSINESS_UPDATED })
         } catch (error) {
+            logger.warn("Failed to update business password.")
             next(error)
         }
     }
@@ -152,7 +167,7 @@ export class BusinessController {
 
     applyForVerification = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-
+            logger.info("Request recieved to apply for business verification.")
             const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -161,14 +176,17 @@ export class BusinessController {
             await this._applyForVerificationUseCase.execute(id);
 
             const response = { success: true, message: MESSAGES.SEND_VERIFICATION_SUCCESS };
+            logger.info("Applied for Business verification successfully.")
             res.status(STATUS_CODES.CREATED).json(response)
         } catch (error) {
+            logger.warn("Failed to apply for Business verification.")
             next(error)
         }
     }
 
     getBusinessDataForAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            logger.info("Request recieved to fetch business data for admin.")
             const id = req.params.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -179,8 +197,11 @@ export class BusinessController {
                 message: MESSAGES.BUSINESS_UPDATED,
                 business: BusinessDTOMapper.toGetBusinessProfileDTO(result)
             };
+            logger.info("Business data fetched successfully.")
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
+            logger.warn("Failed to fetch business data for admin");
+            
             next(error)
         }
     }
@@ -188,12 +209,15 @@ export class BusinessController {
 
     updateVerificationStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
+            logger.info("Request recieved to update business verification status.")
             const { id, status, remarks } = req.body;
             await this._updateVerificationStatusUseCase.execute({ id, status, remarks });
 
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            logger.info("Business verification status updated successfully.")
             res.status(STATUS_CODES.CREATED).json(response)
         } catch (error) {
+            logger.warn("Failed to update business verification status.")
             next(error)
         }
     }

@@ -17,7 +17,6 @@ export class BusinessGoogleSigninUseCase implements IBusinessGoogleSigninUseCase
     async execute(token: string):Promise<BusinessGoogleSigninOutput> {
         const userInfo = await this._googleAuthService.getUserInfo(token);
         const { sub, email, name, picture } = userInfo
-        console.log(userInfo);
         let business = await this._businessRepository.findByEmail(email);
         if(business && !business.isActive){
             throw new AppError(MESSAGES.BLOCKED,STATUS_CODES.UNAUTHORIZED)

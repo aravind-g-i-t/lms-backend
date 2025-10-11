@@ -17,6 +17,7 @@ import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail"
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
+import { logger } from "@infrastructure/logging/Logger";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 
 import { Response, NextFunction } from "express"
@@ -64,7 +65,7 @@ export class UserAuthController {
 
     signup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-
+            logger.info("User signup request recieved");
             const result = await this._userSignupUseCase.execute(req.body);
             
             const response: UserSignupResponseDTO = {
@@ -74,8 +75,10 @@ export class UserAuthController {
                 email: result.email,
                 role: result.role
             }
+            logger.info("OTP sent to learner email successfully");
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
+            logger.warn("User signup failed");
             next(error)
         }
     }
@@ -83,7 +86,7 @@ export class UserAuthController {
 
     verifyOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            
+            logger.info("OTP verification request recieved for user signup");
             const { role,email,otp } = req.body;
             let message;
             if (role === 'learner') {
@@ -96,17 +99,21 @@ export class UserAuthController {
                 message=MESSAGES.BUSINESS_CREATED
                 await this._businessOTPVerificationUseCase.execute({email,otp})
             }
+            logger.info("User registration completed.");
             res.status(STATUS_CODES.CREATED).json({success:true,message});
 
         } catch (error) {
+            logger.warn("Failed to verify OTP for user registration.");
             next(error)
         }
     }
 
     resendOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("Recieved request to resend OTP for email verification.");
             const email = req.body.email;
-            const result = await this._resendOTPUseCase.execute(email)
+            const result = await this._resendOTPUseCase.execute(email);
+            logger.info("OTP was resent successfully,");
             res.status(STATUS_CODES.OK).json({
                 success: true,
                 message: true,
@@ -114,12 +121,14 @@ export class UserAuthController {
             });
 
         } catch (error) {
+            logger.warn("Failed to resend OTP.");
             next(error)
         }
     }
 
     signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("User signin request recieved");
             const role: 'learner' | 'instructor' | 'business' = req.body.role;
 
             let result;
@@ -147,7 +156,7 @@ export class UserAuthController {
             if(!result || !user){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-
+            logger.info("User signed in successfully");
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -169,12 +178,14 @@ export class UserAuthController {
 
 
         } catch (error) {
+            logger.warn("User failed to sign in.");
             next(error)
         }
     }
 
     logout = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("User logout request recieved");
             if (!req.cookies?.refreshToken) {
                 res.status(STATUS_CODES.BAD_REQUEST).json({
                     success: false,
@@ -182,7 +193,7 @@ export class UserAuthController {
                 });
                 return;
             }
-
+            logger.info("User logged out successfully.");
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -200,7 +211,7 @@ export class UserAuthController {
 
     refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-
+            logger.info("Token refresh request recieved");
             const refreshToken = req.cookies?.refreshToken
 
             if (!refreshToken) {
@@ -219,9 +230,10 @@ export class UserAuthController {
                 message: MESSAGES.REFRESH_TOKEN_SUCCESS,
                 accessToken
             }
-
+            logger.info("Access token refreshed successfully");
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
+            logger.warn("Failed to refresh access token.");
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -234,6 +246,7 @@ export class UserAuthController {
 
     googleSignin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("Google signin request recieved.");
             const {role,token}= req.body
 
             let result;
@@ -268,7 +281,7 @@ export class UserAuthController {
             if(!result){
                 throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-
+            logger.info("User singed in via google authentication successfully.");
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -286,50 +299,60 @@ export class UserAuthController {
 
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
+            logger.warn("Google sign in failed.");
             next(error);
         }
     };
 
     verifyEmail = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("Email verification request recieved");
             const {email,role} = req.body;
-            const result = await this._verifyEmailUseCase.execute(email,role)
+            const result = await this._verifyEmailUseCase.execute(email,role);
+
             res.status(STATUS_CODES.OK).json({
                 success: true,
                 message: 'Email verification successful.',
                 otpExpiresAt: result
             });
+            logger.info("OTP sent to user email successfully")
 
         } catch (error) {
+            logger.warn("Failed to sent OTP for email verification");
             next(error)
         }
     }
 
     verifyResetOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            
+            logger.info("OTP verification request recieved for password reset");
             const {email,otp} = req.body;
             await this._otpVerificationUseCase.execute({otp,email})
+            logger.info("OTP verificaiton successfull")
             res.status(STATUS_CODES.OK).json({
                 success: true,
                 message: 'OTP verification success',
             });
 
         } catch (error) {
+            logger.warn("Failed to verify OTP")
             next(error)
         }
     }
 
     resetPassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.info("Password reset request recieved")
             const {email,role,password} = req.body;
-            await this._resetPasswordUseCase.execute(role,email,password)
+            await this._resetPasswordUseCase.execute(role,email,password);
+            logger.info("Password reset successfully successfully")
             res.status(STATUS_CODES.OK).json({
                 success: true,
                 message: "Password updated successfully",
             });
 
         } catch (error) {
+            logger.warn("Failed to reset user password.")
             next(error)
         }
     }

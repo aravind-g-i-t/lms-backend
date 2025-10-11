@@ -10,16 +10,13 @@ export class UpdateBusinessPasswordUseCase implements IUpdateUserPassword{
         private _businessRepository:IBusinessRepository
     ){}
     async execute(id:string,currentPassword:string,newPassword:string):Promise<void>{
-        console.log(id,currentPassword,newPassword);
         
         const business=await this._businessRepository.findById(id,true);
-        console.log('business',business);
         
         if(!business?.password){
             throw new AppError(MESSAGES.UNAUTHORIZED,STATUS_CODES.UNAUTHORIZED)
         }
         const passwordMatch= await comparePassword(currentPassword,business?.password);
-        console.log('passwordMatch',passwordMatch);
         if(!passwordMatch){
             throw new AppError(MESSAGES.INCORRECT_PASSWORD,STATUS_CODES.UNAUTHORIZED)
         }

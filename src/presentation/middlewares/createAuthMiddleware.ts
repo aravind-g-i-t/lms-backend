@@ -28,7 +28,6 @@ export const createAuthMiddleware = (tokenService: ITokenService,authorizationSe
       return res.status(401).json({ message: "No token provided" });
     }
     const token = authHeader.split(" ")[1];
-    console.log('token in middleware',token);
     let decoded:DecodedToken
 
     try{
@@ -36,7 +35,6 @@ export const createAuthMiddleware = (tokenService: ITokenService,authorizationSe
     }catch{
         return res.status(401).json({ message: MESSAGES.INVALID_TOKEN });
     }
-    console.log(decoded.role);
     
     if(decoded.role!=="admin"){
       const isActive = await authorizationService.checkUserActive(decoded.id, decoded.role);

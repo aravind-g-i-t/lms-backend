@@ -17,7 +17,6 @@ export class AdminRefreshTokenUseCase implements IRefreshTokenUseCase{
     ){}
 
     async execute(refreshToken:string){
-        console.log('entered usecase');
         
         const payload:TokenPayload=await this._tokenService.verifyRefreshToken(refreshToken);
 

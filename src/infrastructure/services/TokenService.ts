@@ -3,6 +3,7 @@ import { ITokenService } from '@domain/interfaces/ITokenService';
 import { AppError } from 'shared/errors/AppError';
 import { MESSAGES } from 'shared/constants/messages';
 import { STATUS_CODES } from 'shared/constants/httpStatus';
+import { logger } from '@infrastructure/logging/Logger';
 
 
 const accessTokenMaxAge = (process.env.ACCESS_TOKEN_MAX_AGE || "1m") as SignOptions["expiresIn"];
@@ -19,39 +20,42 @@ export class TokenService implements ITokenService {
 
     async generateAccessToken(payload: object): Promise<string> {
         
-        console.log(this.accessSecret);
-        
-
-        return jwt.sign(payload, this.accessSecret, { expiresIn: accessTokenMaxAge });
+        const token= jwt.sign(payload, this.accessSecret, { expiresIn: accessTokenMaxAge });
+        if(!token){
+            logger.warn("Failed to generate access token");
+            throw new AppError("Failed to generate accessToken",STATUS_CODES.SERVICE_UNAVAILABLE,false)
+        }
+        logger.info("Access token genetated successfully");
+        return token
     }
 
 
     async generateRefreshToken(payload: object): Promise<string> {
-        console.log(this.accessSecret);
-        return jwt.sign(payload, this.refreshSecret, { expiresIn: refreshTokenMaxAge });
+        const token= jwt.sign(payload, this.refreshSecret, { expiresIn: refreshTokenMaxAge });
+        if(!token){
+            logger.warn("Failed to generate refresh token");
+            throw new AppError("Failed to generate refresh",STATUS_CODES.SERVICE_UNAVAILABLE,false)
+        }
+        logger.info("Refresh token genetated successfully");
+        return token;
     }
 
     async verifyAccessToken<T>(token: string): Promise<T> {
         
         try {
-            console.log(this.accessSecret);
-            console.log('recievedAccessToken',token);
-            
-            
             return jwt.verify(token, this.accessSecret) as T;
         } catch {
+            logger.warn("Failed to verify access token");
             throw new AppError(MESSAGES.INVALID_TOKEN,STATUS_CODES.UNAUTHORIZED);
         }
     }
 
     async verifyRefreshToken<T>(token: string): Promise<T> {
-        console.log('entered verifyRefreshToken');
 
         try {
-            console.log(this.refreshSecret);
-            
             return jwt.verify(token, this.refreshSecret) as T;
         } catch {
+            logger.warn("Failed to verify refresh token");
             throw new AppError(MESSAGES.INVALID_REFRESH_TOKEN,STATUS_CODES.BAD_REQUEST);
         }
     }

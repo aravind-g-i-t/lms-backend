@@ -32,6 +32,6 @@ export interface IInstructorRepository{
 
     updateStatus(id:string):Promise<Instructor|null>;
 
-    create(instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor>;
+    create(instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>;
 
 }

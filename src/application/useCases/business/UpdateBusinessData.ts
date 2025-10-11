@@ -11,7 +11,6 @@ export class UpdateBusinessDataUseCase implements IUpdateBusinessDataUseCase{
     ){}
 
     async execute(id: string, update: Partial<Business>): Promise<Business> {
-        console.log(update);
         
         const business=await this._businessRepository.findByIdAndUpdate(id,update);
         if(!business){

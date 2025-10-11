@@ -1,6 +1,9 @@
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { IOTPService } from "@domain/interfaces/IOTPService";
+import { logger } from "@infrastructure/logging/Logger";
 import nodemailer from 'nodemailer';
+import { STATUS_CODES } from "shared/constants/httpStatus";
+import { AppError } from "shared/errors/AppError";
 
 export class OTPService implements IOTPService {
     constructor(
@@ -8,10 +11,13 @@ export class OTPService implements IOTPService {
     ) { }
 
     async generateOTP(): Promise<string> {
-        return Math.floor(100000 + Math.random() * 900000).toString()
+        
+        return Math.floor(100000 + Math.random() * 900000).toString();
+        
     }
 
     async sendOTP(email: string, otp: string): Promise<Date> {
+
         const cacheKey = `otp:${email}`;
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -40,18 +46,19 @@ export class OTPService implements IOTPService {
             await transporter.sendMail(mailOptions);
             await this.cacheService.set(cacheKey, otp, 120);
             return new Date(Date.now()+2*60*1000)
-        } catch (error) {
-            console.error('Failed to send email:', error)
-            throw new Error("Failed to send OTP. Please try again.")
+        } catch  {
+            logger.warn("Failed to send otp via email")
+            throw new AppError("Failed to send OTP. Please try again.",STATUS_CODES.SERVICE_UNAVAILABLE)
         }
+        
     }
 
     async deleteOTP(email: string): Promise<void> {
         const cacheKey=`otp:${email}`;
         try { 
             await this.cacheService.delete(cacheKey)
-        } catch (error) {   
-            console.error(`Failed to delete OTP for ${email}`,error);
+        } catch  {   
+            logger.warn("Failed to delete OTP");
             throw new Error(`Failed to delete OTP for ${email}`)
         }
     }

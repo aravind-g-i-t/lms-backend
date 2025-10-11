@@ -23,7 +23,7 @@ export interface ILearnerRepository{
         options: { page: number; limit: number }
     ):Promise<FindAllResponse>;
 
-    create(learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner>;
+    create(learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>;
 
     updateStatus(id:string):Promise<void>;
 

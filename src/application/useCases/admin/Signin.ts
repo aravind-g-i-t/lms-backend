@@ -13,7 +13,6 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
     ){}
 
     async execute({email,password}:{email:string,password:string}){
-        console.log("entered adminSignin useCase");
         
         const admin=await this._adminRepository.findByEmail(email);
         
@@ -27,10 +26,8 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
 
         }
         const accessToken= await this._tokenService.generateAccessToken({role:'admin',id:admin.id});
-        console.log(accessToken);
         
         const refreshToken=await this._tokenService.generateRefreshToken({role:'admin',id:admin.id});
-        console.log(refreshToken);
         
         return {id:admin.id,email:admin.email,accessToken,refreshToken}
     }

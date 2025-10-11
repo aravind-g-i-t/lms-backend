@@ -5,10 +5,13 @@ import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
-
-
 import { hashPassword } from "shared/utils/hash";
 
+interface SignupData{
+    name:string,
+    email:string,
+    password:string
+}
 
 export class LearnerOTPVerificationUseCase implements IUserOTPVerificationUseCase {
     constructor(
@@ -23,7 +26,7 @@ export class LearnerOTPVerificationUseCase implements IUserOTPVerificationUseCas
             throw new AppError(MESSAGES.OTP_EXPIRED, STATUS_CODES.GONE)
 
         }
-        const user = await this._cacheService.get(`${email}:signup`)
+        const user = await this._cacheService.get<SignupData>(`${email}:signup`)
         if (!user) {
             throw new AppError(MESSAGES.SIGNUP_TIMEOUT, STATUS_CODES.REQUEST_TIMEOUT)
 

@@ -17,7 +17,6 @@ export class GetInstructorsUseCase implements IGetInstructorsUseCase {
 
     async execute(input:GetInstructorsInput):Promise<GetInstructorsOutput>{
         const {page,search,status,limit,verificationStatus}=input;
-        console.log("useCase input:",input);
         
         
         const query:InstructorQuery={};

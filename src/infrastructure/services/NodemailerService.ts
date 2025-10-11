@@ -1,6 +1,7 @@
 import { IEmailService } from '@domain/interfaces/IEmailService';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv'
+import { logger } from '@infrastructure/logging/Logger';
 const env=process.env.NODE_ENV || 'production'
 dotenv.config({path: `.env.${env}`});
 
@@ -19,9 +20,7 @@ export class NodemailerService implements IEmailService{
     ){}
 
     async send(email:string,subject:string,text:string):Promise<void>{
-        try {
-            console.log('hostMail:',nlightnEmail);
-            
+        try {            
             const mailOptions={
                 from:nlightnEmail,
                 to:email,
@@ -29,8 +28,8 @@ export class NodemailerService implements IEmailService{
                 text
             }
             await this.transporter.sendMail(mailOptions);
-        } catch (error) {
-            console.log('Failed to send otp:',error)
+        } catch {
+            logger.warn('Failed to send otp via email')
         }
     }
 }

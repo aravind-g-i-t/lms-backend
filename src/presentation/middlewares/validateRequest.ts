@@ -20,9 +20,6 @@ export const validateRequest =
       next();
     } catch (err) {
       if (err instanceof ZodError) {
-        console.log(err);
-        
-        
         return res.status(400).json({
           success: false,
           message:err.message,

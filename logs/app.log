@@ -287,3 +287,27 @@
 {"level":30,"time":1760180934649,"pid":8332,"hostname":"Aravind","msg":"Instructor data fetched successfully"}
 {"level":30,"time":1760180934664,"pid":8332,"hostname":"Aravind","msg":"Request recieved to get instructor data for profile."}
 {"level":30,"time":1760180934670,"pid":8332,"hostname":"Aravind","msg":"Instructor data fetched successfully"}
+{"level":30,"time":1760181837219,"pid":13024,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760181837725,"pid":13024,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760181837744,"pid":13024,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760182352836,"pid":18208,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760182353148,"pid":18208,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760182353153,"pid":18208,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760182531673,"pid":15184,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760182531953,"pid":15184,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760182531960,"pid":15184,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760187583295,"pid":19032,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760187583603,"pid":19032,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760187583609,"pid":19032,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":50,"time":1760188172126,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":30,"time":1760188172538,"pid":19032,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":50,"time":1760188563065,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":30,"time":1760188563466,"pid":19032,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":50,"time":1760189650975,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":50,"time":1760189651203,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":50,"time":1760189651558,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":50,"time":1760189651763,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":50,"time":1760189652133,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":50,"time":1760189652612,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":50,"time":1760189653487,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
+{"level":30,"time":1760189656809,"pid":19032,"hostname":"Aravind","msg":"Connected to Redis"}

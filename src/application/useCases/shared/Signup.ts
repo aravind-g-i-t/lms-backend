@@ -51,8 +51,8 @@ export class UserSignupUseCase implements IUserSignupUseCase{
             );
             const otpKey=`${email}:otp`;
             const signupDataKey=`${email}:signup`;            
-            await this.cacheService.set(signupDataKey,signupInput,600);
-            await this.cacheService.set(otpKey,otp,120);
+            await this.cacheService.set(signupDataKey,signupInput,SIGNUPDATA_TTL);
+            await this.cacheService.set(otpKey,otp,OTP_TTL);
             const otpExpiresAt=new Date(Date.now() + 2 * 60 * 1000)
             return {email,otpExpiresAt,role}
 

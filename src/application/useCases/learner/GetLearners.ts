@@ -1,7 +1,9 @@
 
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
-import { GetLearnersInput, GetLearnersOutput, IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners";
+import { IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
+import { GetLearnersInput, GetLearnersOutput } from "@application/dtos/learner/GetLearners";
+import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
 
 type LearnerQuery = {
   isActive?: boolean;
@@ -26,7 +28,8 @@ export class GetLearnersUseCase implements IGetLearnersUseCase{
 
                 const result=await this._learnerRepository.findAll(query,{page,limit});
         
-        const {learners,totalPages,totalCount}=result;
+        const {totalPages,totalCount}=result;
+        const learners=result.learners.map(learner=>LearnerDTOMapper.toGetLearnersDTO(learner));
         
         return {learners,totalPages,totalCount}
     }

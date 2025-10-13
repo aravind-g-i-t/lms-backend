@@ -1,7 +1,7 @@
 
-import { RefreshTokenResponseDTO } from "@application/dtos/shared/RefreshToken";
-import { UserSigninResponseDTO } from "@application/dtos/shared/Signin";
-import { UserSignupResponseDTO } from "@application/dtos/shared/Signup";
+import { RefreshTokenResponseDTO } from "@presentation/dtos/shared/RefreshToken";
+import { UserSigninResponseDTO } from "@presentation/dtos/shared/Signin";
+import { UserSignupResponseDTO } from "@presentation/dtos/shared/Signup";
 import { IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
 import { IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
 import { IInstructorGoogleSigninUseCase } from "@application/IUseCases/instructor/IGoogleSignin";
@@ -14,9 +14,7 @@ import { IResetPasswordUseCase } from "@application/IUseCases/shared/IResetPassw
 import { IUserSignupUseCase } from "@application/IUseCases/shared/ISignupUseCase";
 import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
-import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
-import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
-import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
+
 import { logger } from "@infrastructure/logging/Logger";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 
@@ -138,16 +136,16 @@ export class UserAuthController {
             switch (role) {
                 case "learner":
                     result = await this._learnerSigninUseCase.execute(req.body);
-                    user=LearnerDTOMapper.toSigninDTO(result.user)
+                    user=result.user
                     break;
                     
                 case "instructor":
                     result = await this._instructorSigninUseCase.execute(req.body);
-                    user=InstructorDTOMapper.toSigninDTO(result.user)
+                    user=result.user
                     break;
                 case "business":
                     result = await this._businessSigninUseCase.execute(req.body);
-                    user=BusinessDTOMapper.toSigninDTO(result.user)
+                    user=result.user
                     break;
             }
 
@@ -256,7 +254,7 @@ export class UserAuthController {
                     const learnerResult = await this._learnerGoogleSigninUseCase.execute(token);
                     result = {
                         ...learnerResult,
-                        user: LearnerDTOMapper.toSigninDTO(learnerResult.user), 
+                        user: learnerResult.user, 
                     };
                     break;
                 }
@@ -264,7 +262,7 @@ export class UserAuthController {
                     const instructorResult = await this._instructorGoogleSigninUseCase.execute(token);
                     result = {
                         ...instructorResult,
-                        user: InstructorDTOMapper.toSigninDTO(instructorResult.user),
+                        user: instructorResult.user,
                     };
                     break;
                 }
@@ -272,7 +270,7 @@ export class UserAuthController {
                     const businessResult = await this._businessGoogleSigninUseCase.execute(token);
                     result = {
                         ...businessResult,
-                        user: BusinessDTOMapper.toSigninDTO(businessResult.user),
+                        user: businessResult.user,
                     };
                     break;
                 }

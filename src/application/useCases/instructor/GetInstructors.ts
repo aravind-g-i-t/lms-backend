@@ -1,5 +1,7 @@
 
-import { GetInstructorsInput, GetInstructorsOutput, IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
+import { GetInstructorsInput, GetInstructorsOutput } from "@application/dtos/instructor/GetInstructors";
+import {  IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
+import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
@@ -31,7 +33,9 @@ export class GetInstructorsUseCase implements IGetInstructorsUseCase {
         }
         const result=await this._instructorRepository.findAll(query,{page,limit});
         
-        const {instructors,totalPages,totalCount}=result;
+        const {totalPages,totalCount}=result;
+
+        const instructors=result.instructors.map(instructor=>InstructorDTOMapper.toGetInstructorsDTO(instructor));
         
         return {instructors,totalPages,totalCount}
     }

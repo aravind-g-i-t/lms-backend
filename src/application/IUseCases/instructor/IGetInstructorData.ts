@@ -1,5 +1,5 @@
-import { Instructor } from "@domain/entities/Instructor";
+import { GetInstructorDataOutputDTO } from "@application/dtos/instructor/GetInstructorData";
 
 export interface IGetInstructorDataUseCase{
-    execute(id:string):Promise<Instructor>
+    execute(id:string):Promise<GetInstructorDataOutputDTO>
 }

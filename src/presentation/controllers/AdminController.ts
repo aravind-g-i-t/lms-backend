@@ -1,4 +1,4 @@
-import { AdminSigninResponseDTO } from "@application/dtos/admin/Signin";
+import { AdminSigninResponseDTO } from "@presentation/dtos/admin/Signin";
 import { IAdminSigninUseCase } from "@application/IUseCases/admin/ISignin";
 import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
 import { logger } from "@infrastructure/logging/Logger";

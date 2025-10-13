@@ -1,6 +1,8 @@
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
-import { GetBusinessesInput, GetBusinessesOutput, IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
+import {   IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
+import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
+import { GetBusinessesInput, GetBusinessesOutput } from "@application/dtos/business/GetBusinesses";
 
 type BusinessQuery = {
     isActive?: boolean;
@@ -29,7 +31,8 @@ export class GetBusinessesUseCase implements IGetBusinessesUseCase {
         }
 
         const result = await this._businessRepository.findAll(query, { page, limit });
-        const { businesses, totalPages, totalCount } = result;
+        const {  totalPages, totalCount } = result;
+        const businesses=result.businesses.map(business=>BusinessDTOMapper.toGetBusinessesDTO(business));
 
         return { businesses, totalPages, totalCount };
     }

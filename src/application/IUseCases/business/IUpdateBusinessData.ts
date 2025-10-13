@@ -1,5 +1,5 @@
-import { Business } from "@domain/entities/Business";
+import { BusinessAsRaw } from "@application/dtos/business/BusinessDTO";
 
 export interface IUpdateBusinessDataUseCase{
-    execute(id:string,update:Partial<Business>):Promise<Business>
+    execute(id:string,update:Partial<BusinessAsRaw>):Promise<void>
 }

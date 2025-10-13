@@ -1,13 +1,13 @@
 
-import { AdminSigninRequestSchema } from "@application/dtos/admin/Signin";
-import { GetBusinessesRequestSchema } from "@application/dtos/business/GetBusinesses";
-import { GetBusinessForAdminRequestSchema } from "@application/dtos/business/GetBusinessForAdmin";
-import { GetInstructorForAdminRequestSchema } from "@application/dtos/instructor/GetInstructorForAdmin";
-import { GetInstructorsRequestSchema } from "@application/dtos/instructor/GetInstructors";
-import { GetLearnerForAdminRequestSchema } from "@application/dtos/learner/GetLearnerForAdmin";
-import { GetLearnersRequestSchema } from "@application/dtos/learner/GetLearners";
-import { UpdateUserStatusRequestSchema } from "@application/dtos/shared/UpdateUserStatus";
-import { UpdateUserVerificationStatusRequestSchema } from "@application/dtos/shared/UpdateVerificationStatus";
+import { AdminSigninRequestSchema } from "@presentation/dtos/admin/Signin";
+import { GetBusinessesRequestSchema } from "@presentation/dtos/business/GetBusinesses";
+import { GetBusinessForAdminRequestSchema } from "@presentation/dtos/business/GetBusinessForAdmin";
+import { GetInstructorForAdminRequestSchema } from "@presentation/dtos/instructor/GetInstructorForAdmin";
+import { GetInstructorsRequestSchema } from "@presentation/dtos/instructor/GetInstructors";
+import { GetLearnerForAdminRequestSchema } from "@presentation/dtos/learner/GetLearnerForAdmin";
+import { GetLearnersRequestSchema } from "@presentation/dtos/learner/GetLearners";
+import { UpdateUserStatusRequestSchema } from "@presentation/dtos/shared/UpdateUserStatus";
+import { UpdateUserVerificationStatusRequestSchema } from "@presentation/dtos/shared/UpdateVerificationStatus";
 import { validateRequest } from "@presentation/middlewares/validateRequest";
 
 

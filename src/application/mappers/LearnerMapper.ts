@@ -1,10 +1,10 @@
-import { GetLearnersDTO } from "@application/dtos/learner/GetLearners";
-import { GetLearnerProfileDTO } from "@application/dtos/learner/GetProfile";
-import {  UserSigninDTO } from "@application/dtos/shared/Signin";
-import { Learner } from "@domain/entities/Learner";
+import { GetLearnerDataOutput } from "@application/dtos/learner/GetLearnerData"
+import { LearnerAsRaw, LearnerForListing } from "@application/dtos/learner/LearnerDTO"
+import { UserForSignin } from "@application/dtos/shared/Signin"
+
 
 export class LearnerDTOMapper{
-    static toSigninDTO(entity:Learner):UserSigninDTO{
+    static toSigninDTO(entity:LearnerAsRaw):UserForSignin{
             return {
                 id:entity.id,
                 name:entity.name,
@@ -12,7 +12,7 @@ export class LearnerDTOMapper{
             }
         }
 
-    static toGetLearnersDTO(entity:Learner):GetLearnersDTO{
+    static toGetLearnersDTO(entity:LearnerAsRaw):LearnerForListing{
         return{
             id:entity.id,
             name:entity.name,
@@ -22,7 +22,7 @@ export class LearnerDTOMapper{
         }
     }
     
-    static toProfileDTO(entity:Learner):GetLearnerProfileDTO{
+    static toProfileDTO(entity:LearnerAsRaw):GetLearnerDataOutput{
         return{
             name:entity.name,
             email:entity.email,

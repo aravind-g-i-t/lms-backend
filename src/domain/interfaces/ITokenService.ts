@@ -1,3 +1,5 @@
+import { VerifiedToken } from "@domain/types";
+
 export interface ITokenService {
   generateAccessToken(payload: object): Promise<string>;
   generateRefreshToken(payload:object):Promise<string>;
@@ -6,9 +8,3 @@ export interface ITokenService {
   decodeToken<T extends object>(token: string): T | null;
 }
 
-export type VerifiedToken<T> = T & {
-  iat?: number;
-  exp?: number;
-  iss?: string;
-  aud?: string;
-};

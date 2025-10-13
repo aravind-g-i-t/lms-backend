@@ -1,7 +1,9 @@
 
 
 
-import { IInstructorSigninUseCase, InstructorSigninUseCaseOutput } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
+import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/shared/Signin";
+import { IInstructorSigninUseCase } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
+import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -15,7 +17,8 @@ export class InstructorSigninUseCase implements IInstructorSigninUseCase {
         private _tokenService:ITokenService
     ) { }
 
-    async execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}):Promise<InstructorSigninUseCaseOutput> {
+
+    async execute(input: UserSigninInputDTO):Promise<UserSigninOutputDTO> {
             const {email,password,role}=input;
             const instructorEntity=await this._instructorRepository.findByEmail(email,true);
             if(!instructorEntity){
@@ -35,7 +38,7 @@ export class InstructorSigninUseCase implements IInstructorSigninUseCase {
             const accessToken= await this._tokenService.generateAccessToken({id:instructorEntity.id,role});
             const refreshToken= await this._tokenService.generateRefreshToken({id:instructorEntity.id,role});
             return {
-                user:instructorEntity,
+                user:InstructorDTOMapper.toSigninDTO(instructorEntity),
                 accessToken,
                 refreshToken,
                 role

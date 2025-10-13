@@ -1,0 +1,42 @@
+
+
+export interface BusinessForListing{
+    id: string;
+    name: string;
+    email: string;
+    isActive: boolean;
+    planName:string;
+    employeeCount:number;
+    profilePic: string|null;
+    verification:{
+      status:string,
+      remarks:string|null
+    }
+}
+
+export interface BusinessAsRaw{
+    id:string;
+    name:string;
+    email:string;
+    isActive:boolean;
+    employees:string[];
+    joiningDate:Date;
+    verification:{
+        status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
+        remarks:string|null;
+    };
+    password:string|null;
+    businessDomain:string|null;
+    website:string|null;
+    license:string|null;
+    location:string|null;
+    planId:string|null;
+    planStartDate:Date|null;
+    planEndDate:Date|null;
+    maxEmployees:number|null;
+    profilePic:string|null;
+    googleId:string|null;
+}
+
+
+

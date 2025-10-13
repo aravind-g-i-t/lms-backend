@@ -1,13 +1,8 @@
-import { Business } from "@domain/entities/Business";
+import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/shared/Signin";
 
 
-export interface BusinessSigninUseCaseOutput{
-    user:Business;
-    accessToken:string;
-    refreshToken:string;
-    role:'learner'|'instructor'|'business'
-}
+
 
 export interface IBusinessSigninUseCase {
-    execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}):Promise<BusinessSigninUseCaseOutput>
+    execute(input: UserSigninInputDTO):Promise<UserSigninOutputDTO>
 }

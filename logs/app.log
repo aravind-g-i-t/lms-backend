@@ -311,3 +311,727 @@
 {"level":50,"time":1760189652612,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
 {"level":50,"time":1760189653487,"pid":19032,"hostname":"Aravind","msg":"Redis error"}
 {"level":30,"time":1760189656809,"pid":19032,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760293954883,"pid":6068,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760293955272,"pid":6068,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760293955278,"pid":6068,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760294054836,"pid":6068,"hostname":"Aravind","msg":"Admin signin request recieved."}
+{"level":30,"time":1760294054938,"pid":6068,"hostname":"Aravind","msg":"Fetched Admin successfully"}
+{"level":40,"time":1760294055038,"pid":6068,"hostname":"Aravind","msg":"Failed to signin as Admin"}
+{"level":30,"time":1760294064101,"pid":6068,"hostname":"Aravind","msg":"Admin signin request recieved."}
+{"level":30,"time":1760294064104,"pid":6068,"hostname":"Aravind","msg":"Fetched Admin successfully"}
+{"level":30,"time":1760294064280,"pid":6068,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760294064282,"pid":6068,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760294064283,"pid":6068,"hostname":"Aravind","msg":"Admin signed in successfully."}
+{"level":30,"time":1760294065915,"pid":6068,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760294065966,"pid":6068,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760294065966,"pid":6068,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760294065973,"pid":6068,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760294065980,"pid":6068,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760294065981,"pid":6068,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760294069544,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760294069605,"pid":6068,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760294069605,"pid":6068,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760294070594,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760294070652,"pid":6068,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760294070652,"pid":6068,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760294073021,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760294073028,"pid":6068,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760294073028,"pid":6068,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760294073925,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760294073931,"pid":6068,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760294073931,"pid":6068,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760294075193,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760294075200,"pid":6068,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760294075200,"pid":6068,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760294075779,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760294075784,"pid":6068,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760294075784,"pid":6068,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760294078989,"pid":6068,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760294079021,"pid":6068,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760294079021,"pid":6068,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760294079027,"pid":6068,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760294079032,"pid":6068,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760294079033,"pid":6068,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760294081036,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update instructor status"}
+{"level":30,"time":1760294081068,"pid":6068,"hostname":"Aravind","msg":"Updated instructor status successfully."}
+{"level":30,"time":1760294081873,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update instructor status"}
+{"level":30,"time":1760294081946,"pid":6068,"hostname":"Aravind","msg":"Updated instructor status successfully."}
+{"level":30,"time":1760294085447,"pid":6068,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760294085516,"pid":6068,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760294085516,"pid":6068,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760294085522,"pid":6068,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760294085527,"pid":6068,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760294085527,"pid":6068,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760294088728,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update business status"}
+{"level":30,"time":1760294088761,"pid":6068,"hostname":"Aravind","msg":"Business status updated successfully."}
+{"level":30,"time":1760294088761,"pid":6068,"hostname":"Aravind","msg":"Updated business status successfully."}
+{"level":30,"time":1760294089534,"pid":6068,"hostname":"Aravind","msg":"Request recieved to update business status"}
+{"level":30,"time":1760294089540,"pid":6068,"hostname":"Aravind","msg":"Business status updated successfully."}
+{"level":30,"time":1760294089540,"pid":6068,"hostname":"Aravind","msg":"Updated business status successfully."}
+{"level":30,"time":1760294090619,"pid":6068,"hostname":"Aravind","msg":"Request recieved to fetch business data for admin."}
+{"level":30,"time":1760294090622,"pid":6068,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760294090623,"pid":6068,"hostname":"Aravind","msg":"Business data fetched successfully."}
+{"level":30,"time":1760294099738,"pid":6068,"hostname":"Aravind","msg":"Request recieved to fetch business data for admin."}
+{"level":30,"time":1760294099740,"pid":6068,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760294099740,"pid":6068,"hostname":"Aravind","msg":"Business data fetched successfully."}
+{"level":30,"time":1760325859270,"pid":9508,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760325859609,"pid":9508,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760325859616,"pid":9508,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":40,"time":1760325895969,"pid":9508,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":40,"time":1760325895978,"pid":9508,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760325895988,"pid":9508,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760325895997,"pid":9508,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760325895998,"pid":9508,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760325896012,"pid":9508,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760325896014,"pid":9508,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760325896015,"pid":9508,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760325896059,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325896086,"pid":9508,"hostname":"Aravind","msg":"Fetched Admin successfully."}
+{"level":30,"time":1760325896088,"pid":9508,"hostname":"Aravind","msg":"Fetched Admin successfully."}
+{"level":30,"time":1760325896114,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325896115,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325896120,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325896124,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325896124,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325900213,"pid":9508,"hostname":"Aravind","msg":"Request recieved to update learner status"}
+{"level":30,"time":1760325900276,"pid":9508,"hostname":"Aravind","msg":"Learner status updated successfully"}
+{"level":30,"time":1760325900276,"pid":9508,"hostname":"Aravind","msg":"Updated learner status successfully."}
+{"level":30,"time":1760325905359,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325905365,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325905365,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325905372,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325905377,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325905377,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325908253,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760325908279,"pid":9508,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760325908279,"pid":9508,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760325908288,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760325908294,"pid":9508,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760325908294,"pid":9508,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760325913383,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760325913416,"pid":9508,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760325913416,"pid":9508,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760325913420,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760325913423,"pid":9508,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760325913423,"pid":9508,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760325926743,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760325926751,"pid":9508,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760325926751,"pid":9508,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760325926755,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760325926759,"pid":9508,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760325926759,"pid":9508,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760325928810,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760325928816,"pid":9508,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760325928816,"pid":9508,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760325928823,"pid":9508,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760325928828,"pid":9508,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760325928828,"pid":9508,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760325930386,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325930390,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325930391,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325930396,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325930401,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325930401,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325956283,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325956311,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325956311,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760325963311,"pid":9508,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760325963314,"pid":9508,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760325963315,"pid":9508,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760326093536,"pid":3260,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760326093942,"pid":3260,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760326093947,"pid":3260,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760326118890,"pid":3260,"hostname":"Aravind","msg":"Admin logout request recieved."}
+{"level":30,"time":1760326118890,"pid":3260,"hostname":"Aravind","msg":"Admin logged out successfully."}
+{"level":30,"time":1760326151437,"pid":3260,"hostname":"Aravind","msg":"User signin request recieved"}
+{"level":30,"time":1760326151503,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":40,"time":1760326151603,"pid":3260,"hostname":"Aravind","msg":"User failed to sign in."}
+{"level":30,"time":1760326157933,"pid":3260,"hostname":"Aravind","msg":"User signin request recieved"}
+{"level":30,"time":1760326157936,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326158038,"pid":3260,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760326158040,"pid":3260,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760326158040,"pid":3260,"hostname":"Aravind","msg":"User signed in successfully"}
+{"level":30,"time":1760326161723,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326161724,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760326161725,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326161726,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760326161737,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326161738,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760326161741,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326161741,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760326168701,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326168701,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760326168704,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326168704,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760326168718,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326168718,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760326168723,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326168723,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760326184289,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326184290,"pid":3260,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760326184336,"pid":3260,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760326184336,"pid":3260,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760326208737,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326208737,"pid":3260,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760326208741,"pid":3260,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760326208742,"pid":3260,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760326216298,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326216298,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760326216300,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326216301,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760326216312,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326216312,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760326216315,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760326216315,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":40,"time":1760327330845,"pid":3260,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760327330862,"pid":3260,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760327330885,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327330888,"pid":3260,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760327330888,"pid":3260,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760327330913,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327330914,"pid":3260,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760327330926,"pid":3260,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760327330927,"pid":3260,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760327359956,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327359956,"pid":3260,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760327359958,"pid":3260,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760327359958,"pid":3260,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760327437017,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327437018,"pid":3260,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760327437088,"pid":3260,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760327437088,"pid":3260,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760327455094,"pid":3260,"hostname":"Aravind","msg":"User logout request recieved"}
+{"level":30,"time":1760327455094,"pid":3260,"hostname":"Aravind","msg":"User logged out successfully."}
+{"level":30,"time":1760327484963,"pid":3260,"hostname":"Aravind","msg":"User signin request recieved"}
+{"level":30,"time":1760327484978,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327485084,"pid":3260,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760327485085,"pid":3260,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760327485085,"pid":3260,"hostname":"Aravind","msg":"User signed in successfully"}
+{"level":30,"time":1760327488209,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327488209,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760327488211,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327488211,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760327488220,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327488220,"pid":3260,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760327488221,"pid":3260,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327488221,"pid":3260,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760327640543,"pid":2860,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327640940,"pid":2860,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327640947,"pid":2860,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327736705,"pid":3936,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327737007,"pid":3936,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327737011,"pid":3936,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327751200,"pid":14976,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327751515,"pid":14976,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327751521,"pid":14976,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327781888,"pid":14976,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327838045,"pid":14588,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327838395,"pid":14588,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327838400,"pid":14588,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327847586,"pid":4060,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327847925,"pid":4060,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327847930,"pid":4060,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327861327,"pid":4060,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327885079,"pid":5768,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327885457,"pid":5768,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327885461,"pid":5768,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327885652,"pid":5768,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327894966,"pid":5768,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760327941481,"pid":2896,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327941764,"pid":2896,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327941769,"pid":2896,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327946080,"pid":7436,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760327946455,"pid":7436,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760327946460,"pid":7436,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760327947914,"pid":7436,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328000633,"pid":13372,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328001009,"pid":13372,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328001015,"pid":13372,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328007136,"pid":13372,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328028173,"pid":10732,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328028492,"pid":10732,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328028498,"pid":10732,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328029569,"pid":10732,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328046300,"pid":21160,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328046614,"pid":21160,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328046621,"pid":21160,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328051739,"pid":15676,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328052016,"pid":15676,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328052021,"pid":15676,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328095729,"pid":15932,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328096008,"pid":15932,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328096012,"pid":15932,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328105978,"pid":5464,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328106409,"pid":5464,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328106415,"pid":5464,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328128072,"pid":8540,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328129341,"pid":8540,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328129347,"pid":8540,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328130751,"pid":8540,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328155337,"pid":19072,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328155648,"pid":19072,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328155654,"pid":19072,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328155753,"pid":19072,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328198843,"pid":16500,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328199202,"pid":16500,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328199209,"pid":16500,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328199307,"pid":16500,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328249914,"pid":17688,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328250282,"pid":17688,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328250290,"pid":17688,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328250542,"pid":17688,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328263302,"pid":7364,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328263703,"pid":7364,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328263708,"pid":7364,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328263832,"pid":7364,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328309387,"pid":20336,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328309782,"pid":20336,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328309787,"pid":20336,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328312386,"pid":20336,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328325472,"pid":12404,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328325795,"pid":12404,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328325800,"pid":12404,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328329857,"pid":12404,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328348027,"pid":14940,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328348396,"pid":14940,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328348400,"pid":14940,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328348610,"pid":14940,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328353870,"pid":14940,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328392596,"pid":13192,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328392909,"pid":13192,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328392916,"pid":13192,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328411776,"pid":872,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328412059,"pid":872,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328412066,"pid":872,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328473521,"pid":12824,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328473909,"pid":12824,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328473914,"pid":12824,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328481144,"pid":5424,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328481412,"pid":5424,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328481416,"pid":5424,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328540419,"pid":9668,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328540728,"pid":9668,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328540733,"pid":9668,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328544473,"pid":2400,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328544797,"pid":2400,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328544801,"pid":2400,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":40,"time":1760328549580,"pid":2400,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760328549593,"pid":2400,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760328549608,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328549613,"pid":2400,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760328549613,"pid":2400,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760328549645,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328700886,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328700886,"pid":2400,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760328700899,"pid":2400,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760328700899,"pid":2400,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760328756605,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328756606,"pid":2400,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760328756610,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328756611,"pid":2400,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760328756622,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328756622,"pid":2400,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760328756627,"pid":2400,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760328756627,"pid":2400,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760328843713,"pid":1036,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328844004,"pid":1036,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328844010,"pid":1036,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328894134,"pid":4868,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328894488,"pid":4868,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328894493,"pid":4868,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328946912,"pid":4588,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328947267,"pid":4588,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328947272,"pid":4588,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328957866,"pid":18992,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328958186,"pid":18992,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328958192,"pid":18992,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328963210,"pid":9524,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328963576,"pid":9524,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328963581,"pid":9524,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760328974884,"pid":9168,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760328975329,"pid":9168,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760328975338,"pid":9168,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329007306,"pid":16132,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329007584,"pid":16132,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329007590,"pid":16132,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329014131,"pid":6744,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329014436,"pid":6744,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329014442,"pid":6744,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329026076,"pid":21208,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329026366,"pid":21208,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329026371,"pid":21208,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329031966,"pid":18188,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329032261,"pid":18188,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329032266,"pid":18188,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329081036,"pid":2480,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329081392,"pid":2480,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329081398,"pid":2480,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329128380,"pid":17688,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329128777,"pid":17688,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329128782,"pid":17688,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329191415,"pid":20532,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329191769,"pid":20532,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329191775,"pid":20532,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329201755,"pid":10424,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329202101,"pid":10424,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329202108,"pid":10424,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329235309,"pid":10932,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329235584,"pid":10932,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329235589,"pid":10932,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329297894,"pid":12700,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329298309,"pid":12700,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329298314,"pid":12700,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329311419,"pid":14440,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329311699,"pid":14440,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329311705,"pid":14440,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329327019,"pid":19464,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329327369,"pid":19464,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329327377,"pid":19464,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329345204,"pid":14940,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329345471,"pid":14940,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329345476,"pid":14940,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329353093,"pid":2268,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329353603,"pid":2268,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329353607,"pid":2268,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329358839,"pid":3196,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329359136,"pid":3196,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329359144,"pid":3196,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329390224,"pid":10092,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329390493,"pid":10092,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329390498,"pid":10092,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329676323,"pid":9488,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329676629,"pid":9488,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329676633,"pid":9488,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329690967,"pid":5936,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329691283,"pid":5936,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329691288,"pid":5936,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329700755,"pid":17068,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329701115,"pid":17068,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329701122,"pid":17068,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329732592,"pid":10792,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329732928,"pid":10792,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329732932,"pid":10792,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329745151,"pid":11088,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329745445,"pid":11088,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329745451,"pid":11088,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329752025,"pid":8984,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329752296,"pid":8984,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329752302,"pid":8984,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760329993787,"pid":17664,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760329994180,"pid":17664,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760329994186,"pid":17664,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330000277,"pid":13772,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330000606,"pid":13772,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330000621,"pid":13772,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330145445,"pid":1912,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330145841,"pid":1912,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330145847,"pid":1912,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330335282,"pid":16240,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330335634,"pid":16240,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330335641,"pid":16240,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330356238,"pid":3720,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330356532,"pid":3720,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330356536,"pid":3720,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330374646,"pid":20984,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330374960,"pid":20984,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330374964,"pid":20984,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330381972,"pid":11908,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330382293,"pid":11908,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330382299,"pid":11908,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330417521,"pid":3356,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330417828,"pid":3356,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330417834,"pid":3356,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760330429038,"pid":12876,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760330429348,"pid":12876,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760330429353,"pid":12876,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":40,"time":1760330515143,"pid":12876,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760330515160,"pid":12876,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760330515178,"pid":12876,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760330515183,"pid":12876,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760330515183,"pid":12876,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760330515220,"pid":12876,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331197837,"pid":592,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331198236,"pid":592,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331198241,"pid":592,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331210926,"pid":12964,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331211202,"pid":12964,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331211207,"pid":12964,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331215364,"pid":6016,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331215648,"pid":6016,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331215655,"pid":6016,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331222735,"pid":17760,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331223162,"pid":17760,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331223167,"pid":17760,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331246850,"pid":16788,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331247204,"pid":16788,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331247209,"pid":16788,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331255288,"pid":6440,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331255630,"pid":6440,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331255636,"pid":6440,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331266474,"pid":400,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331266762,"pid":400,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331266767,"pid":400,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331290694,"pid":21380,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331291039,"pid":21380,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331291046,"pid":21380,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331309535,"pid":16212,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331309816,"pid":16212,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331309821,"pid":16212,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331317005,"pid":3044,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331317357,"pid":3044,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331317363,"pid":3044,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331324523,"pid":1860,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331324885,"pid":1860,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331324891,"pid":1860,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331355910,"pid":3480,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331356361,"pid":3480,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331356367,"pid":3480,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331399218,"pid":2608,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331399573,"pid":2608,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331399580,"pid":2608,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331452342,"pid":13444,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331452766,"pid":13444,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331452771,"pid":13444,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331470561,"pid":8932,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331470841,"pid":8932,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331470846,"pid":8932,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331480069,"pid":8568,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331480353,"pid":8568,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331480360,"pid":8568,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331512231,"pid":8040,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331512759,"pid":8040,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331512765,"pid":8040,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331517880,"pid":17148,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331518391,"pid":17148,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331518396,"pid":17148,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331535515,"pid":2916,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331535805,"pid":2916,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331535810,"pid":2916,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331561059,"pid":10900,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331561378,"pid":10900,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331561383,"pid":10900,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331567997,"pid":5112,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331568332,"pid":5112,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331568338,"pid":5112,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331575635,"pid":15404,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331575992,"pid":15404,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331575997,"pid":15404,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331584127,"pid":1684,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331584553,"pid":1684,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331584559,"pid":1684,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331592664,"pid":1752,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331593015,"pid":1752,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331593019,"pid":1752,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331602377,"pid":10204,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331602714,"pid":10204,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331602719,"pid":10204,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331682394,"pid":2484,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331682738,"pid":2484,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331682744,"pid":2484,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760331697320,"pid":20212,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760331697594,"pid":20212,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760331697600,"pid":20212,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":40,"time":1760331851428,"pid":20212,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":40,"time":1760331851444,"pid":20212,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760331851454,"pid":20212,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760331851476,"pid":20212,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760331851486,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331851490,"pid":20212,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760331851490,"pid":20212,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760331851494,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331851496,"pid":20212,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760331851496,"pid":20212,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760331851528,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331851529,"pid":20212,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760331851533,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331851533,"pid":20212,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760331851546,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331851546,"pid":20212,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760331851549,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331851549,"pid":20212,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760331859157,"pid":20212,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760331859160,"pid":20212,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760331859171,"pid":20212,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760331859172,"pid":20212,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760332016580,"pid":20212,"hostname":"Aravind","msg":"User logout request recieved"}
+{"level":30,"time":1760332016580,"pid":20212,"hostname":"Aravind","msg":"User logged out successfully."}
+{"level":30,"time":1760332606712,"pid":10252,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760332607067,"pid":10252,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760332607074,"pid":10252,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760332629640,"pid":10252,"hostname":"Aravind","msg":"Admin signin request recieved."}
+{"level":30,"time":1760332629706,"pid":10252,"hostname":"Aravind","msg":"Fetched Admin successfully"}
+{"level":30,"time":1760332629820,"pid":10252,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760332629822,"pid":10252,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760332629823,"pid":10252,"hostname":"Aravind","msg":"Admin signed in successfully."}
+{"level":30,"time":1760332631521,"pid":10252,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760332631576,"pid":10252,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760332631576,"pid":10252,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760332631582,"pid":10252,"hostname":"Aravind","msg":"Request recieved to fetch learners for listing."}
+{"level":30,"time":1760332631587,"pid":10252,"hostname":"Aravind","msg":"Learners fetched successfully."}
+{"level":30,"time":1760332631587,"pid":10252,"hostname":"Aravind","msg":"Learner fetched for listing successfully."}
+{"level":30,"time":1760332632829,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760332632841,"pid":10252,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760332632841,"pid":10252,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760332632851,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get instructors for listing"}
+{"level":30,"time":1760332632863,"pid":10252,"hostname":"Aravind","msg":"Instructors fetched successfully"}
+{"level":30,"time":1760332632863,"pid":10252,"hostname":"Aravind","msg":"Instructor fetched for listing successfully."}
+{"level":30,"time":1760332636087,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get Instructor data for admin"}
+{"level":30,"time":1760332636157,"pid":10252,"hostname":"Aravind","msg":"Leaner data was fetched successfully."}
+{"level":30,"time":1760332645481,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332645532,"pid":10252,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332645533,"pid":10252,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332645539,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332645546,"pid":10252,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332645546,"pid":10252,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332654465,"pid":10252,"hostname":"Aravind","msg":"Admin logout request recieved."}
+{"level":30,"time":1760332654465,"pid":10252,"hostname":"Aravind","msg":"Admin logged out successfully."}
+{"level":40,"time":1760332685019,"pid":10252,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":40,"time":1760332685026,"pid":10252,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760332685033,"pid":10252,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760332685038,"pid":10252,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760332685038,"pid":10252,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760332685042,"pid":10252,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760332685048,"pid":10252,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760332685048,"pid":10252,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760332685053,"pid":10252,"hostname":"Aravind","msg":"Fetched Admin successfully."}
+{"level":30,"time":1760332685053,"pid":10252,"hostname":"Aravind","msg":"Fetched Admin successfully."}
+{"level":30,"time":1760332685065,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332685071,"pid":10252,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332685072,"pid":10252,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332685077,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332685081,"pid":10252,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332685081,"pid":10252,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332713176,"pid":10252,"hostname":"Aravind","msg":"User signin request recieved"}
+{"level":30,"time":1760332713314,"pid":10252,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760332713411,"pid":10252,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760332713412,"pid":10252,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760332713412,"pid":10252,"hostname":"Aravind","msg":"User signed in successfully"}
+{"level":30,"time":1760332715514,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332715515,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760332715519,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332715520,"pid":10252,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760332715531,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332715531,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760332715536,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332715537,"pid":10252,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760332717026,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332717027,"pid":10252,"hostname":"Aravind","msg":"Request recieved to apply for business verification."}
+{"level":30,"time":1760332717031,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":40,"time":1760332717032,"pid":10252,"hostname":"Aravind","msg":"Failed to apply for Business verification."}
+{"level":30,"time":1760332736558,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332736558,"pid":10252,"hostname":"Aravind","msg":"Request recieved to update business profile"}
+{"level":30,"time":1760332736636,"pid":10252,"hostname":"Aravind","msg":"Business updated successfully"}
+{"level":30,"time":1760332736636,"pid":10252,"hostname":"Aravind","msg":"Business profile updated successfully"}
+{"level":30,"time":1760332739633,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332739634,"pid":10252,"hostname":"Aravind","msg":"Request recieved to apply for business verification."}
+{"level":30,"time":1760332739635,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332739694,"pid":10252,"hostname":"Aravind","msg":"Business updated successfully"}
+{"level":30,"time":1760332739694,"pid":10252,"hostname":"Aravind","msg":"Applied for Business verification successfully."}
+{"level":30,"time":1760332751851,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332751857,"pid":10252,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332751858,"pid":10252,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332751866,"pid":10252,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332751875,"pid":10252,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332751875,"pid":10252,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332755123,"pid":10252,"hostname":"Aravind","msg":"Request recieved to fetch business data for admin."}
+{"level":30,"time":1760332755126,"pid":10252,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332755126,"pid":10252,"hostname":"Aravind","msg":"Business data fetched successfully."}
+{"level":30,"time":1760332875189,"pid":2480,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760332875539,"pid":2480,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760332875545,"pid":2480,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760332908274,"pid":2480,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332908290,"pid":2480,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332908290,"pid":2480,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332908303,"pid":2480,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760332908312,"pid":2480,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760332908312,"pid":2480,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760332911418,"pid":2480,"hostname":"Aravind","msg":"Request recieved to fetch business data for admin."}
+{"level":30,"time":1760332911442,"pid":2480,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760332911444,"pid":2480,"hostname":"Aravind","msg":"Business data fetched successfully."}
+{"level":30,"time":1760333112185,"pid":5112,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760333112518,"pid":5112,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760333112523,"pid":5112,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760333127964,"pid":20316,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760333128324,"pid":20316,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760333128330,"pid":20316,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760333147542,"pid":18892,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760333147826,"pid":18892,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760333147832,"pid":18892,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760333153638,"pid":9516,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760333153950,"pid":9516,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760333153957,"pid":9516,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":50,"time":1760333379809,"pid":9516,"hostname":"Aravind","msg":"Redis error"}
+{"level":30,"time":1760333380267,"pid":9516,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760333587940,"pid":22056,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760333588312,"pid":22056,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760333588319,"pid":22056,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":40,"time":1760333778778,"pid":22056,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":40,"time":1760333778787,"pid":22056,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760333778809,"pid":22056,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760333778817,"pid":22056,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760333778825,"pid":22056,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760333778838,"pid":22056,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760333778841,"pid":22056,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760333778842,"pid":22056,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760333778852,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760333778875,"pid":22056,"hostname":"Aravind","msg":"Fetched Admin successfully."}
+{"level":30,"time":1760333778876,"pid":22056,"hostname":"Aravind","msg":"Fetched Admin successfully."}
+{"level":30,"time":1760333779165,"pid":22056,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760333779165,"pid":22056,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":30,"time":1760333779172,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get businesses for listing"}
+{"level":30,"time":1760333779180,"pid":22056,"hostname":"Aravind","msg":"Businnesses fetched successfully"}
+{"level":30,"time":1760333779180,"pid":22056,"hostname":"Aravind","msg":"Business fetched for listing successfully."}
+{"level":40,"time":1760333786097,"pid":22056,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":40,"time":1760333786103,"pid":22056,"hostname":"Aravind","msg":"Failed to verify access token"}
+{"level":30,"time":1760333786165,"pid":22056,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760333786170,"pid":22056,"hostname":"Aravind","msg":"Token refresh request recieved"}
+{"level":30,"time":1760333786181,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760333786183,"pid":22056,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760333786183,"pid":22056,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760333786189,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760333786191,"pid":22056,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760333786191,"pid":22056,"hostname":"Aravind","msg":"Access token refreshed successfully"}
+{"level":30,"time":1760333786300,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760333786300,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760333786303,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760333786303,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760333786312,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760333786313,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760333786316,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760333786316,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334062690,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334062690,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334062693,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334062693,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334062698,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334062698,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334062700,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334062700,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334316589,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334316589,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334316592,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334316592,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334316600,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334316600,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334316603,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334316604,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334360400,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334360400,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334360404,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334360404,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334360415,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334360415,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334360420,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334360420,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334366808,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334366808,"pid":22056,"hostname":"Aravind","msg":"Request recieved to update business profile"}
+{"level":30,"time":1760334366832,"pid":22056,"hostname":"Aravind","msg":"Business updated successfully"}
+{"level":30,"time":1760334366832,"pid":22056,"hostname":"Aravind","msg":"Business profile updated successfully"}
+{"level":30,"time":1760334369517,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334369517,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334369520,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334369521,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}
+{"level":30,"time":1760334369533,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334369534,"pid":22056,"hostname":"Aravind","msg":"Request recieved to get business data for profile."}
+{"level":30,"time":1760334369538,"pid":22056,"hostname":"Aravind","msg":"Fusiness fetched successfully"}
+{"level":30,"time":1760334369539,"pid":22056,"hostname":"Aravind","msg":"Business data fetched successfully"}

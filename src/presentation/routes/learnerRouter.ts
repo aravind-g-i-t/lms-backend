@@ -1,7 +1,6 @@
-import { UpdateLearnerProfileRequestSchema } from "@application/dtos/learner/UpdateProfile";
-import { ResetUserPasswordRequestSchema } from "@application/dtos/shared/ResetUserPassword";
-// import { UpdatePasswordSchema } from "@application/dtos/shared/UpdatePassword";
-import { UpdateUserProfileImageRequestSchema } from "@application/dtos/shared/UpdateProfileImage";
+import { UpdateLearnerProfileRequestSchema } from "@presentation/dtos/learner/UpdateProfile";
+import { UpdatePasswordSchema } from "@presentation/dtos/shared/UpdatePassword";
+import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/UpdateProfileImage";
 import { validateRequest } from "@presentation/middlewares/validateRequest";
 import { learnerController } from "@setup/container/learner/learnerController";
 import { userAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
@@ -23,7 +22,7 @@ learnerRouter.patch(ROUTES.IMAGE,userAuthMiddleware,validateRequest(UpdateUserPr
 
 // Update learner password
 
-learnerRouter.patch(ROUTES.PASSWORD,userAuthMiddleware,validateRequest(ResetUserPasswordRequestSchema),(req:Request,res:Response,next:NextFunction)=>learnerController.updatePassword(req,res,next));
+learnerRouter.patch(ROUTES.PASSWORD,userAuthMiddleware,validateRequest(UpdatePasswordSchema),(req:Request,res:Response,next:NextFunction)=>learnerController.updatePassword(req,res,next));
 
 
 export default learnerRouter;

@@ -1,12 +1,11 @@
 import { Response, NextFunction } from "express";
-import { GetInstructorsRequestSchema, GetInstructorsResponseDTO } from "@application/dtos/instructor/GetInstructors";
+import { GetInstructorsRequestSchema, GetInstructorsResponseDTO } from "@presentation/dtos/instructor/GetInstructors";
 import { MESSAGES } from "shared/constants/messages";
-import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
 import { IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
 import { IGetInstructorDataUseCase } from "@application/IUseCases/instructor/IGetInstructorData";
-import { GetInstructorProfileResponseDTO } from "@application/dtos/instructor/GetProfile";
+import { GetInstructorProfileResponseDTO } from "@presentation/dtos/instructor/GetProfile";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { IUpdateInstructorDataUseCase } from "@application/IUseCases/instructor/IUpdateInstructorData";
 import { IInstructorApplyForVeficationUseCase } from "@application/IUseCases/instructor/IApplyForVerification";
@@ -38,7 +37,7 @@ export class InstructorController {
             const response: GetInstructorsResponseDTO = {
                 success: true,
                 message: MESSAGES.INSTRUCTOR_FETCHED,
-                instructors: result.instructors.map(instructor => InstructorDTOMapper.toGetInstructorsDTO(instructor)),
+                instructors: result.instructors,
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
             }
@@ -79,7 +78,7 @@ export class InstructorController {
             const response: GetInstructorProfileResponseDTO = {
                 success: true,
                 message: MESSAGES.INSTRUCTOR_UPDATED,
-                instructor: InstructorDTOMapper.toGetInstructorProfile(instructorData)
+                instructor:instructorData
             };
             logger.info("Instructor data fetched successfully");
             res.status(STATUS_CODES.OK).json(response)
@@ -239,7 +238,7 @@ export class InstructorController {
             const response: GetInstructorProfileResponseDTO = {
                 success: true,
                 message: MESSAGES.INSTRUCTOR_UPDATED,
-                instructor: InstructorDTOMapper.toGetInstructorProfile(instructorData)
+                instructor: instructorData
             };
             logger.info("Leaner data was fetched successfully.");
             res.status(STATUS_CODES.OK).json(response)

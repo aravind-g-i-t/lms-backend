@@ -1,5 +1,7 @@
 
-import { IInstructorGoogleSigninUseCase, InstructorGoogleSigninOutput } from "@application/IUseCases/instructor/IGoogleSignin";
+import { UserSigninOutputDTO } from "@application/dtos/shared/Signin";
+import { IInstructorGoogleSigninUseCase } from "@application/IUseCases/instructor/IGoogleSignin";
+import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { IGoogleAuthService } from "@domain/interfaces/IGoogleAuthService";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
@@ -14,7 +16,7 @@ export class InstructorGoogleSigninUseCase implements IInstructorGoogleSigninUse
         private _googleAuthService:IGoogleAuthService,
     ) { }
 
-    async execute(token:string):Promise<InstructorGoogleSigninOutput> {
+    async execute(token:string):Promise<UserSigninOutputDTO> {
         const userInfo=await this._googleAuthService.getUserInfo(token);
         const {sub,email,name,picture}=userInfo
         let instructor=await this._instructorRepository.findByEmail(email);
@@ -48,8 +50,9 @@ export class InstructorGoogleSigninUseCase implements IInstructorGoogleSigninUse
 
         const accessToken = await this._tokenService.generateAccessToken({ id: instructor.id, role });
         const refreshToken = await this._tokenService.generateRefreshToken({ id: instructor.id, role });
+        
         return {
-            user:instructor,
+            user:InstructorDTOMapper.toSigninDTO(instructor),
             accessToken,
             refreshToken,
             role

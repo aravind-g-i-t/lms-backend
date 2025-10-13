@@ -1,11 +1,7 @@
-import { BusinessForListing } from "@application/IUseCases/business/IGetBusinesses";
 import { Business } from "@domain/entities/Business";
+import { FindAllBusinessesOutput, FindAllBusinessesQuery, FindAllOptions } from "@domain/types";
 
-type BusinessQuery = {
-  isActive?: boolean;
-  name?: { $regex: string; $options: string };
-  "verification.status"?: string;
-};
+
 
 export interface IBusinessRepository{
     findById(id:string,allowPassword?:boolean):Promise<Business |null>;
@@ -15,9 +11,9 @@ export interface IBusinessRepository{
     findOne(params:Partial<Business>,allowPassword?:boolean):Promise<Business|null>;
 
     findAll(
-        query: BusinessQuery, 
-        options: { page: number; limit: number }
-    ):Promise<{businesses:BusinessForListing[],totalPages: number; totalCount: number}>;
+        query: FindAllBusinessesQuery, 
+        options: FindAllOptions
+    ):Promise<FindAllBusinessesOutput>;
 
     findByIdAndUpdate(id:string,learner:Partial<Business>,allowPassword?:boolean):Promise<Business|null>;
 

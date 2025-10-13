@@ -1,7 +1,7 @@
-import { UpdateInstructorExpertiseRequestSchema } from "@application/dtos/instructor/UpdateExpertise";
-import { UpdateInstructorProfileRequestSchema } from "@application/dtos/instructor/UpdateProfile";
-import { ResetUserPasswordRequestSchema } from "@application/dtos/shared/ResetUserPassword";
-import { UpdateUserProfileImageRequestSchema } from "@application/dtos/shared/UpdateProfileImage";
+import { UpdateInstructorExpertiseRequestSchema } from "@presentation/dtos/instructor/UpdateExpertise";
+import { UpdateInstructorProfileRequestSchema } from "@presentation/dtos/instructor/UpdateProfile";
+import { UpdatePasswordSchema } from "@presentation/dtos/shared/UpdatePassword";
+import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/UpdateProfileImage";
 import { validateRequest } from "@presentation/middlewares/validateRequest";
 import { instructorController } from "@setup/container/instructor/instructorController";
 import { userAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
@@ -35,7 +35,7 @@ instructorRouter.patch(ROUTES.ID_PROOF,userAuthMiddleware,(req:Request,res:Respo
 
 // Update instructor password
 
-instructorRouter.patch(ROUTES.PASSWORD,userAuthMiddleware,validateRequest(ResetUserPasswordRequestSchema),(req:Request,res:Response,next:NextFunction)=>instructorController.updatePassword(req,res,next));
+instructorRouter.patch(ROUTES.PASSWORD,userAuthMiddleware,validateRequest(UpdatePasswordSchema),(req:Request,res:Response,next:NextFunction)=>instructorController.updatePassword(req,res,next));
 
 // Apply for instructor verification
 

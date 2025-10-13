@@ -1,0 +1,37 @@
+export interface InstructorForListing {
+    id: string;
+    name: string;
+    email: string;
+    isActive: boolean;
+    joiningDate:Date;
+    profilePic: string|null;
+    verification:{
+        status:string,
+        remarks:string|null
+    }
+    
+}
+
+export interface InstructorAsRaw{
+    id:string;
+    name:string;
+    email:string;
+    isActive:boolean;
+    walletBalance:number;
+    joiningDate:Date;
+    expertise:string[];
+    verification:{
+        status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
+        remarks:string|null;
+    };
+    identityProof:string|null;
+    rating:number|null;
+    designation:string |null;
+    password:string|null;
+    profilePic:string|null;
+    resume:string|null;
+    googleId:string|null;
+    website:string|null;
+    bio:string|null;
+
+}

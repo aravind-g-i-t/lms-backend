@@ -1,11 +1,10 @@
 import { Response, NextFunction } from "express";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
-import { GetBusinessesRequestSchema, GetBusinessesResponseDTO } from "@application/dtos/business/GetBusinesses";
-import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
+import { GetBusinessesRequestSchema, GetBusinessesResponseDTO } from "@presentation/dtos/business/GetBusinesses";
 import { IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
-import { GetBusinessProfileResponseDTO } from "@application/dtos/business/GetProfile";
+import { GetBusinessProfileResponseDTO } from "@presentation/dtos/business/GetProfile";
 import { IGetBusinessDataUseCase } from "@application/IUseCases/business/IGetBusinessData";
 import { IUpdateBusinessDataUseCase } from "@application/IUseCases/business/IUpdateBusinessData";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
@@ -38,7 +37,7 @@ export class BusinessController {
             const response:GetBusinessesResponseDTO = {
                 success: true,
                 message: MESSAGES.BUSINESS_FETCHED,
-                businesses: result.businesses.map(business => BusinessDTOMapper.toGetBusinessesDTO(business)),
+                businesses: result.businesses,
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
             }
@@ -78,7 +77,7 @@ export class BusinessController {
             const response: GetBusinessProfileResponseDTO = {
                 success: true,
                 message: MESSAGES.BUSINESS_UPDATED,
-                business: BusinessDTOMapper.toGetBusinessProfileDTO(result)
+                business: result
             };
             logger.info("Business data fetched successfully");
             res.status(STATUS_CODES.OK).json(response)
@@ -195,7 +194,7 @@ export class BusinessController {
             const response: GetBusinessProfileResponseDTO = {
                 success: true,
                 message: MESSAGES.BUSINESS_UPDATED,
-                business: BusinessDTOMapper.toGetBusinessProfileDTO(result)
+                business: result
             };
             logger.info("Business data fetched successfully.")
             res.status(STATUS_CODES.OK).json(response)

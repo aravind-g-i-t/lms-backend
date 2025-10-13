@@ -5,7 +5,9 @@ import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
-import { BusinessGoogleSigninOutput, IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
+import { IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
+import { UserSigninOutputDTO } from "@application/dtos/shared/Signin";
+import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 
 export class BusinessGoogleSigninUseCase implements IBusinessGoogleSigninUseCase{
     constructor(
@@ -14,7 +16,9 @@ export class BusinessGoogleSigninUseCase implements IBusinessGoogleSigninUseCase
         private _googleAuthService: IGoogleAuthService,
     ) { }
 
-    async execute(token: string):Promise<BusinessGoogleSigninOutput> {
+
+
+    async execute(token: string):Promise<UserSigninOutputDTO> {
         const userInfo = await this._googleAuthService.getUserInfo(token);
         const { sub, email, name, picture } = userInfo
         let business = await this._businessRepository.findByEmail(email);
@@ -47,12 +51,14 @@ export class BusinessGoogleSigninUseCase implements IBusinessGoogleSigninUseCase
         const accessToken = await this._tokenService.generateAccessToken({ id: business.id, role });
         const refreshToken = await this._tokenService.generateRefreshToken({ id: business.id, role });
         return {
-            user: business,
+            user: BusinessDTOMapper.toSigninDTO(business),
             accessToken,
             refreshToken,
             role
         };
     }
+
+
     isBusinessEmail(email: string): boolean {
         const freeDomains = [
             "gmail.com", "yahoo.com", "outlook.com", "hotmail.com",

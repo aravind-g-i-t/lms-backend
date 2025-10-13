@@ -1,16 +1,16 @@
-import { GetInstructorsDTO } from "@application/dtos/instructor/GetInstructors";
-import { GetInstructorProfileDTO } from "@application/dtos/instructor/GetProfile";
-import { UserSigninDTO } from "@application/dtos/shared/Signin";
-import { Instructor } from "@domain/entities/Instructor";
+import { GetInstructorDataOutputDTO } from "@application/dtos/instructor/GetInstructorData"
+import { InstructorAsRaw, InstructorForListing } from "@application/dtos/instructor/InstructorDTO"
+import { UserForSignin } from "@application/dtos/shared/Signin"
+
 export class InstructorDTOMapper {
-    static toSigninDTO(entity: Instructor): UserSigninDTO {
+    static toSigninDTO(entity: InstructorAsRaw): UserForSignin {
         return {
             id: entity.id,
             name: entity.name,
             profilePic: entity.profilePic,
         }
     }
-    static toGetInstructorsDTO(entity: Instructor): GetInstructorsDTO {
+    static toGetInstructorsDTO(entity: InstructorAsRaw): InstructorForListing {
         return {
             id: entity.id,
             name: entity.name,
@@ -22,7 +22,7 @@ export class InstructorDTOMapper {
         }
     }
 
-    static toGetInstructorProfile(entity: Instructor): GetInstructorProfileDTO {
+    static toGetInstructorProfile(entity: InstructorAsRaw): GetInstructorDataOutputDTO {
         return {
             name: entity.name,
             email: entity.email,

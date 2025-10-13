@@ -1,3 +1,5 @@
+import { UpdateVerificationStatusInputDTO } from "@application/dtos/shared/UpdateVerificationStatus";
+
 export interface IUpdateBusinessVerificationStatusUseCase{
-    execute(input:{id:string,status:string,remarks:string|null}):Promise<void>;
+    execute(input:UpdateVerificationStatusInputDTO):Promise<void>;
 }

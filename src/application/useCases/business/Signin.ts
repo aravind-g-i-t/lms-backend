@@ -1,5 +1,7 @@
 
-import { BusinessSigninUseCaseOutput, IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
+import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/shared/Signin";
+import {  IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
+import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -14,7 +16,9 @@ export class BusinessSigninUseCase implements IBusinessSigninUseCase{
         private _tokenService:ITokenService
     ) { }
 
-    async execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}):Promise<BusinessSigninUseCaseOutput> {
+
+
+    async execute(input: UserSigninInputDTO):Promise<UserSigninOutputDTO> {
 
             const {email,password,role}=input;
 
@@ -40,7 +44,7 @@ export class BusinessSigninUseCase implements IBusinessSigninUseCase{
             
             const refreshToken= await this._tokenService.generateRefreshToken({id:businessEntity.id,role});
             return {
-                user:businessEntity,
+                user:BusinessDTOMapper.toSigninDTO(businessEntity),
                 accessToken,
                 refreshToken,
                 role

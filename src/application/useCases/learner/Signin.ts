@@ -1,5 +1,7 @@
 
-import { ILearnerSigninUseCase, LearnerSigninUseCaseOutput } from "@application/IUseCases/learner/ILearnerSigninUseCase";
+import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/shared/Signin";
+import { ILearnerSigninUseCase } from "@application/IUseCases/learner/ILearnerSigninUseCase";
+import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -13,7 +15,7 @@ export class LearnerSigninUseCase implements ILearnerSigninUseCase{
         private _tokenService: ITokenService
     ) { }
 
-    async execute(input: {email:string,password:string,role:'learner'|'instructor'|'business'}):Promise<LearnerSigninUseCaseOutput> {
+    async execute(input: UserSigninInputDTO):Promise<UserSigninOutputDTO> {
         const { email, password, role } = input;
         const learnerEntity = await this._learnerRepository.findByEmail(email,true);
         if (!learnerEntity) {
@@ -32,7 +34,7 @@ export class LearnerSigninUseCase implements ILearnerSigninUseCase{
         const accessToken = await this._tokenService.generateAccessToken({ id: learnerEntity.id, role });
         const refreshToken = await this._tokenService.generateRefreshToken({ id: learnerEntity.id, role });
         return {
-            user:learnerEntity,
+            user:LearnerDTOMapper.toSigninDTO(learnerEntity),
             accessToken,
             refreshToken,
             role

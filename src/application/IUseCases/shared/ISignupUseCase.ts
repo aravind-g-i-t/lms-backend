@@ -1,8 +1,9 @@
+import { SignupInputDTO, SignupOutputDTO } from "@application/dtos/shared/Signup";
 
 
 
 export interface IUserSignupUseCase {
-    execute(signupInput:{name:string,email:string,password:string,role:string}):Promise<{email:string,otpExpiresAt:Date,role:string}>
+    execute(signupInput:SignupInputDTO):Promise<SignupOutputDTO>
 
     isBusinessEmail(email: string): boolean;
 }

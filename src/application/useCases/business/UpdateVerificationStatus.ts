@@ -1,3 +1,4 @@
+import { UpdateVerificationStatusInputDTO } from "@application/dtos/shared/UpdateVerificationStatus";
 import { IUpdateBusinessVerificationStatusUseCase } from "@application/IUseCases/business/IUpdateVerificationStatus";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -9,7 +10,8 @@ export class UpdateBusinessVerificationStatusUseCase implements IUpdateBusinessV
         private _businessRepository:IBusinessRepository
     ){}
 
-    async execute(input: {id:string; status: "Verified"|"Rejected"; remarks: string|null; }): Promise<void> {
+
+    async execute(input: UpdateVerificationStatusInputDTO ): Promise<void> {
         const {id,status,remarks}=input;
         const verification={
             status,

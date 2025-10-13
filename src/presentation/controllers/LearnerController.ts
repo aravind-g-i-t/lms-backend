@@ -1,15 +1,14 @@
 
 import { NextFunction, Response } from "express";
-import { GetLearnersRequestSchema, GetLearnersResponseDTO } from "@application/dtos/learner/GetLearners";
+import { GetLearnersRequestSchema, GetLearnersResponseDTO } from "@presentation/dtos/learner/GetLearners";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
-import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
 import { IGetLearnerDataUseCase } from "@application/IUseCases/learner/IGetLearnerData";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
 import { IUpdateLearnerDataUseCase } from "@application/IUseCases/learner/IUpdateLearnerData";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
 import { IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners";
-import { GetLearnerProfileResponseDTO } from "@application/dtos/learner/GetProfile";
+import { GetLearnerProfileResponseDTO } from "@presentation/dtos/learner/GetProfile";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 import { AppError } from "shared/errors/AppError";
 import { logger } from "@infrastructure/logging/Logger";
@@ -36,7 +35,7 @@ export class LearnerController {
             const response: GetLearnersResponseDTO = {
                 success: true,
                 message: MESSAGES.LEARNERS_FETCHED,
-                learners: result.learners.map(learner => LearnerDTOMapper.toGetLearnersDTO(learner)),
+                learners: result.learners,
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
             }
@@ -134,7 +133,7 @@ export class LearnerController {
             const response:GetLearnerProfileResponseDTO={
                 success:true,
                 message:MESSAGES.LEARNER_UPDATED,
-                learner:LearnerDTOMapper.toProfileDTO(result)
+                learner:result
             };
             logger.info("Learner data fetched successfully");
             res.status(STATUS_CODES.OK).json(response)
@@ -157,7 +156,7 @@ export class LearnerController {
             const response:GetLearnerProfileResponseDTO={
                 success:true,
                 message:MESSAGES.LEARNER_UPDATED,
-                learner:LearnerDTOMapper.toProfileDTO(result)
+                learner:result
             };
             logger.info("Leaner data was fetched successfully.");
             res.status(STATUS_CODES.OK).json(response)

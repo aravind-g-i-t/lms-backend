@@ -1,15 +1,6 @@
 import { Learner } from "@domain/entities/Learner";
+import { FindAllLearnersOutput, FindAllLearnersQuery, FindAllOptions } from "@domain/types";
 
-type LearnerQuery = {
-  isActive?: boolean;
-  name?: { $regex: string; $options: string };
-};
-
-interface FindAllResponse{
-    learners:Learner[],
-    totalPages:number,
-    totalCount:number,
-}
 
 export interface ILearnerRepository{
     findByEmail(email:string,allowPassword?:boolean):Promise<Learner | null>;
@@ -19,9 +10,9 @@ export interface ILearnerRepository{
     findById(id:string,allowPassword?:boolean):Promise<Learner |null>
 
     findAll(
-        query:LearnerQuery, 
-        options: { page: number; limit: number }
-    ):Promise<FindAllResponse>;
+        query:FindAllLearnersQuery, 
+        options: FindAllOptions
+    ):Promise<FindAllLearnersOutput>;
 
     create(learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>;
 

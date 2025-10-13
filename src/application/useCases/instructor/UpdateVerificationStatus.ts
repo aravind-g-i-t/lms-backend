@@ -1,4 +1,5 @@
 
+import { UpdateVerificationStatusInputDTO } from "@application/dtos/shared/UpdateVerificationStatus";
 import { IUpdateInstructorVerificationStatusUseCase } from "@application/IUseCases/instructor/IUpdateVerificationStatus";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -10,7 +11,7 @@ export class UpdateInstructorVerificationStatusUseCase implements IUpdateInstruc
         private _instructorRepository:IInstructorRepository
     ){}
 
-    async execute(input: {id:string; status: "Verified"|"Rejected"; remarks: string|null; }): Promise<void> {
+    async execute(input: UpdateVerificationStatusInputDTO): Promise<void> {
         const {id,status,remarks}=input;
         const verification={
             status,

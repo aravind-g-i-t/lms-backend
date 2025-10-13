@@ -1,17 +1,8 @@
 
 import { Instructor } from "@domain/entities/Instructor";
+import { FindAllInstructorsOutput, FindAllInstructorsQuery, FindAllOptions } from "@domain/types";
 
-type InstructorQuery = {
-  isActive?: boolean;
-  name?: { $regex: string; $options: string };
-  "verification.status"?: string;
-};
 
-interface FindAllResponse{
-    instructors:Instructor[],
-    totalPages:number,
-    totalCount:number,
-}
 
 export interface IInstructorRepository{
     
@@ -20,9 +11,9 @@ export interface IInstructorRepository{
     findById(id:string,allowPassword?:boolean):Promise<Instructor |null>;
     
     findAll(
-        query: InstructorQuery, 
-        options: { page: number; limit: number }
-    ):Promise<FindAllResponse>;
+        query: FindAllInstructorsQuery, 
+        options: FindAllOptions
+    ):Promise<FindAllInstructorsOutput>;
     
     findByIdAndUpdate(id:string,instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>;
 

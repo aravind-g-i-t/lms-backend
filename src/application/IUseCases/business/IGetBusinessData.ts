@@ -1,5 +1,5 @@
-import { Business } from "@domain/entities/Business";
+import { GetBusinessDataOutputDTO } from "@application/dtos/business/GetBusinessData";
 
 export interface IGetBusinessDataUseCase{
-    execute(id:string):Promise<Business>
+    execute(id:string):Promise<GetBusinessDataOutputDTO>
 }

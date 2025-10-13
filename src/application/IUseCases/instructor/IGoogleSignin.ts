@@ -1,14 +1,9 @@
-import { Instructor } from "@domain/entities/Instructor";
+import { UserSigninOutputDTO } from "@application/dtos/shared/Signin";
 
 
 export interface IInstructorGoogleSigninUseCase {
-    execute(token: string):Promise<InstructorGoogleSigninOutput>
+    execute(token: string):Promise<UserSigninOutputDTO>
 }
 
-export interface InstructorGoogleSigninOutput{
-    user:Instructor;
-    accessToken:string;
-    refreshToken:string;
-    role:'instructor';
-}
+
 

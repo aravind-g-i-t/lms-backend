@@ -1,5 +1,7 @@
 
-import { ILearnerGoogleSigninUseCase, LearnerGoogleSigninOutput } from "@application/IUseCases/learner/IGoogleSignin";
+import { UserSigninOutputDTO } from "@application/dtos/shared/Signin";
+import { ILearnerGoogleSigninUseCase } from "@application/IUseCases/learner/IGoogleSignin";
+import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
 import { IGoogleAuthService } from "@domain/interfaces/IGoogleAuthService";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
@@ -14,7 +16,7 @@ export class LearnerGoogleSigninUseCase implements ILearnerGoogleSigninUseCase {
         private _googleAuthService:IGoogleAuthService,
     ) { }
 
-    async execute(token:string):Promise<LearnerGoogleSigninOutput> {
+    async execute(token:string):Promise<UserSigninOutputDTO> {
         const userInfo=await this._googleAuthService.getUserInfo(token);
         const {sub,email,name,picture}=userInfo
         let learner=await this._learnerRepository.findByEmail(email);
@@ -46,7 +48,7 @@ export class LearnerGoogleSigninUseCase implements ILearnerGoogleSigninUseCase {
         const accessToken = await this._tokenService.generateAccessToken({ id: learner.id, role });
         const refreshToken = await this._tokenService.generateRefreshToken({ id: learner.id, role });
         return {
-            user:learner,
+            user:LearnerDTOMapper.toSigninDTO(learner),
             accessToken,
             refreshToken,
             role

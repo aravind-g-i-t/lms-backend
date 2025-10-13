@@ -6,26 +6,23 @@ import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 import { logger } from "@infrastructure/logging/Logger";
+import { FindAllBusinessesQuery, FindAllOptions, FindAllBusinessesOutput } from "@domain/types";
 
-type BusinessQuery = {
-    isActive?: boolean;
-    name?: { $regex: string; $options: string };
-    "verification.status"?: string;
-};
 
-interface GetAllBusiness {
-    id: string;
-    name: string;
-    email: string;
-    isActive: boolean;
-    planName?: string;
-    employeeCount: number;
-    profilePic?: string;
-    verification: {
-        status: string,
-        remarks: string | null
-    }
-}
+
+// interface GetAllBusiness {
+//     id: string;
+//     name: string;
+//     email: string;
+//     isActive: boolean;
+//     planName?: string;
+//     employeeCount: number;
+//     profilePic?: string;
+//     verification: {
+//         status: string,
+//         remarks: string | null
+//     }
+// }
 
 export class BusinessRepositoryImpl implements IBusinessRepository {
 
@@ -68,9 +65,12 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
 
     }
 
+    // async findAll(query: FindAllBusinessesQuery, options: FindAllOptions): Promise<FindAllBusinessesOutput> {
+        
+    // }
 
-    async findAll(query: BusinessQuery,
-        options: { page: number; limit: number }): Promise<{ businesses: GetAllBusiness[]; totalPages: number; totalCount: number }> {
+    async findAll(query: FindAllBusinessesQuery,
+        options: FindAllOptions): Promise< FindAllBusinessesOutput> {
 
         const { page, limit } = options;
         const skip = (page - 1) * limit;

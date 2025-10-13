@@ -1,5 +1,5 @@
-import { Learner } from "@domain/entities/Learner";
+import { GetLearnerDataOutput } from "@application/dtos/learner/GetLearnerData";
 
 export interface IGetLearnerDataUseCase{
-    execute(id:string):Promise<Learner>
+    execute(id:string):Promise<GetLearnerDataOutput>
 }

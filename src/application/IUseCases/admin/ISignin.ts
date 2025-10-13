@@ -1,5 +1,6 @@
+import { AdminSigninInputDTO, AdminSigninOutputDTO } from "@application/dtos/admin/Signin";
 
 
 export interface IAdminSigninUseCase{
-    execute(input:{email:string,password:string}):Promise<{id:string,email:string,accessToken:string,refreshToken:string}>
+    execute(input:AdminSigninInputDTO):Promise<AdminSigninOutputDTO>
 }

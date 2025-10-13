@@ -1,19 +1,33 @@
 
-import { GetBusinessesDTO } from "@application/dtos/business/GetBusinesses";
-import { GetBusinessProfileDTO } from "@application/dtos/business/GetProfile";
-import {  UserSigninDTO } from "@application/dtos/shared/Signin";
-import { BusinessForListing } from "@application/IUseCases/business/IGetBusinesses";
-import { Business } from "@domain/entities/Business";
+
+
+import { BusinessAsRaw, BusinessForListing } from "@application/dtos/business/BusinessDTO";
+import { GetBusinessDataOutputDTO } from "@application/dtos/business/GetBusinessData";
+import { UserForSignin } from "@application/dtos/shared/Signin";
+
+interface BusinessForGetBusinesses {
+    id: string;
+    name: string;
+    email: string;
+    isActive: boolean;
+    planName?: string;
+    employeeCount: number;
+    profilePic: string|null;
+    verification: {
+        status: string,
+        remarks: string | null
+    }
+}
 
 export class BusinessDTOMapper{
-    static toSigninDTO(entity:Business):UserSigninDTO{
+    static toSigninDTO(entity:BusinessAsRaw):UserForSignin{
         return {
             id:entity.id,
             name:entity.name,
             profilePic:entity.profilePic,
         }
     }
-    static toGetBusinessesDTO(entity:BusinessForListing):GetBusinessesDTO{
+    static toGetBusinessesDTO(entity:BusinessForGetBusinesses):BusinessForListing{
             return{
                 id:entity.id,
                 name:entity.name,
@@ -27,7 +41,7 @@ export class BusinessDTOMapper{
             }
         }
 
-    static toGetBusinessProfileDTO(entity:Business):GetBusinessProfileDTO{
+    static toGetBusinessProfileDTO(entity:BusinessAsRaw):GetBusinessDataOutputDTO{
             return{
                 name:entity.name,
                 email:entity.email,

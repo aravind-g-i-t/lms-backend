@@ -1,5 +1,5 @@
+import { InstructorAsRaw } from "@application/dtos/instructor/InstructorDTO";
 import { IUpdateInstructorDataUseCase } from "@application/IUseCases/instructor/IUpdateInstructorData";
-import { Instructor } from "@domain/entities/Instructor";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
@@ -10,11 +10,11 @@ export class UpdateInstructorDataUseCase implements IUpdateInstructorDataUseCase
         private _instructorRepository:IInstructorRepository
     ){}
 
-    async execute(id: string, update: Partial<Instructor>): Promise<Instructor> {
+    async execute(id: string, update: Partial<InstructorAsRaw>): Promise<void> {
         const instructor=await this._instructorRepository.findByIdAndUpdate(id,update);
         if(!instructor){
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_UPDATED,STATUS_CODES.NOT_MODIFIED)
         }
-        return instructor;
+        return;
     }
 }

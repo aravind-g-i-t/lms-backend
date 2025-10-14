@@ -1964,3 +1964,91 @@
 {"level":30,"time":1760382469300,"pid":7276,"hostname":"Aravind","msg":"Admin logged out successfully."}
 {"level":30,"time":1760382481216,"pid":7276,"hostname":"Aravind","msg":"User logout request recieved"}
 {"level":30,"time":1760382481216,"pid":7276,"hostname":"Aravind","msg":"User logged out successfully."}
+{"level":30,"time":1760413896307,"pid":10864,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760413896624,"pid":10864,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760413896631,"pid":10864,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760413932965,"pid":10864,"hostname":"Aravind","msg":"Google signin request recieved."}
+{"level":30,"time":1760413933253,"pid":10864,"hostname":"Aravind","msg":"Accessed used data from google signin api."}
+{"level":50,"time":1760413933306,"pid":10864,"hostname":"Aravind","msg":"Failed to fetch Learner."}
+{"level":30,"time":1760413933368,"pid":10864,"hostname":"Aravind","msg":"Learner created successfully"}
+{"level":30,"time":1760413933373,"pid":10864,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760413933374,"pid":10864,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760413933374,"pid":10864,"hostname":"Aravind","msg":"User singed in via google authentication successfully."}
+{"level":30,"time":1760413966380,"pid":10864,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760413966381,"pid":10864,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760413966384,"pid":10864,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760413966421,"pid":10864,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760413966430,"pid":10864,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760413966430,"pid":10864,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760413966433,"pid":10864,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760413966436,"pid":10864,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414142171,"pid":20464,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760414146893,"pid":16536,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760414147203,"pid":16536,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760414147209,"pid":16536,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760414213818,"pid":2024,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760414214157,"pid":2024,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760414214161,"pid":2024,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760414241599,"pid":11104,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760414241887,"pid":11104,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760414241894,"pid":11104,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760414243657,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414243658,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414243660,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414243682,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414243690,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414243690,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414243692,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414243694,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414245797,"pid":11104,"hostname":"Aravind","msg":"User logout request recieved"}
+{"level":30,"time":1760414245797,"pid":11104,"hostname":"Aravind","msg":"User logged out successfully."}
+{"level":30,"time":1760414295119,"pid":11104,"hostname":"Aravind","msg":"Google signin request recieved."}
+{"level":30,"time":1760414295502,"pid":11104,"hostname":"Aravind","msg":"Accessed used data from google signin api."}
+{"level":50,"time":1760414295509,"pid":11104,"hostname":"Aravind","msg":"Failed to fetch Learner."}
+{"level":30,"time":1760414295527,"pid":11104,"hostname":"Aravind","msg":"Learner created successfully"}
+{"level":30,"time":1760414295529,"pid":11104,"hostname":"Aravind","msg":"Access token genetated successfully"}
+{"level":30,"time":1760414295531,"pid":11104,"hostname":"Aravind","msg":"Refresh token genetated successfully"}
+{"level":30,"time":1760414295531,"pid":11104,"hostname":"Aravind","msg":"User singed in via google authentication successfully."}
+{"level":30,"time":1760414297597,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414297597,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414297601,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414297601,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414297611,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414297612,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414297615,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414297615,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414311867,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414311868,"pid":11104,"hostname":"Aravind","msg":"Request recieved to update learner profile"}
+{"level":30,"time":1760414311885,"pid":11104,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760414311885,"pid":11104,"hostname":"Aravind","msg":"Learner profile updated successfully"}
+{"level":30,"time":1760414344653,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414344654,"pid":11104,"hostname":"Aravind","msg":"Request recieved to update learner profile image."}
+{"level":30,"time":1760414344656,"pid":11104,"hostname":"Aravind","msg":"Learner updated successfully"}
+{"level":30,"time":1760414344656,"pid":11104,"hostname":"Aravind","msg":"Learner profile image updated successfully"}
+{"level":30,"time":1760414352413,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414352413,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414352415,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414352418,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414352426,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414352426,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414352428,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414352431,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414355787,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414355787,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414355789,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414355791,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414355796,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414355796,"pid":11104,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414355799,"pid":11104,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414355800,"pid":11104,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414835822,"pid":20652,"hostname":"Aravind","msg":"Connected to Redis"}
+{"level":30,"time":1760414836099,"pid":20652,"hostname":"Aravind","msg":"Mongoose connected to DB"}
+{"level":30,"time":1760414836105,"pid":20652,"hostname":"Aravind","msg":"Server running in development mode at port 3000"}
+{"level":30,"time":1760414847007,"pid":20652,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414847007,"pid":20652,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414847010,"pid":20652,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414847032,"pid":20652,"hostname":"Aravind","msg":"Learner data fetched successfully"}
+{"level":30,"time":1760414847042,"pid":20652,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414847042,"pid":20652,"hostname":"Aravind","msg":"Request recieved to get learner data for profile."}
+{"level":30,"time":1760414847044,"pid":20652,"hostname":"Aravind","msg":"Learner fetched successfully"}
+{"level":30,"time":1760414847048,"pid":20652,"hostname":"Aravind","msg":"Learner data fetched successfully"}

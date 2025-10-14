@@ -10,19 +10,6 @@ import { FindAllBusinessesQuery, FindAllOptions, FindAllBusinessesOutput } from 
 
 
 
-// interface GetAllBusiness {
-//     id: string;
-//     name: string;
-//     email: string;
-//     isActive: boolean;
-//     planName?: string;
-//     employeeCount: number;
-//     profilePic?: string;
-//     verification: {
-//         status: string,
-//         remarks: string | null
-//     }
-// }
 
 export class BusinessRepositoryImpl implements IBusinessRepository {
 

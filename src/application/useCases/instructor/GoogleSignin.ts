@@ -18,7 +18,7 @@ export class InstructorGoogleSigninUseCase implements IInstructorGoogleSigninUse
 
     async execute(token:string):Promise<UserSigninOutputDTO> {
         const userInfo=await this._googleAuthService.getUserInfo(token);
-        const {sub,email,name,picture}=userInfo
+        const {sub,email,name}=userInfo
         let instructor=await this._instructorRepository.findByEmail(email);
         if(instructor && !instructor.isActive){
                     throw new AppError(MESSAGES.BLOCKED,STATUS_CODES.FORBIDDEN)
@@ -30,7 +30,6 @@ export class InstructorGoogleSigninUseCase implements IInstructorGoogleSigninUse
             instructor=await this._instructorRepository.create({
                 name,
                 email,
-                profilePic:picture,
                 isActive:true,
                 walletBalance:0,
                 expertise:[],

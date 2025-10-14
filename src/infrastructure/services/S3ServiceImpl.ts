@@ -5,6 +5,8 @@ import { IS3Service } from "../../domain/interfaces/IS3Service";
 export class S3ServiceImpl implements IS3Service {
     private s3: S3Client;
     private bucketName: string;
+    private uploadUrlExpiry: number;
+    private downloadUrlExpiry: number;
 
     constructor() {
         this.s3 = new S3Client({
@@ -15,6 +17,8 @@ export class S3ServiceImpl implements IS3Service {
             },
         });
         this.bucketName = process.env.S3_BUCKET_NAME!;
+        this.uploadUrlExpiry = Number(process.env.S3_UPLOAD_URL_EXPIRY) || 60;
+        this.downloadUrlExpiry = Number(process.env.S3_DOWNLOAD_URL_EXPIRY) || 300;
     }
 
     async getUploadUrl(
@@ -27,7 +31,7 @@ export class S3ServiceImpl implements IS3Service {
             ContentType: contentType,
         });
 
-        const url = await getSignedUrl(this.s3, command, { expiresIn: 60 });
+        const url = await getSignedUrl(this.s3, command, { expiresIn: this.uploadUrlExpiry });
         return { url, key };
     }
 
@@ -37,7 +41,7 @@ export class S3ServiceImpl implements IS3Service {
             Key: key,
         });
 
-        const url = await getSignedUrl(this.s3, command, { expiresIn: 300 });
+        const url = await getSignedUrl(this.s3, command, { expiresIn: this.downloadUrlExpiry });
         return url;
     }
 }

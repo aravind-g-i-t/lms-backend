@@ -18,7 +18,7 @@ export class LearnerGoogleSigninUseCase implements ILearnerGoogleSigninUseCase {
 
     async execute(token:string):Promise<UserSigninOutputDTO> {
         const userInfo=await this._googleAuthService.getUserInfo(token);
-        const {sub,email,name,picture}=userInfo
+        const {sub,email,name}=userInfo
         let learner=await this._learnerRepository.findByEmail(email);
         if(learner && !learner.isActive){
                     throw new AppError(MESSAGES.BLOCKED,STATUS_CODES.UNAUTHORIZED)
@@ -30,7 +30,6 @@ export class LearnerGoogleSigninUseCase implements ILearnerGoogleSigninUseCase {
             learner=await this._learnerRepository.create({
                 name,
                 email,
-                profilePic:picture,
                 isActive:true,
                 walletBalance:0,
                 googleId:sub

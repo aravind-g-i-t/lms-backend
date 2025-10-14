@@ -3,6 +3,7 @@ import {   IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBus
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { GetBusinessesInput, GetBusinessesOutput } from "@application/dtos/business/GetBusinesses";
+import { IS3Service } from "@domain/interfaces/IS3Service";
 
 type BusinessQuery = {
     isActive?: boolean;
@@ -11,29 +12,47 @@ type BusinessQuery = {
 };
 
 export class GetBusinessesUseCase implements IGetBusinessesUseCase {
-    constructor(private _businessRepository: IBusinessRepository) { }
+    constructor(
+        private _businessRepository: IBusinessRepository,
+        private _fileStorageService: IS3Service
+    ) {}
 
     async execute(input: GetBusinessesInput): Promise<GetBusinessesOutput> {
         const { page, search, status, limit, verificationStatus } = input;
 
         const query: BusinessQuery = {};
-
         if (status) {
             query.isActive = status === "Active";
         }
-
         if (search?.trim()) {
-            query.name = { $regex: escapeRegExp(search.trim()).slice(0, 100), $options: "i" };
+            query.name = {
+                $regex: escapeRegExp(search.trim()).slice(0, 100),
+                $options: "i",
+            };
         }
-
         if (verificationStatus) {
             query["verification.status"] = verificationStatus;
         }
 
         const result = await this._businessRepository.findAll(query, { page, limit });
-        const {  totalPages, totalCount } = result;
-        const businesses=result.businesses.map(business=>BusinessDTOMapper.toGetBusinessesDTO(business));
+        const { totalPages, totalCount } = result;
+
+        const businesses = await Promise.all(
+            result.businesses.map(async (business) => {
+                const profilePicUrl = business.profilePic
+                    ? await this._fileStorageService.getDownloadUrl(business.profilePic)
+                    : null;
+
+
+
+                return BusinessDTOMapper.toGetBusinessesDTO({
+                    ...business,
+                    profilePic: profilePicUrl,
+                });
+            })
+        );
 
         return { businesses, totalPages, totalCount };
     }
 }
+

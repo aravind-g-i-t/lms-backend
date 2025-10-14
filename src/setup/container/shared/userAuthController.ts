@@ -22,6 +22,7 @@ import { VerifyEmailUseCase } from "@application/useCases/shared/VerifyEmail";
 import { OTPVerificationUseCase } from "@application/useCases/shared/VerifyOTP";
 import { ResetPasswordUseCase } from "@application/useCases/shared/ResetPassword";
 import { adminRepository } from "../admin/adminController";
+import { s3Service } from "./s3Controller";
 
 
 
@@ -36,11 +37,11 @@ const businessOTPVerificationUseCase=new BusinessOTPVerificationUseCase(cacheSer
 
 const resendOTPUseCase=new ResendOTPUseCase(cacheService,nodemailerService);
 
-const learnerSigninUseCase=new LearnerSigninUseCase(learnerRepository,tokenService)
+const learnerSigninUseCase=new LearnerSigninUseCase(learnerRepository,tokenService,s3Service)
 
-const instructorSigninUseCase=new InstructorSigninUseCase(instructorRepository,tokenService);
+const instructorSigninUseCase=new InstructorSigninUseCase(instructorRepository,tokenService,s3Service);
 
-const businessSigninUseCase=new BusinessSigninUseCase(businessRepository,tokenService);
+const businessSigninUseCase=new BusinessSigninUseCase(businessRepository,tokenService,s3Service);
 
 const userRefreshTokenUseCase=new UserRefreshTokenUseCase(tokenService,learnerRepository,instructorRepository,businessRepository,adminRepository);
 

@@ -7,12 +7,13 @@ import { UpdateInstructorPasswordUseCase } from "@application/useCases/instructo
 import { UpdateInstructorDataUseCase } from "@application/useCases/instructor/UpdateInstructorData";
 import { InstructorApplyForVeficationUseCase } from "@application/useCases/instructor/ApplyForVerification";
 import { UpdateInstructorVerificationStatusUseCase } from "@application/useCases/instructor/UpdateVerificationStatus";
+import { s3Service } from "../shared/s3Controller";
 
-const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository);
+const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository,s3Service);
 
 const updateInstructorStatusUseCase=new UpdateInstructorStatusUseCase(instructorRepository);
 
-const getInstructorDataUseCase=new GetInstructorDataUseCase(instructorRepository)
+const getInstructorDataUseCase=new GetInstructorDataUseCase(instructorRepository,s3Service)
 
 const updateInstructorPasswordUseCase=new UpdateInstructorPasswordUseCase(instructorRepository);
 

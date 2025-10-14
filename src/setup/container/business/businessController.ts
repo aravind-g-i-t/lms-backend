@@ -7,13 +7,14 @@ import { UpdateBusinessDataUseCase } from "@application/useCases/business/Update
 import { UpdateBusinessPasswordUseCase } from "@application/useCases/business/UpdatePassword";
 import { ApplyForBusinessVerificationUseCase } from "@application/useCases/business/ApplyForVerification";
 import { UpdateBusinessVerificationStatusUseCase } from "@application/useCases/business/UpdateVerificationStatus";
+import { s3Service } from "../shared/s3Controller";
 
-const getBusinessesUseCase=new GetBusinessesUseCase(businessRepository)
+const getBusinessesUseCase=new GetBusinessesUseCase(businessRepository,s3Service)
 
 
 const updateBusinessStatusUseCase=new UpdateBusinessStatusUseCase(businessRepository);
 
-const getBusinessesDataUseCase=new GetBusinessDataUseCase(businessRepository);
+const getBusinessesDataUseCase=new GetBusinessDataUseCase(businessRepository,s3Service);
 
 const updateBususinessDataUseCase=new UpdateBusinessDataUseCase(businessRepository);
 

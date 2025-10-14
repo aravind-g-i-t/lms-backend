@@ -5,6 +5,7 @@ export const ROUTES = {
     INSTRUCTOR:"/instructor",
     BUSINESS:"/business",
     ADMIN:"/admin",
+    S3:"/s3",
     SIGNUP: "/signup",
     SEND_OTP:"/otp/send",
     RESEND_OPT:"/otp/resend",

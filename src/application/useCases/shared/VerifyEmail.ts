@@ -37,7 +37,7 @@ export class VerifyEmailUseCase implements IVerifyEmailUseCase{
         }
         const user=await repository.findByEmail(email);
         if(!user){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.NO_ACCOUNT,STATUS_CODES.NOT_FOUND)
         }
             const cacheKey=`${email}:otp`;
             const otp=generateOTP();

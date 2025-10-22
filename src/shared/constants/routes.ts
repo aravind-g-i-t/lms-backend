@@ -37,4 +37,8 @@ export const ROUTES = {
     INSTRUCTOR_DATA:"/instructor/:id",
     BUSINESS_DATA:"/business/:id",
 
+    CATEGORY:"/category",
+    CATEGORIES:"/categories",
+    CATEGORY_STATUS:"/category/status"
+
 } as const;

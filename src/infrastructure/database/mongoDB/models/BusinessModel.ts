@@ -1,4 +1,3 @@
-// infrastructure/database/mongo/models/OrganisationModel.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface BusinessDoc extends Document {

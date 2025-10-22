@@ -2,6 +2,7 @@
 import { AdminSigninRequestSchema } from "@presentation/dtos/admin/Signin";
 import { GetBusinessesRequestSchema } from "@presentation/dtos/business/GetBusinesses";
 import { GetBusinessForAdminRequestSchema } from "@presentation/dtos/business/GetBusinessForAdmin";
+import { GetCategoriesRequestSchema } from "@presentation/dtos/category/GetCategories";
 import { GetInstructorForAdminRequestSchema } from "@presentation/dtos/instructor/GetInstructorForAdmin";
 import { GetInstructorsRequestSchema } from "@presentation/dtos/instructor/GetInstructors";
 import { GetLearnerForAdminRequestSchema } from "@presentation/dtos/learner/GetLearnerForAdmin";
@@ -15,6 +16,7 @@ import { adminController } from "@setup/container/admin/adminController";
 import { businessController } from "@setup/container/business/businessController";
 import { instructorController } from "@setup/container/instructor/instructorController";
 import { learnerController } from "@setup/container/learner/learnerController";
+import { categoryController } from "@setup/container/shared/categoryController";
 import { userAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 
 import express, { Request, Response,NextFunction } from "express";
@@ -73,8 +75,21 @@ adminRouter.patch(ROUTES.INSTRUCTOR_VERIFICATION,userAuthMiddleware,validateRequ
 
 adminRouter.patch(ROUTES.BUSINESS_VERIFICATION,userAuthMiddleware,validateRequest(UpdateUserVerificationStatusRequestSchema),(req:Request,res:Response,next:NextFunction)=>businessController.updateVerificationStatus(req,res,next));
 
+// Add category
 
+adminRouter.post(ROUTES.CATEGORY,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>categoryController.addCategory(req,res,next));
 
+// Get all categories
+
+adminRouter.get(ROUTES.CATEGORIES,userAuthMiddleware,validateRequest(GetCategoriesRequestSchema),(req:Request,res:Response,next:NextFunction)=>categoryController.getAllCategories(req,res,next));
+
+// Update category
+
+adminRouter.put(ROUTES.CATEGORY,(req:Request,res:Response,next:NextFunction)=>categoryController.updateCategory(req,res,next));
+
+// Update categoryStatus
+
+adminRouter.patch(ROUTES.CATEGORY_STATUS,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>categoryController.updateStatus(req,res,next));
 
 
 export default adminRouter;

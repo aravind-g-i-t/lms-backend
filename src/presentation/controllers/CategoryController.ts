@@ -7,13 +7,15 @@ import { IGetCategoriesUseCase } from "@application/IUseCases/category/IGetCateg
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { IUpdateCategoryUseCase } from "@application/IUseCases/category/IUpdateCategory";
 import { IUpdateCategoryStatusUseCase } from "@application/IUseCases/category/IUpdateStatus";
+import { IGetCategoryOptionsUseCase } from "@application/IUseCases/category/IGetCategoryOptions";
 
 export class CategoryController {
     constructor(
         private _addCategoryUseCase: IAddCategoryUseCase,
         private _getCategoriesUseCase:IGetCategoriesUseCase,
         private _updateCategoryUseCase:IUpdateCategoryUseCase,
-        private _updateCategoryStatusUseCase:IUpdateCategoryStatusUseCase
+        private _updateCategoryStatusUseCase:IUpdateCategoryStatusUseCase,
+        private _getCategoryOptionsUseCase:IGetCategoryOptionsUseCase
     ) { }
 
     async addCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -41,7 +43,7 @@ export class CategoryController {
     // ✅ Get all categories
     async getAllCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            logger.info("Request recieved to fetch learners for listing.");
+            logger.info("Request recieved to fetch categories for listing.");
             const { query } = GetCategoriesRequestSchema.parse(req);
 
             const { page, search, status, limit } = query;
@@ -84,4 +86,24 @@ export class CategoryController {
             next(err)
         }
     }
+
+
+    async getCategoryOptions(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            logger.info("Request recieved to fetch category options");
+
+
+            const categories=await this._getCategoryOptionsUseCase.execute();
+            res.status(STATUS_CODES.OK).json({
+                success:true,
+                message:"Fetched categorie options successfully",
+                data:{categories}
+            });
+            
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    
 }

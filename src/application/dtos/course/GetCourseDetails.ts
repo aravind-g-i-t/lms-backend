@@ -1,31 +1,5 @@
-export enum CourseLevel {
-    Beginner = "beginner",
-    Intermediate = "intermediate",
-    Advanced = "advanced"
-}
+import { CourseLevel, CourseStatus, ResourceType, VerificationStatus } from "@domain/entities/Course";
 
-export enum CourseStatus {
-    Draft = "draft",
-    Published = "published",
-    Archived = "archived"
-}
-
-export enum VerificationStatus {
-    NotVerified = "not_verified",
-    UnderReview = "under_review",
-    Verified = "verified",
-    Rejected = "rejected",
-    Blocked = "blocked"
-}
-
-
-export enum ResourceType {
-    PDF = "pdf",
-    DOCS = "docs",
-    EXE = "exe",
-    ZIP = "zip",
-    OTHER = "other"
-}
 
 
 export interface Chapter {
@@ -39,7 +13,7 @@ export interface Chapter {
 
 
 export interface Resource {
-    id:string
+    id:string;
     title: string;
     file: string;
     size: number;
@@ -54,15 +28,26 @@ export interface Module {
     chapters: Chapter[];
 }
 
+interface Instructor {
+    id: string;
+    name: string;
+    profilePic: string | null;
 
-export interface Course {
+}
+
+export interface Category {
+    id: string;
+    name: string;
+}
+
+export interface GetCourseDetailsOutput {
     id: string;
     title: string;
     description: string;
     prerequisites: string[];
-    categoryId: string;
+    category: Category;
     enrollmentCount: number;
-    instructorId: string;
+    instructor: Instructor;
     modules: Module[];
     level: CourseLevel;
     duration: number;
@@ -76,11 +61,11 @@ export interface Course {
     previewVideo: string | null;
     price: number;
     rating: number | null;
+    publishedAt: Date | null;
     verification: {
         status: VerificationStatus,
         reviewedAt: Date | null;
         submittedAt: Date | null;
         remarks: string | null
     }
-    publishedAt: Date | null;
 }

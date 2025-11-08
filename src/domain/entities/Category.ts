@@ -3,6 +3,6 @@ export interface Category {
     name: string;
     description: string;
     isActive: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }

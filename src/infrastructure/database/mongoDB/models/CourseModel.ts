@@ -1,87 +1,166 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
+import { CategoryDoc } from "./CategoryModel";
+import { InstructorDoc } from "./InstructorModel";
 
-
-export interface SectionDoc{
-    title: string;
-    description: string;
-    duration:number;
-    lectures: LectureDoc[]; 
+export enum CourseLevel {
+    Beginner = "beginner",
+    Intermediate = "intermediate",
+    Advanced = "advanced",
 }
 
-export interface LectureDoc{
+export enum CourseStatus {
+    Draft = "draft",
+    Published = "published",
+    Archived = "archived",
+}
+
+export enum VerificationStatus {
+    NotVerified = "not_verified",
+    UnderReview = "under_review",
+    Verified = "verified",
+    Rejected = "rejected",
+    Blocked = "blocked"
+
+}
+
+export enum ResourceType {
+    PDF = "pdf",
+    DOCS = "docs",
+    EXE = "exe",
+    ZIP = "zip",
+    OTHER = "other",
+}
+
+export interface IResource {
+    id: string
+    title: string;
+    file: string;
+    size: number;
+    type: ResourceType;
+}
+
+export interface IChapter {
+    id: string
     title: string;
     description: string;
-    thumbnail:string;
-    videoUrl: string;
+    video: string;
     duration: number;
-    resources: string[];
+    resources: IResource[];
 }
 
-const LectureSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  thumbnail: { type: String, required: true },
-  videoUrl: { type: String, required: true },
-  duration: { type: Number, required: true },
-  resources: { type: [String], default: [] },
-});
-
-const SectionSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  duration: { type: Number, required: true },
-  lectures: { type: [LectureSchema], default: [] },
-});
-
-
-
+export interface IModule {
+    id: string
+    title: string;
+    description: string;
+    duration: number;
+    chapters: IChapter[];
+}
 
 export interface CourseDoc extends Document {
-  _id:Types.ObjectId;
-  title: string;
-  description: string;
-  thumbnail: string | null;
-  previewVideo: string | null;
-  preRequisites: string[];
-  categoryId: string;
-  subCategoryId: string;
-  enrollmentCount: number;
-  instructorId: string;
-  sections: SectionDoc[];
-  price: number | null;
-  level: "beginner" | "intermediate" | "advanced";
-  duration: number;
-  tags: string[];
-  rating: number | null;
-  totalRatings: number;
-  isActive: boolean;
-  status: "draft" | "under_review" | "published" | "archived";
-  publishedAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
+    _id: Types.ObjectId;
+    title: string;
+    description: string;
+    thumbnail: string | null;
+    previewVideo: string | null;
+    prerequisites: string[];
+    categoryId: Types.ObjectId;
+    enrollmentCount: number;
+    instructorId: Types.ObjectId;
+    modules: IModule[];
+    price: number;
+    level: CourseLevel;
+    duration: number;
+    tags: string[];
+    whatYouWillLearn: string[];
+    rating: number | null;
+    totalRatings: number;
+    status: CourseStatus;
+    verification: {
+        status: VerificationStatus;
+        reviewedAt: Date | null;
+        submittedAt: Date | null;
+        remarks: string | null;
+    };
+    publishedAt: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-const CourseSchema = new Schema<CourseDoc>({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  thumbnail: { type: String, default: null },
-  previewVideo: { type: String, default: null },
-  preRequisites: { type: [String], default: [] },
-  categoryId: { type: String, required: true },
-  subCategoryId: { type: String, required: true },
-  enrollmentCount: { type: Number, default: 0 },
-  instructorId: { type: String, required: true },
-  sections: { type: [SectionSchema], default: [] },
-  price: { type: Number, default: null },
-  level: { type: String, enum: ["beginner", "intermediate", "advanced"], required: true },
-  duration: { type: Number, required: true },
-  tags: { type: [String], default: [] },
-  rating: { type: Number, default: null },
-  totalRatings: { type: Number, default: 0 },
-  isActive: { type: Boolean, default: true },
-  status: { type: String, enum: ["draft", "under_review", "published", "archived"], default: "draft" },
-  publishedAt: { type: Date, default: null },
+export interface HydratedCourseDoc extends Omit<CourseDoc, "categoryId" | "instructorId"> {
+    categoryId: CategoryDoc;
+    instructorId: InstructorDoc;
+}
 
-},{ timestamps: true });
+const ResourceSchema = new Schema<IResource>(
+    {
+        id: { type: String, required: true },
+        title: { type: String, required: true },
+        file: { type: String, required: true },
+        size: { type: Number, required: true },
+        type: { type: String, enum: Object.values(ResourceType), required: true },
+    },
+    { _id: false }
+);
+
+const ChapterSchema = new Schema<IChapter>(
+    {
+        id: { type: String, required: true },
+        title: { type: String, required: true, trim: true },
+        description: { type: String, required: true },
+        video: { type: String, required: true },
+        duration: { type: Number, required: true },
+        resources: { type: [ResourceSchema], default: [] },
+    },
+    { _id: false }
+);
+
+const ModuleSchema = new Schema<IModule>(
+    {
+        id: { type: String, required: true },
+        title: { type: String, required: true, trim: true },
+        description: { type: String, required: true },
+        duration: { type: Number, required: true },
+        chapters: { type: [ChapterSchema], default: [] },
+    },
+    { _id: false }
+);
+
+const CourseSchema = new Schema<CourseDoc>(
+    {
+        title: { type: String, required: true, trim: true },
+        description: { type: String, required: true },
+        thumbnail: { type: String, default: null },
+        previewVideo: { type: String, default: null },
+        prerequisites: { type: [String], default: [] },
+        categoryId: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+        enrollmentCount: { type: Number, default: 0 },
+        instructorId: { type: Schema.Types.ObjectId, ref: "Instructor", required: true },
+        modules: { type: [ModuleSchema], default: [] },
+        price: { type: Number, required: true },
+        level: { type: String, enum: Object.values(CourseLevel), required: true },
+        duration: { type: Number, required: true },
+        tags: { type: [String], default: [] },
+        whatYouWillLearn: { type: [String], default: [] },
+        rating: { type: Number, default: null },
+        totalRatings: { type: Number, default: 0 },
+        status: {
+            type: String,
+            enum: Object.values(CourseStatus),
+            default: CourseStatus.Draft,
+        },
+        verification: {
+            status: {
+                type: String,
+                enum: Object.values(VerificationStatus),
+                default: VerificationStatus.NotVerified,
+            },
+            reviewedAt: { type: Date, default: null },
+            submittedAt: { type: Date, default: null },
+            remarks: { type: String, default: null },
+        },
+        publishedAt: { type: Date, default: null },
+    },
+    { timestamps: true }
+);
 
 export const CourseModel = mongoose.model<CourseDoc>("Course", CourseSchema);

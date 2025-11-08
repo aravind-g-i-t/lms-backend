@@ -39,6 +39,19 @@ export const ROUTES = {
 
     CATEGORY:"/category",
     CATEGORIES:"/categories",
-    CATEGORY_STATUS:"/category/status"
+    CATEGORY_STATUS:"/category/status",
+
+    COURSE:"/course",
+    COURSES:"/courses",
+    COURSE_INFO:"/course/info",
+    COURSE_THUMBNAIL:"/course/thumbnail",
+    COURSE_PREVIEW_VIDEO:"/course/preview-video",
+    COURSE_OBJECTIVES:"/course/objectives",
+    COURSE_TAGS:"/course/tags",
+    COURSE_PREREQUISITES:"/course/prerequisites",
+    COURSE_VERIFICATION:"/course/verification",
+    ADD_MODULE:"/course/module/add",
+    ADD_CHAPTER:"/course/chapter/add",
+    
 
 } as const;

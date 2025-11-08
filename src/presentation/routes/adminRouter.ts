@@ -3,6 +3,7 @@ import { AdminSigninRequestSchema } from "@presentation/dtos/admin/Signin";
 import { GetBusinessesRequestSchema } from "@presentation/dtos/business/GetBusinesses";
 import { GetBusinessForAdminRequestSchema } from "@presentation/dtos/business/GetBusinessForAdmin";
 import { GetCategoriesRequestSchema } from "@presentation/dtos/category/GetCategories";
+import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
 import { GetInstructorForAdminRequestSchema } from "@presentation/dtos/instructor/GetInstructorForAdmin";
 import { GetInstructorsRequestSchema } from "@presentation/dtos/instructor/GetInstructors";
 import { GetLearnerForAdminRequestSchema } from "@presentation/dtos/learner/GetLearnerForAdmin";
@@ -17,6 +18,7 @@ import { businessController } from "@setup/container/business/businessController
 import { instructorController } from "@setup/container/instructor/instructorController";
 import { learnerController } from "@setup/container/learner/learnerController";
 import { categoryController } from "@setup/container/shared/categoryController";
+import { courseController } from "@setup/container/shared/courseController";
 import { userAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 
 import express, { Request, Response,NextFunction } from "express";
@@ -90,6 +92,13 @@ adminRouter.put(ROUTES.CATEGORY,(req:Request,res:Response,next:NextFunction)=>ca
 // Update categoryStatus
 
 adminRouter.patch(ROUTES.CATEGORY_STATUS,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>categoryController.updateStatus(req,res,next));
+
+
+
+adminRouter.patch(ROUTES.COURSE_VERIFICATION,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateVerification(req,res,next));
+
+
+adminRouter.get(ROUTES.COURSES,userAuthMiddleware, validateRequest(GetCoursesForAdminRequestSchema),(req:Request,res:Response,next:NextFunction)=>courseController.getCoursesForAdmin(req,res,next));
 
 
 export default adminRouter;

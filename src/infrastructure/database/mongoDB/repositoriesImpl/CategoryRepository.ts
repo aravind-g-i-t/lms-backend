@@ -1,8 +1,8 @@
 import { ICategoryRepository } from "@domain/interfaces/ICategoryRepository";
-import { CategoryDoc, CategoryModel } from "../models/CategoryModel";
-import { Category } from "@domain/entities/Category";
+import {  CategoryModel } from "../models/CategoryModel";
 import { logger } from "@infrastructure/logging/Logger";
 import { AppError } from "shared/errors/AppError";
+import { CategoryMapper } from "../mappers/CategoryMapper";
 
 type AllCategoryQuery = {
     isActive?: boolean;
@@ -10,31 +10,41 @@ type AllCategoryQuery = {
 };
 
 type FindAllCategoriesOutput={
-    categories:Category[],
+    categories:CategoryEntity[],
     totalPages:number,
     totalCount:number
 }
 
+export interface CategoryEntity {
+    id: string;
+    name: string;
+    description: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+
 
 export class CategoryRepositoryImpl implements ICategoryRepository {
-    async createCategory(category: Partial<Category>): Promise<Category> {
+    async createCategory(category: Partial<CategoryEntity>): Promise<CategoryEntity> {
         
         const created = await CategoryModel.create({
             name: category.name,
             description: category.description,
             isActive: category.isActive ?? true,
         });
-        return this.toDomain(created);
+        return CategoryMapper.toDomain(created);
     }
 
-    async findById(id: string): Promise<Category | null> {
+    async findById(id: string): Promise<CategoryEntity | null> {
         const category = await CategoryModel.findById(id);
-        return category ? this.toDomain(category) : null;
+        return category ? CategoryMapper.toDomain(category) : null;
     }
 
-    async findByName(name: string): Promise<Category | null> {
+    async findByName(name: string): Promise<CategoryEntity | null> {
         const category = await CategoryModel.findOne({ name });
-        return category ? this.toDomain(category) : null;
+        return category ? CategoryMapper.toDomain(category) : null;
     }
 
     async findAll(query: AllCategoryQuery,
@@ -53,7 +63,7 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
         if (docs) {
             logger.info("Categories fetched successfully.");
         }
-        const categories = docs.map(doc => this.toDomain(doc));
+        const categories = docs.map(doc => CategoryMapper.toDomain(doc));
         return {
             categories,
             totalPages: Math.ceil(totalCount / limit),
@@ -61,12 +71,23 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
         };
     }
 
-    async updateCategory(id: string, data: Partial<Category>): Promise<Category | null> {
-        const updated = await CategoryModel.findByIdAndUpdate(id, data, { new: true });
-        return updated ? this.toDomain(updated) : null;
+    async findActiveCategories():Promise<CategoryEntity[]>{
+        const docs=await CategoryModel.find({isActive:true}).lean();
+        if (docs) {
+            logger.info("Categories fetched successfully.");
+        }
+        const categories = docs.map(doc => CategoryMapper.toDomain(doc));
+        return categories;
     }
 
-    async updateCategoryStatus(id: string): Promise<Category | null> {
+    
+
+    async updateCategory(id: string, data: Partial<CategoryEntity>): Promise<CategoryEntity | null> {
+        const updated = await CategoryModel.findByIdAndUpdate(id, data, { new: true });
+        return updated ? CategoryMapper.toDomain(updated) : null;
+    }
+
+    async updateCategoryStatus(id: string): Promise<CategoryEntity | null> {
         const category = await CategoryModel.findById(id);
         if(!category){
             throw new AppError("Category not found")
@@ -77,18 +98,9 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
                     logger.warn("Failed to update Category status")
                 }
                 logger.info("Category status updated successfully.")
-        return this.toDomain(category);
+        return CategoryMapper.toDomain(category);
         
     }
 
-    private toDomain(doc: CategoryDoc): Category {
-        return {
-            id: doc._id.toString(),
-            name: doc.name,
-            description: doc.description,
-            isActive: doc.isActive,
-            createdAt: doc.createdAt,
-            updatedAt: doc.updatedAt,
-        };
-    }
+
 }

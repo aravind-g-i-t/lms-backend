@@ -49,7 +49,7 @@ instructorRouter.post(ROUTES.VERIFICATION,userAuthMiddleware,(req:Request,res:Re
 instructorRouter.post(ROUTES.COURSE,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.createCourse(req,res,next))
 
 
-instructorRouter.get(ROUTES.CATEGORIES,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>categoryController.getCategoryOptions(req,res,next));
+instructorRouter.get(ROUTES.CATEGORIES,(req:Request,res:Response,next:NextFunction)=>categoryController.getCategoryOptions(req,res,next));
 
 instructorRouter.get(ROUTES.COURSES,userAuthMiddleware,validateRequest(GetCoursesForInstructorRequestSchema),(req:Request,res:Response,next:NextFunction)=>courseController.getCoursesForInstructor(req,res,next));
 
@@ -85,6 +85,7 @@ instructorRouter.patch("/course/chapter/delete",userAuthMiddleware,(req:Request,
 
 instructorRouter.patch("/course/verification",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.submitForReview(req,res,next));
 
+instructorRouter.patch(ROUTES.COURSE_STATUS,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateStatus(req,res,next));
 
 
 export default instructorRouter

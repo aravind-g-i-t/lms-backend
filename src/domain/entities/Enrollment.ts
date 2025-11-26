@@ -1,14 +1,27 @@
+export enum EnrollmentStatus {
+    Pending= "pending",
+    Active = "active",
+    Completed = "completed",
+    Cancelled = "cancelled"
+}
+
+
+
+
 export interface Enrollment {
     id: string;
     learnerId: string;
     courseId: string;
-    enrolledAt: Date;
-    status: "active" | "completed" | "cancelled";
-    progress: {
-        currentSection: number|null;
-        currentLecture: number|null;
-    };
-    certificateIssued: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    enrolledAt: Date|null;
+    status: EnrollmentStatus;
+    paymentId: string;
+    certificate: string | null;
+    completedAt: Date | null;
+    cancelledAt: Date | null;
+    createdAt:Date;
+    instructorId:string;
+    courseTitle:string;
+    instructorName:string
+    thumbnail:string;
+    duration:number;
 }

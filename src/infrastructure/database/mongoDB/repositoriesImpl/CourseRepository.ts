@@ -33,6 +33,8 @@ export interface CourseEntity {
     price: number;
     level: CourseLevel;
     duration: number;
+    totalChapters: number;
+    totalModules: number;
     tags: string[];
     whatYouWillLearn: string[];
     rating: number | null;
@@ -66,6 +68,8 @@ export interface HydratedCourseEntity {
     price: number;
     level: CourseLevel;
     duration: number;
+    totalChapters: number;
+    totalModules: number;
     tags: string[];
     whatYouWillLearn: string[];
     rating: number | null;
@@ -82,10 +86,29 @@ export interface HydratedCourseEntity {
     updatedAt: Date;
 }
 
+export interface FindAllCoursesInput {
+    pagination?: {
+        page?: number;
+        limit?: number;
+    };
+    search?: string;
+    sort?: Record<keyof CourseEntity, "asc" | "desc">;
+
+    filter?: {
+        instructorIds?: string[];
+        categoryIds?: string[];
+        levels?: CourseLevel[];
+        durationRange?: [number, number];
+        priceRange?: [number, number];
+        minRating?: number;
+    };
+}
+
+
 interface FindAllInput {
     pageOptions: { page: number; limit: number };
     filter?: object;
-    sort?: Record<string, 1 | -1>;
+    sort?: Record<keyof CourseEntity, 1 | -1>;
 }
 
 interface FindAllOutput {
@@ -114,7 +137,7 @@ export class CourseRepository implements ICourseRepository {
         const course = await CourseModel.findById(id)
             .populate<{ categoryId: CategoryDoc }>("categoryId")
             .populate<{ instructorId: InstructorDoc }>("instructorId")
-            .exec();
+            .lean();
         return course ? CourseMapper.toHydrated(course) : null;
     }
 
@@ -132,12 +155,12 @@ export class CourseRepository implements ICourseRepository {
 
         const [docs, totalCount] = await Promise.all([
             CourseModel.find(query)
-            .sort(sortBy)
-            .skip(skip)
-            .limit(limit)
-            .populate<{ categoryId: CategoryDoc }>("categoryId")
-            .populate<{ instructorId: InstructorDoc }>("instructorId")
-            .exec(),
+                .sort(sortBy)
+                .skip(skip)
+                .limit(limit)
+                .populate<{ categoryId: CategoryDoc }>("categoryId")
+                .populate<{ instructorId: InstructorDoc }>("instructorId")
+                .exec(),
             CourseModel.countDocuments(query),
         ]);
 
@@ -153,6 +176,86 @@ export class CourseRepository implements ICourseRepository {
         };
     }
 
+    async findAllCourses(input: FindAllCoursesInput): Promise<FindAllOutput> {
+        const {
+            search,
+            filter,
+            sort,
+            pagination = { page: 1, limit: 10 },
+        } = input;
+
+        console.log("search", search);
+
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const query: Record<string, any> = { status: "published" };
+
+        if (search) {
+            query.title = { $regex: search, $options: "i" };
+        }
+
+        if (filter?.instructorIds?.length) {
+            query.instructorId = { $in: filter.instructorIds };
+        }
+
+        if (filter?.categoryIds?.length) {
+            query.categoryId = { $in: filter.categoryIds };
+        }
+
+        if (filter?.levels?.length) {
+            query.level = { $in: filter.levels };
+        }
+
+        if (filter?.durationRange) {
+            const [min, max] = filter.durationRange;
+            query.duration = { $gte: min, $lte: max };
+        }
+
+        if (filter?.priceRange) {
+            const [min, max] = filter.priceRange;
+            query.price = { $gte: min, $lte: max };
+        }
+
+        if (filter?.minRating) {
+            query.rating = { $gte: filter.minRating };
+        }
+
+        query.status=CourseStatus.Published;
+        query["verification.status"]=VerificationStatus.Verified
+
+        const sortQuery: Record<string, 1 | -1> = {};
+        if (sort) {
+            for (const [key, direction] of Object.entries(sort)) {
+                sortQuery[key] = direction === "asc" ? 1 : -1;
+            }
+        } else {
+            sortQuery.rating = -1;
+            sortQuery.enrollmentCount = -1;
+            sortQuery.publishedAt = -1;
+        }
+
+        const page = pagination.page ?? 1;
+        const limit = pagination.limit ?? 10;
+        const skip = (page - 1) * limit;
+
+        const totalCount = await CourseModel.countDocuments(query).exec();
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const courses = await CourseModel.find(query)
+            .populate<{ categoryId: CategoryDoc }>("categoryId")
+            .populate<{ instructorId: InstructorDoc }>("instructorId")
+            .sort(sortQuery)
+            .skip(skip)
+            .limit(limit)
+            .exec();
+
+        const hydratedCourses: HydratedCourseEntity[] = courses.map(course => CourseMapper.toHydrated(course));
+        return {
+            pagination: { totalPages, totalCount },
+            courses: hydratedCourses,
+        };
+    }
+
     async update({ id, updates }: { id: string; updates: Partial<CourseEntity> }): Promise<CourseEntity | null> {
         const updated = await CourseModel.findByIdAndUpdate(id, updates, { new: true }).exec();
         return updated ? CourseMapper.toDomain(updated) : null;
@@ -163,44 +266,35 @@ export class CourseRepository implements ICourseRepository {
         return result !== null;
     }
 
-    async changeStatus({ id, status }: { id: string; status: CourseEntity["status"] }): Promise<CourseEntity | null> {
-        const updated = await CourseModel.findByIdAndUpdate(id, { status }, { new: true }).exec();
-        return updated ? CourseMapper.toDomain(updated) : null;
-    }
 
-    async updateVerification({
-        id,
-        verification,
+
+
+
+
+    async addModule({
+        courseId,
+        module,
     }: {
-        id: string;
-        verification: CourseEntity["verification"];
+        courseId: string;
+        module: IModule;
     }): Promise<CourseEntity | null> {
-        const updated = await CourseModel.findByIdAndUpdate(
-            id,
-            { verification },
-            { new: true }
-        ).exec();
-        return updated ? CourseMapper.toDomain(updated) : null;
+        const course = await CourseModel.findById(courseId).exec();
+        if (!course) return null;
+
+        course.modules.push(module);
+
+        course.totalModules = course.modules.length;
+
+        const newChaptersCount = module.chapters?.length || 0;
+        course.totalChapters += newChaptersCount;
+
+        const moduleDuration = module.duration || 0;
+        course.duration += moduleDuration;
+
+        await course.save();
+        return CourseMapper.toDomain(course);
     }
 
-
-    async incrementEnrollment({ id, count = 1 }: { id: string; count?: number }): Promise<CourseEntity | null> {
-        const updated = await CourseModel.findByIdAndUpdate(
-            id,
-            { $inc: { enrollmentCount: count } },
-            { new: true }
-        ).exec();
-        return updated ? CourseMapper.toDomain(updated) : null;
-    }
-
-    async addModule({ courseId, module }: { courseId: string; module: IModule }): Promise<CourseEntity | null> {
-        const updated = await CourseModel.findByIdAndUpdate(
-            courseId,
-            { $push: { modules: module } },
-            { new: true }
-        ).exec();
-        return updated ? CourseMapper.toDomain(updated) : null;
-    }
 
     async removeModule({
         courseId,
@@ -216,14 +310,19 @@ export class CourseRepository implements ICourseRepository {
         if (!module) return null;
 
         const removedDuration = module.duration || 0;
+        course.duration -= removedDuration;
 
-        // Remove the module manually
+        const removedChaptersCount = module.chapters?.length || 0;
+        course.totalChapters -= removedChaptersCount;
+
         course.modules = course.modules.filter(m => m.id !== moduleId);
-        course.duration = (course.duration || 0) - removedDuration;
+
+        course.totalModules = course.modules.length;
 
         await course.save();
         return CourseMapper.toDomain(course);
     }
+
 
 
     async updateModuleInfo({
@@ -264,8 +363,9 @@ export class CourseRepository implements ICourseRepository {
         const module = course.modules.find(m => m.id === moduleId);
         if (!module) return null;
 
-
         module.chapters.push(chapter);
+
+        course.totalChapters += 1;
 
         const chapterDuration = chapter.duration || 0;
         module.duration += chapterDuration;
@@ -274,6 +374,7 @@ export class CourseRepository implements ICourseRepository {
         await course.save();
         return CourseMapper.toDomain(course);
     }
+
 
     async removeChapter({
         courseId,
@@ -295,16 +396,17 @@ export class CourseRepository implements ICourseRepository {
 
         const removedDuration = chapter.duration || 0;
 
-        // Remove the chapter manually
         module.chapters = module.chapters.filter(c => c.id !== chapterId);
 
-        // Update durations
+        course.totalChapters -= 1;
+
         module.duration -= removedDuration;
         course.duration -= removedDuration;
 
         await course.save();
         return CourseMapper.toDomain(course);
     }
+
 
 
     async updateChapterInfo({
@@ -365,5 +467,18 @@ export class CourseRepository implements ICourseRepository {
         await course.save();
         return CourseMapper.toDomain(course);
     }
+
+    async incrementEnrollment(id: string): Promise<CourseEntity | null> {
+        const updated = await CourseModel.findByIdAndUpdate(
+            id,
+            { $inc: { enrollmentCount: 1 } },
+            { new: true }
+        ).exec();
+
+        if (!updated) return null;
+
+        return CourseMapper.toDomain(updated);
+    }
+
 
 }

@@ -22,17 +22,17 @@ export class InstructorController {
         private _updateInstructorDataUseCase: IUpdateInstructorDataUseCase,
         private _updateInstructorPasswordUseCase: IUpdateUserPassword,
         private _applyForVerificationUseCase: IInstructorApplyForVeficationUseCase,
-        private _updateVerificationStatusUseCase:IUpdateInstructorVerificationStatusUseCase
+        private _updateVerificationStatusUseCase: IUpdateInstructorVerificationStatusUseCase
 
     ) { }
 
     getInstructors = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("Request recieved to get instructors for listing");
-            const { query } = GetInstructorsRequestSchema.parse(req);            
+            const { query } = GetInstructorsRequestSchema.parse(req);
 
-            const { page, search, status, limit ,verificationStatus} = query
-            const result = await this._getInstructorsUseCase.execute({page,search,status,limit,verificationStatus});
+            const { page, search, status, limit, verificationStatus } = query
+            const result = await this._getInstructorsUseCase.execute({ page, search, status, limit, verificationStatus });
 
             const response: GetInstructorsResponseDTO = {
                 success: true,
@@ -53,7 +53,7 @@ export class InstructorController {
         try {
             logger.info("Request recieved to update instructor status");
             const id = req.body.id;
-            
+
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -78,7 +78,7 @@ export class InstructorController {
             const response: GetInstructorProfileResponseDTO = {
                 success: true,
                 message: MESSAGES.INSTRUCTOR_UPDATED,
-                instructor:instructorData
+                instructor: instructorData
             };
             logger.info("Instructor data fetched successfully");
             res.status(STATUS_CODES.OK).json(response)
@@ -87,19 +87,19 @@ export class InstructorController {
             next(error)
         }
     }
-    
-    
+
+
     updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to update Instructor profile");
-            const { name,designation,website,bio } = req.body;
-            
+            const { name, designation, website, bio } = req.body;
+
             const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            
-            await this._updateInstructorDataUseCase.execute(id, {name,designation,website,bio});
+
+            await this._updateInstructorDataUseCase.execute(id, { name, designation, website, bio });
             const response = { success: true, message: MESSAGES.INSTRUCTOR_UPDATED };
             logger.info("Instructor profile updated successfully");
             res.status(STATUS_CODES.OK).json(response)
@@ -108,8 +108,8 @@ export class InstructorController {
             next(error)
         }
     }
-    
-    
+
+
     updateProfileImage = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to update Instructor profile image.");

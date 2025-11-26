@@ -17,9 +17,9 @@ export class AdminController {
     signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("Admin signin request recieved.")
-            const {email,password}=req.body;
+            const { email, password } = req.body;
 
-            const result:AdminSigninResponseDTO = await this._adminSigninUseCase.execute({email,password});
+            const result: AdminSigninResponseDTO = await this._adminSigninUseCase.execute({ email, password });
 
 
             res.cookie("refreshToken", result.refreshToken, {

@@ -66,6 +66,8 @@ export interface Course {
     modules: Module[];
     level: CourseLevel;
     duration: number;
+    totalChapters:number;
+    totalModules:number;
     tags: string[];
     whatYouWillLearn: string[];
     totalRatings: number;

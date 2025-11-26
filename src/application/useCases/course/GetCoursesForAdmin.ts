@@ -6,19 +6,19 @@ import { IS3Service } from "@domain/interfaces/IS3Service";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
 type CourseQuery = {
-  title?: { $regex: string; $options: string };
-  "verification.status"?: string;
-  status?:"published"| "draft"|"under_review"|"archived";
+    title?: { $regex: string; $options: string };
+    "verification.status"?: string;
+    status?: "published" | "draft" | "under_review" | "archived";
 };
 
 export class GetCoursesForAdminUseCase implements IGetCoursesForAdminUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService:IS3Service
+        private _fileStorageService: IS3Service
     ) { }
 
     async execute(input: GetCoursesForAdminInput): Promise<GetCoursesForAdminOutput> {
-        const { page, search, limit, status ,verificationStatus} = input;
+        const { page, search, limit, status, verificationStatus } = input;
 
         const query: CourseQuery = {};
         if (search?.trim()) {
@@ -30,8 +30,8 @@ export class GetCoursesForAdminUseCase implements IGetCoursesForAdminUseCase {
         if (status) {
             query.status = status;
         }
-        if(verificationStatus){
-            query["verification.status"]=verificationStatus
+        if (verificationStatus) {
+            query["verification.status"] = verificationStatus
         }
 
         const result = await this._courseRepository.findAll({
@@ -73,13 +73,13 @@ export class GetCoursesForAdminUseCase implements IGetCoursesForAdminUseCase {
             verification: {
                 status: input.verification.status
             },
-            category:{
-                name:input.category.name,
+            category: {
+                name: input.category.name,
                 id: input.category.id
             },
-            instructor:{
-                id:input.instructor.id,
-                name : input.instructor.name
+            instructor: {
+                id: input.instructor.id,
+                name: input.instructor.name
             }
         }
     }

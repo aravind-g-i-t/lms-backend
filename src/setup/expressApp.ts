@@ -13,6 +13,15 @@ dotenv.config({path: `.env.${env}`});
 
 const app=express();
 
+// app.post(
+//   '/api/v1/payments/webhook',
+//   express.raw({ type: 'application/json' }),   // REQUIRED for Stripe
+//   (req, res) => stripeWebhookController.handle(req, res)
+// );
+
+
+app.use(express.urlencoded({extended:true}))
+
 app.use(cookieParser());
 
 app.use(morgan('dev'));

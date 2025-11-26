@@ -16,10 +16,10 @@ import { logger } from "@infrastructure/logging/Logger";
 export class LearnerController {
     constructor(
         private _getLearnersUseCase: IGetLearnersUseCase,
-        private _updateLearnerStatusUseCase:IUpdateUserStatusUseCase,
-        private _updateLearnerDataUseCase:IUpdateLearnerDataUseCase,
-        private _updatePassword:IUpdateUserPassword,
-        private _getLearnerData:IGetLearnerDataUseCase,
+        private _updateLearnerStatusUseCase: IUpdateUserStatusUseCase,
+        private _updateLearnerDataUseCase: IUpdateLearnerDataUseCase,
+        private _updatePassword: IUpdateUserPassword,
+        private _getLearnerData: IGetLearnerDataUseCase,
     ) { }
 
     getLearners = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -30,7 +30,7 @@ export class LearnerController {
             const { query } = GetLearnersRequestSchema.parse(req);
 
             const { page, search, status, limit } = query
-            const result = await this._getLearnersUseCase.execute({page,search,status,limit});
+            const result = await this._getLearnersUseCase.execute({ page, search, status, limit });
 
             const response: GetLearnersResponseDTO = {
                 success: true,
@@ -46,125 +46,125 @@ export class LearnerController {
 
             logger.warn("Failed to fetch Learners for listing.")
             next(error)
-            
+
         }
 
     }
 
 
-    updateLearnerStatus=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
+    updateLearnerStatus = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to update learner status");
-            const id=req.body.id
+            const id = req.body.id
             await this._updateLearnerStatusUseCase.execute(id);
             logger.info("Updated learner status successfully.");
-            res.status(STATUS_CODES.OK).json({success:true,message:MESSAGES.LEARNER_UPDATED})
+            res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.LEARNER_UPDATED })
         } catch (error) {
             logger.warn("Failed to update learner status.")
-            next (error)
+            next(error)
         }
     }
 
-    updateProfile=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
+    updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to update learner profile");
-            const {name}=req.body;
+            const { name } = req.body;
             const id = req.user?.id
-            if(!id){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            await this._updateLearnerDataUseCase.execute(id,{name});
-            const response={success:true,message:MESSAGES.LEARNER_UPDATED};
+            await this._updateLearnerDataUseCase.execute(id, { name });
+            const response = { success: true, message: MESSAGES.LEARNER_UPDATED };
             logger.info("Learner profile updated successfully");
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             logger.warn("Failed to update learner profile.")
-            next (error)
+            next(error)
         }
     }
 
     updateProfileImage = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-            try {
-                logger.info("Request recieved to update learner profile image.");
-                const { imageURL } = req.body;
-                
-                const id = req.user?.id
-            if(!id){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
-            }
-    
-                await this._updateLearnerDataUseCase.execute(id, {profilePic:imageURL});
-                const response = { success: true, message: MESSAGES.LEARNER_UPDATED};
-                logger.info("Learner profile image updated successfully");
-                res.status(STATUS_CODES.OK).json(response)
-            } catch (error) {
-                logger.warn("Failed to update learner profile image .")
-                next(error)
-            }
-        }
-
-    updatePassword=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
         try {
-            logger.info("Request recieved to update learner password.");
+            logger.info("Request recieved to update learner profile image.");
+            const { imageURL } = req.body;
+
             const id = req.user?.id
-            if(!id){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            const {currentPassword,newPassword}=req.body;
-            
-            await this._updatePassword.execute(id,currentPassword,newPassword);
-            logger.info("Learner password updated successfully");
-            res.status(STATUS_CODES.OK).json({success:true,message:MESSAGES.LEARNER_UPDATED})
+
+            await this._updateLearnerDataUseCase.execute(id, { profilePic: imageURL });
+            const response = { success: true, message: MESSAGES.LEARNER_UPDATED };
+            logger.info("Learner profile image updated successfully");
+            res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
-            logger.warn("Failed to update learner password.")
-            next (error)
+            logger.warn("Failed to update learner profile image .")
+            next(error)
         }
     }
 
-    getLearnerProfile=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
+    updatePassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to update learner password.");
+            const id = req.user?.id
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            const { currentPassword, newPassword } = req.body;
+
+            await this._updatePassword.execute(id, currentPassword, newPassword);
+            logger.info("Learner password updated successfully");
+            res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.LEARNER_UPDATED })
+        } catch (error) {
+            logger.warn("Failed to update learner password.")
+            next(error)
+        }
+    }
+
+    getLearnerProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to get learner data for profile.");
             const id = req.user?.id
-            if(!id){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            
-            const result=await this._getLearnerData.execute(id);
-            const response:GetLearnerProfileResponseDTO={
-                success:true,
-                message:MESSAGES.LEARNER_UPDATED,
-                learner:result
+
+            const result = await this._getLearnerData.execute(id);
+            const response: GetLearnerProfileResponseDTO = {
+                success: true,
+                message: MESSAGES.LEARNER_UPDATED,
+                learner: result
             };
             logger.info("Learner data fetched successfully");
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             logger.warn("Failed to get learner data for profile.")
-            next (error)
+            next(error)
         }
     }
 
 
-    getLearnerDataForAdmin=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
+    getLearnerDataForAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to get learner data for admin");
             const id = req.params.id
-            if(!id){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            if (!id) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
-            
-            const result=await this._getLearnerData.execute(id);
-            const response:GetLearnerProfileResponseDTO={
-                success:true,
-                message:MESSAGES.LEARNER_UPDATED,
-                learner:result
+
+            const result = await this._getLearnerData.execute(id);
+            const response: GetLearnerProfileResponseDTO = {
+                success: true,
+                message: MESSAGES.LEARNER_UPDATED,
+                learner: result
             };
             logger.info("Leaner data was fetched successfully.");
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             logger.warn("Failed to fetch learner data for admin.")
-            next (error)
+            next(error)
         }
     }
 
-    
+
 }

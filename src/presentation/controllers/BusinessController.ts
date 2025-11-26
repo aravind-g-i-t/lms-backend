@@ -32,9 +32,9 @@ export class BusinessController {
             const { query } = GetBusinessesRequestSchema.parse(req);
 
             const { page, search, status, limit, verificationStatus } = query
-            const result = await this._getBusinessesUseCase.execute({ page,search,status,limit,verificationStatus });
+            const result = await this._getBusinessesUseCase.execute({ page, search, status, limit, verificationStatus });
 
-            const response:GetBusinessesResponseDTO = {
+            const response: GetBusinessesResponseDTO = {
                 success: true,
                 message: MESSAGES.BUSINESS_FETCHED,
                 businesses: result.businesses,
@@ -61,7 +61,7 @@ export class BusinessController {
             logger.info("Updated business status successfully.");
             res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.BUSINESS_UPDATED })
         } catch (error) {
-        logger.warn("Failed to update business status")
+            logger.warn("Failed to update business status")
             next(error)
         }
     }
@@ -90,14 +90,14 @@ export class BusinessController {
     updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
             logger.info("Request recieved to update business profile");
-            const { name,businessDomain,website,location } = req.body;            
+            const { name, businessDomain, website, location } = req.body;
 
             const id = req.user?.id
             if (!id) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
-            await this._updateBusinessDataUseCase.execute(id, {name,businessDomain,website,location});
+            await this._updateBusinessDataUseCase.execute(id, { name, businessDomain, website, location });
             const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
             logger.info("Business profile updated successfully");
             res.status(STATUS_CODES.OK).json(response)
@@ -200,7 +200,7 @@ export class BusinessController {
             res.status(STATUS_CODES.OK).json(response)
         } catch (error) {
             logger.warn("Failed to fetch business data for admin");
-            
+
             next(error)
         }
     }

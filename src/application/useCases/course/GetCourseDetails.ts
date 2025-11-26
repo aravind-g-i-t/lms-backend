@@ -72,7 +72,7 @@ export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
             publishedAt: input.publishedAt,
             createdAt: input.createdAt,
             updatedAt: input.updatedAt,
-            verification:input.verification
+            verification: input.verification
         }
     }
 }

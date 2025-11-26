@@ -12,10 +12,10 @@ import { IGetCategoryOptionsUseCase } from "@application/IUseCases/category/IGet
 export class CategoryController {
     constructor(
         private _addCategoryUseCase: IAddCategoryUseCase,
-        private _getCategoriesUseCase:IGetCategoriesUseCase,
-        private _updateCategoryUseCase:IUpdateCategoryUseCase,
-        private _updateCategoryStatusUseCase:IUpdateCategoryStatusUseCase,
-        private _getCategoryOptionsUseCase:IGetCategoryOptionsUseCase
+        private _getCategoriesUseCase: IGetCategoriesUseCase,
+        private _updateCategoryUseCase: IUpdateCategoryUseCase,
+        private _updateCategoryStatusUseCase: IUpdateCategoryStatusUseCase,
+        private _getCategoryOptionsUseCase: IGetCategoryOptionsUseCase
     ) { }
 
     async addCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -47,15 +47,15 @@ export class CategoryController {
             const { query } = GetCategoriesRequestSchema.parse(req);
 
             const { page, search, status, limit } = query;
-            const response=await this._getCategoriesUseCase.execute({page,search,status,limit});
+            const response = await this._getCategoriesUseCase.execute({ page, search, status, limit });
             res.status(STATUS_CODES.OK).json({
-                success:true,
-                message:"Fetched categories successfully",
-                categories:response.categories,
-                totalCount:response.totalCount,
-                totalPages:response.totalPages
+                success: true,
+                message: "Fetched categories successfully",
+                categories: response.categories,
+                totalCount: response.totalCount,
+                totalPages: response.totalPages
             })
-            
+
         } catch (err) {
             next(err)
         }
@@ -64,11 +64,11 @@ export class CategoryController {
     // ✅ Update category
     async updateCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { id, name, description,isActive } = req.body;
-            await this._updateCategoryUseCase.execute({id,name,description,isActive});
+            const { id, name, description, isActive } = req.body;
+            await this._updateCategoryUseCase.execute({ id, name, description, isActive });
 
             res.status(200).json({ success: true, message: "Category updated successfully" });
-        } catch(err) {
+        } catch (err) {
             next(err)
         }
     }
@@ -82,7 +82,7 @@ export class CategoryController {
                 success: true,
                 message: `Category status updated successfully`,
             });
-        } catch(err) {
+        } catch (err) {
             next(err)
         }
     }
@@ -93,17 +93,17 @@ export class CategoryController {
             logger.info("Request recieved to fetch category options");
 
 
-            const categories=await this._getCategoryOptionsUseCase.execute();
+            const categories = await this._getCategoryOptionsUseCase.execute();
             res.status(STATUS_CODES.OK).json({
-                success:true,
-                message:"Fetched categorie options successfully",
-                data:{categories}
+                success: true,
+                message: "Fetched categorie options successfully",
+                data: { categories }
             });
-            
+
         } catch (err) {
             next(err)
         }
     }
 
-    
+
 }

@@ -101,4 +101,6 @@ adminRouter.patch(ROUTES.COURSE_VERIFICATION,userAuthMiddleware,(req:Request,res
 adminRouter.get(ROUTES.COURSES,userAuthMiddleware, validateRequest(GetCoursesForAdminRequestSchema),(req:Request,res:Response,next:NextFunction)=>courseController.getCoursesForAdmin(req,res,next));
 
 
+
+
 export default adminRouter;

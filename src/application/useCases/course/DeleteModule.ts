@@ -11,11 +11,9 @@ export class DeleteModuleUseCase implements IDeleteModuleUseCase {
     async execute(input: { courseId: string; moduleId: string; }): Promise<void> {
 
         const { courseId, moduleId } = input;
-        console.log(courseId,moduleId);
-        
+
         const deleted = await this._courseRepository.removeModule({ courseId, moduleId });
-        console.log("deleted",deleted);
-        
+
         if (!deleted) {
             throw new AppError("Failed to delete module.", STATUS_CODES.BAD_REQUEST)
         }

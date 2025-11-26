@@ -6,10 +6,10 @@ import { IS3Service } from "@domain/interfaces/IS3Service";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
 type CourseQuery = {
-  instructorId?: string;
-  title?: { $regex: string; $options: string };
-  "verification.status"?: string;
-  status?:"published"| "draft"|"under_review"|"archived";
+    instructorId?: string;
+    title?: { $regex: string; $options: string };
+    "verification.status"?: string;
+    status?: "published" | "draft" | "under_review" | "archived";
 };
 
 export class GetCoursesForInstructorUseCase implements IGetCoursesForInstructorUseCase {
@@ -18,9 +18,9 @@ export class GetCoursesForInstructorUseCase implements IGetCoursesForInstructorU
         private _fileStorageService: IS3Service
     ) { }
     async execute(input: GetCoursesForInstructorsInput): Promise<GetCoursesForInstructorsOutput> {
-        const { page, search, limit, instructorId ,status} = input;
+        const { page, search, limit, instructorId, status } = input;
 
-        const query:CourseQuery = {};
+        const query: CourseQuery = {};
         query.instructorId = instructorId
         if (search?.trim()) {
             query.title = {
@@ -28,8 +28,8 @@ export class GetCoursesForInstructorUseCase implements IGetCoursesForInstructorU
                 $options: "i",
             };
         }
-        if(status){
-            query.status=status;
+        if (status) {
+            query.status = status;
         }
 
         const result = await this._courseRepository.findAll({
@@ -61,20 +61,20 @@ export class GetCoursesForInstructorUseCase implements IGetCoursesForInstructorU
         return { pagination, courses };
     }
 
-    private _toGetCoursesForInstructor(input:HydratedCourse):CourseForInstructorListing{
+    private _toGetCoursesForInstructor(input: HydratedCourse): CourseForInstructorListing {
         return {
-            id:input.id,
-            title:input.title,
-            enrollmentCount:input.enrollmentCount,
-            level:input.level,
-            status:input.status,
-            duration:input.duration,
-            thumbnail:input.thumbnail,
-            price:input.price,
-            rating:input.rating,
-            createdAt:input.createdAt,
-            verification:{
-                status:input.verification.status
+            id: input.id,
+            title: input.title,
+            enrollmentCount: input.enrollmentCount,
+            level: input.level,
+            status: input.status,
+            duration: input.duration,
+            thumbnail: input.thumbnail,
+            price: input.price,
+            rating: input.rating,
+            createdAt: input.createdAt,
+            verification: {
+                status: input.verification.status
             }
         }
     }

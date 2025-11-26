@@ -12,7 +12,7 @@ export class UpdateChapterInfoUseCase implements IUpdateChapterInfoUseCase {
 
         const updatedCourse = await this._courseRepository.updateChapterInfo({ courseId, moduleId, chapterId, updates: { title, description } })
         if (!updatedCourse) {
-            throw new AppError("Failed to update chapter info — course or chapter not found",STATUS_CODES.BAD_REQUEST);
+            throw new AppError("Failed to update chapter info — course or chapter not found", STATUS_CODES.BAD_REQUEST);
         }
     }
 }

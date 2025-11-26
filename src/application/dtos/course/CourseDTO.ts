@@ -1,6 +1,6 @@
 import { CourseLevel, CourseStatus, VerificationStatus } from "@domain/entities/Course";
 
-export interface CourseForInstructorListing{
+export interface CourseForInstructorListing {
     id: string;
     title: string;
     enrollmentCount: number;
@@ -11,26 +11,55 @@ export interface CourseForInstructorListing{
     thumbnail: string | null;
     price: number;
     rating: number | null;
-    verification:{
-        status:VerificationStatus;
+    verification: {
+        status: VerificationStatus;
     }
 }
 
-export interface CourseForAdminListing{
+export interface CourseForAdminListing {
     id: string;
     title: string;
     status: CourseStatus;
     thumbnail: string | null;
     price: number;
-    instructor:{
-        id:string;
-        name:string;
+    instructor: {
+        id: string;
+        name: string;
     },
-    category:{
-        id:string;
-        name:string;
+    category: {
+        id: string;
+        name: string;
     },
-    verification:{
-        status:VerificationStatus;
+    verification: {
+        status: VerificationStatus;
     },
+}
+
+export interface CourseForLearnerListing {
+    id: string;
+    title: string;
+    instructor: {
+        name: string;
+        id: string;
+    }
+    category: {
+        name: string;
+        id: string;
+    },
+    price: number;
+    rating: number | null;
+    duration: number;
+    level: CourseLevel
+    description: string;
+    thumbnail: string | null;
+    totalRatings: number;
+}
+
+export interface CourseForCheckout {
+    id: string;
+    title: string;
+    price: number;
+    instructor: {id:string; name: string; profilePic: string };
+    thumbnail: string;
+    description: string;
 }

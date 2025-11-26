@@ -11,6 +11,27 @@ interface FindAllInput {
     sort?: Record<string, number>
 }
 
+export interface FindAllCoursesInput {
+    pagination?: {
+        page?: number;
+        limit?: number;
+    };
+    search?: string;
+    sort?: Record<keyof Course, "asc" | "desc">;
+
+    filter?: {
+        instructorIds?: string[];
+        categoryIds?: string[];
+        levels?: CourseLevel[];
+        durationRange?: [number, number];
+        priceRange?: [number, number];
+        minRating?: number;
+    };
+}
+
+
+
+
 interface FindAllOutput {
     pagination: {
         totalPages: number,
@@ -33,6 +54,8 @@ export interface HydratedCourse {
     price: number;
     level: CourseLevel;
     duration: number;
+    totalChapters:number;
+    totalModules:number;
     tags: string[];
     whatYouWillLearn: string[];
     rating: number | null;
@@ -47,6 +70,7 @@ export interface HydratedCourse {
     publishedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
+
 }
 
 export interface ICourseRepository {
@@ -64,11 +88,11 @@ export interface ICourseRepository {
     findAll(input:FindAllInput):Promise<FindAllOutput>
     update(input:{id: string, updates: Partial<Course>}): Promise<Course | null>;
 
+    findAllCourses(input:FindAllCoursesInput):Promise<FindAllOutput>
+
     delete(id: string): Promise<boolean>;
 
-    changeStatus(input:{id: string, status: Course["status"]}): Promise<Course | null>;
-
-    incrementEnrollment(input:{id: string, count?: number}): Promise<Course | null>;
+    incrementEnrollment(id:string): Promise<Course | null>;
 
     addModule(input:{courseId: string, module: Module}): Promise<Course | null>;
 

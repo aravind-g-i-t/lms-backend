@@ -70,6 +70,8 @@ export interface CourseDoc extends Document {
     price: number;
     level: CourseLevel;
     duration: number;
+    totalChapters:number;
+    totalModules:number;
     tags: string[];
     whatYouWillLearn: string[];
     rating: number | null;
@@ -139,6 +141,8 @@ const CourseSchema = new Schema<CourseDoc>(
         price: { type: Number, required: true },
         level: { type: String, enum: Object.values(CourseLevel), required: true },
         duration: { type: Number, required: true },
+        totalChapters: { type: Number, required: true },
+        totalModules: { type: Number, required: true },
         tags: { type: [String], default: [] },
         whatYouWillLearn: { type: [String], default: [] },
         rating: { type: Number, default: null },

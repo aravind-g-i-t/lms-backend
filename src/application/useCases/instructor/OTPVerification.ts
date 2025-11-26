@@ -2,6 +2,7 @@
 import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
+import { IInstructorWalletRepository } from "@domain/interfaces/IInstructorWalletRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
@@ -17,7 +18,8 @@ interface SignupData{
 export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUseCase{
     constructor(
         private _cacheService: ICacheService,
-        private _instructorRepository: IInstructorRepository
+        private _instructorRepository: IInstructorRepository,
+        private _instructorWalletRepository:IInstructorWalletRepository
     ) { }
 
     async execute(input: {email:string,otp:string}):Promise<void>{
@@ -43,11 +45,14 @@ export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUse
             walletBalance:0,
             expertise:[],
         });
-        if(instructorCreated){
-            return;
-        }else{
-            throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED,STATUS_CODES.INTERNAL_SERVER_ERROR);
+        if(!instructorCreated){
+            throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED,STATUS_CODES.BAD_REQUEST);
         }
+        const instructorWalletCreated=this._instructorWalletRepository.create(instructorCreated.id);
+        if(!instructorWalletCreated){
+            throw new AppError("Failed to create instructor wallet.",STATUS_CODES.BAD_REQUEST);
+        }
+
     }
 
 }

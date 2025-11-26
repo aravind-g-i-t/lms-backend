@@ -50,8 +50,8 @@ export const ROUTES = {
     COURSE_TAGS:"/course/tags",
     COURSE_PREREQUISITES:"/course/prerequisites",
     COURSE_VERIFICATION:"/course/verification",
+    COURSE_STATUS:"/course/status",
     ADD_MODULE:"/course/module/add",
     ADD_CHAPTER:"/course/chapter/add",
-    
 
 } as const;

@@ -1,7 +1,7 @@
 import { UserSignupUseCase } from "@application/useCases/shared/Signup";
 import { UserAuthController } from "@presentation/controllers/UserAuthController";
-import { learnerRepository } from "../learner/learnerRepository";
-import { instructorRepository } from "../instructor/instructorRepository";
+import { learnerRepository, walletRepository } from "../learner/learnerRepository";
+import { instructorRepository, instructorWalletRepository } from "../instructor/instructorRepository";
 import { businessRepository } from "../business/businessRepository";
 import { nodemailerService } from "./nodemailerService";
 import { cacheService } from "./cacheService";
@@ -29,9 +29,9 @@ import { s3Service } from "./s3Controller";
 
 const userSignupUseCase=new UserSignupUseCase(learnerRepository,instructorRepository,businessRepository,cacheService,nodemailerService)
 
-const learnerOTPVerificationUseCase=new LearnerOTPVerificationUseCase(cacheService,learnerRepository);
+const learnerOTPVerificationUseCase=new LearnerOTPVerificationUseCase(cacheService,learnerRepository,walletRepository);
 
-const instructorOTPVerificationUseCase=new InstructorOTPVerificationUseCase(cacheService,instructorRepository);
+const instructorOTPVerificationUseCase=new InstructorOTPVerificationUseCase(cacheService,instructorRepository,instructorWalletRepository);
 
 const businessOTPVerificationUseCase=new BusinessOTPVerificationUseCase(cacheService,businessRepository);
 

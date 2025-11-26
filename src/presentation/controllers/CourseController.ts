@@ -4,16 +4,23 @@ import { ICreateCourseUseCase } from "@application/IUseCases/course/ICreateCours
 import { IDeleteChaperUseCase } from "@application/IUseCases/course/IDeleteChapter";
 import { IDeleteModuleUseCase } from "@application/IUseCases/course/IDeleteModule";
 import { IGetCourseDetailsUseCase } from "@application/IUseCases/course/IGetCourseDetails";
+import { IGetCourseDetailsForLearnerUseCase } from "@application/IUseCases/course/IGetCourseDetailsForLearner";
+import { IGetCourseDetailsForCheckoutUseCase } from "@application/IUseCases/course/IGetCourseForCheckout";
 import { IGetCoursesForAdminUseCase } from "@application/IUseCases/course/IGetCoursesForAdmin";
 import { IGetCoursesForInstructorUseCase } from "@application/IUseCases/course/IGetCoursesForInstructor";
+import { IGetCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetCoursesForLearner";
+import { IGetFullCourseForLearnerUseCase } from "@application/IUseCases/course/IGetFullCourseForLearner";
 import { ISubmitCourseForReviewUseCase } from "@application/IUseCases/course/ISubmitForReview";
 import { IUpdateChapterInfoUseCase } from "@application/IUseCases/course/IUpdateChapterInfo";
 import { IUpdateChapterVideoUseCase } from "@application/IUseCases/course/IUpdateChapterVideo";
 import { IUpdateCourseUseCase } from "@application/IUseCases/course/IUpdateCourse";
 import { IUpdateModuleInfoUseCase } from "@application/IUseCases/course/IUpdateModuleInfo";
+import { IUpdateCourseStatusUseCase } from "@application/IUseCases/course/IUpdateStatus";
 import { IUpdateCourseVerificationUseCase } from "@application/IUseCases/course/IUpdateVerification";
+import { GetCourseDeatailsForLearnerRequestSchema } from "@presentation/dtos/course/GetCourseDetailsForLearner";
 import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
 import { GetCoursesForInstructorRequestSchema } from "@presentation/dtos/course/GetCoursesForInstructor";
+import { GetCoursesForLearnerRequestSchema } from "@presentation/dtos/course/GetCoursesForLearner";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 import { NextFunction, Response } from "express";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -35,8 +42,13 @@ export class CourseController {
         private _deleteModuleUseCase: IDeleteModuleUseCase,
         private _deleteChapterUseCase: IDeleteChaperUseCase,
         private _submitCourseForReviewUseCase: ISubmitCourseForReviewUseCase,
-        private _updateVerificationUseCase:IUpdateCourseVerificationUseCase,
-        private _getCoursesForAdminUseCase:IGetCoursesForAdminUseCase
+        private _updateVerificationUseCase: IUpdateCourseVerificationUseCase,
+        private _getCoursesForAdminUseCase: IGetCoursesForAdminUseCase,
+        private _updateCourseStatusUseCase: IUpdateCourseStatusUseCase,
+        private _getCoursesForLearnerUseCase: IGetCoursesForLearnerUseCase,
+        private _getCoureDetailsForLearnerUseCase: IGetCourseDetailsForLearnerUseCase,
+        private _getFullCourseForLearnerUseCase: IGetFullCourseForLearnerUseCase,
+        private _getCourseDetailsForCheckoutUseCase:IGetCourseDetailsForCheckoutUseCase
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -206,11 +218,11 @@ export class CourseController {
         try {
 
             const { id, title, description } = req.body;
-            const result=await this._addModuleUseCase.execute(id, { title, description });
+            const result = await this._addModuleUseCase.execute(id, { title, description });
             res.status(201).json({
                 success: true,
                 message: "Module added successfully",
-                module:result
+                module: result
             });
 
         } catch (error) {
@@ -225,11 +237,11 @@ export class CourseController {
             const chapter = {
                 title, description, video, duration
             }
-            const result= await this._addChapterUseCase.execute(courseId, moduleId, chapter);
+            const result = await this._addChapterUseCase.execute(courseId, moduleId, chapter);
             res.status(201).json({
                 success: true,
                 message: "Chapter added successfully",
-                chapter:result
+                chapter: result
             });
 
         } catch (error) {
@@ -257,9 +269,9 @@ export class CourseController {
         try {
 
             const { courseId, moduleId, video, duration, chapterId }: { courseId: string; moduleId: string; video: string; duration: number; chapterId: string } = req.body;
-            
+
             await this._updateVideoUseCase.execute({
-                courseId,moduleId,chapterId,video,duration
+                courseId, moduleId, chapterId, video, duration
             });
             res.status(201).json({
                 success: true,
@@ -276,7 +288,7 @@ export class CourseController {
 
             const { courseId, moduleId, title, description } = req.body;
             await this._updateModuleUseCase.execute({
-                courseId,moduleId,title,description
+                courseId, moduleId, title, description
             });
             res.status(201).json({
                 success: true,
@@ -293,7 +305,7 @@ export class CourseController {
 
             const { courseId, moduleId, chapterId } = req.body;
             await this._deleteChapterUseCase.execute({
-                courseId,moduleId,chapterId
+                courseId, moduleId, chapterId
             });
             res.status(201).json({
                 success: true,
@@ -309,7 +321,7 @@ export class CourseController {
         try {
 
             const { courseId, moduleId } = req.body;
-            
+
             await this._deleteModuleUseCase.execute({
                 courseId,
                 moduleId
@@ -328,7 +340,7 @@ export class CourseController {
         try {
 
             const { courseId } = req.body;
-            
+
             await this._submitCourseForReviewUseCase.execute(courseId);
             res.status(201).json({
                 success: true,
@@ -343,12 +355,13 @@ export class CourseController {
     async updateVerification(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
 
-            const { courseId,status,remarks,submittedAt } = req.body;
-            
-            await this._updateVerificationUseCase.execute({courseId,status,remarks,submittedAt});
+            const { courseId, status, remarks } = req.body;
+
+            const verification = await this._updateVerificationUseCase.execute({ courseId, status, remarks });
             res.status(201).json({
                 success: true,
                 message: "Course verification updated successfully.",
+                verification
             });
 
         } catch (error) {
@@ -361,7 +374,7 @@ export class CourseController {
             const { query } = GetCoursesForAdminRequestSchema.parse(req);
 
 
-            const { page, limit, search, status,verificationStatus } = query;
+            const { page, limit, search, status, verificationStatus } = query;
 
             const response = await this._getCoursesForAdminUseCase.execute({
                 page,
@@ -374,7 +387,133 @@ export class CourseController {
                 success: true,
                 message: "Courses fetched successfully",
                 pagination: response.pagination,
-                courses:response.courses
+                courses: response.courses
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async updateStatus(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+            const { courseId, status } = req.body;
+
+            const verification = await this._updateCourseStatusUseCase.execute({ courseId, status });
+            res.status(201).json({
+                success: true,
+                message: "Course status updated successfully.",
+                verification
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async getCoursesForLearner(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { query } = GetCoursesForLearnerRequestSchema.parse(req);
+
+
+            const {
+                page,
+                limit,
+                search,
+                sort,
+                // Renamed from 'categoryIds[]'
+                'categoryIds[]': categoryIds,
+                'instructorIds[]': instructorIds,
+                'priceRange[]': priceRange,
+                'levels[]': levels,
+                "durationRange[]": durationRange,
+                minRating
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } = query as any
+
+
+            const response = await this._getCoursesForLearnerUseCase.execute({
+                page,
+                limit,
+                search,
+                sort,
+                instructorIds: instructorIds,
+                categoryIds: categoryIds,
+                priceRange,
+                levels,
+                durationRange,
+                minRating
+            });
+
+            res.status(201).json({
+                success: true,
+                message: "Courses fetched successfully",
+                pagination: response.pagination,
+                courses: response.courses
+            });
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getFullCourseForLearner(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            
+            const { courseId } = req.query;
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+            console.log(learnerId,courseId)
+            const response = await this._getFullCourseForLearnerUseCase.execute({
+                courseId:courseId as string,
+                learnerId
+            });
+
+            res.status(201).json({
+                success: true,
+                message: "Course fetched successfully",
+                data: response
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getCourseDetailsForLearner(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { query } = GetCourseDeatailsForLearnerRequestSchema.parse(req);
+            const { courseId, learnerId } = query;
+            const response = await this._getCoureDetailsForLearnerUseCase.execute({
+                courseId,
+                learnerId
+            });
+
+            res.status(201).json({
+                success: true,
+                message: "Course details fetched successfully",
+                data: response
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getCourseDetailsForCheckout(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const courseId= req.query.courseId as string;
+
+            const response = await this._getCourseDetailsForCheckoutUseCase.execute(courseId);
+
+            res.status(201).json({
+                success: true,
+                message: "Course details fetched successfully",
+                data: response
             });
 
         } catch (error) {

@@ -4,31 +4,39 @@ import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
-export class UpdateCourseVerificationUseCase implements IUpdateCourseVerificationUseCase{
+export class UpdateCourseVerificationUseCase implements IUpdateCourseVerificationUseCase {
     constructor(
-        private _courseRepository:ICourseRepository
-    ){}
+        private _courseRepository: ICourseRepository
+    ) { }
 
-    async execute(input: { courseId: string; status: string; remarks: string | null; submittedAt:Date; }): Promise<Course["verification"]> {
-        const {courseId,status,remarks,submittedAt}=input;
-        
-        const verification:Course["verification"]={
-                submittedAt:submittedAt,
-                reviewedAt:new Date(),
-                status:status as VerificationStatus,
-                remarks:remarks
+    async execute(input: { courseId: string; status: string; remarks: string | null }): Promise<Course["verification"]> {
+        const { courseId, status, remarks } = input;
+
+
+        const course = await this._courseRepository.findById(courseId);
+        if (!course) {
+            throw new AppError("Course not found", STATUS_CODES.BAD_REQUEST)
         }
 
-        const updated = await this._courseRepository.update({
-            id:courseId,
-            updates:{
-                verification
+        const updatedVerification = {
+            ...course.verification,
+            status: status as VerificationStatus,
+            remarks: remarks ?? null,
+            reviewedAt: new Date(),
+        };
+
+        // Update course verification
+        const updatedCourse = await this._courseRepository.update({
+            id: courseId,
+            updates: {
+                verification: updatedVerification
             }
         });
-        if(!updated){
-            throw new AppError("Failed to update course verificaton status.",STATUS_CODES.BAD_REQUEST)
+
+        if (!updatedCourse) {
+            throw new AppError("Failed to update verification status", STATUS_CODES.BAD_REQUEST);
         }
 
-        return updated.verification;
+        return updatedCourse.verification
     }
 }

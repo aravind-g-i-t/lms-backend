@@ -15,10 +15,17 @@ import { DeleteModuleUseCase } from "@application/useCases/course/DeleteModule";
 import { SubmitCourseForReviewUseCase } from "@application/useCases/course/SubmitForReview";
 import { UpdateCourseVerificationUseCase } from "@application/useCases/course/UpdateVerification";
 import { GetCoursesForAdminUseCase } from "@application/useCases/course/GetCoursesForAdmin";
+import { UpdateCourseStatusUseCase } from "@application/useCases/course/UpdateStatus";
+import { GetCoursesForLearnerUseCase } from "@application/useCases/course/GetCoursesForLearner";
+import { GetCourseDetailsForLearnerUseCase } from "@application/useCases/course/GetCourseDetailsForLearner";
+import { instructorRepository } from "../instructor/instructorRepository";
+import { enrollmentRepository, learnerProgressRepository } from "./dependencies";
+import { GetFullCourseForLearnerUseCase } from "@application/useCases/course/GetFullCourseForLearner";
+import { GetCourseDetailsForCheckoutUseCase } from "@application/useCases/course/GetCourseForCheckout";
 
-const courseRepository= new CourseRepository();
+export const courseRepository= new CourseRepository();
 
-const createCourseUseCase=new CreateCourseUseCase(courseRepository)
+const createCourseUseCase=new CreateCourseUseCase(courseRepository,instructorRepository)
 
 const getCourseDetailsUseCase= new GetCourseDetailsUseCase(courseRepository,s3Service)
 
@@ -40,11 +47,22 @@ const deleteChapterUseCase = new DeleteChapterUseCase(courseRepository);
 
 const deleteModuleUseCase = new DeleteModuleUseCase(courseRepository);
 
-const submitCourseForReviewUseCase = new SubmitCourseForReviewUseCase(courseRepository);
+const submitCourseForReviewUseCase = new SubmitCourseForReviewUseCase(courseRepository,instructorRepository);
 
 const updateCourseVerificationUseCase = new UpdateCourseVerificationUseCase(courseRepository);
 
-const getCoursesForAdminUseCase= new GetCoursesForAdminUseCase(courseRepository,s3Service)
+const getCoursesForAdminUseCase= new GetCoursesForAdminUseCase(courseRepository,s3Service);
+
+const updateCourseStatusUseCase = new UpdateCourseStatusUseCase(courseRepository)
+
+const getCoursesForLearnerUseCase = new GetCoursesForLearnerUseCase(courseRepository,s3Service);
+
+const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseRepository,s3Service,enrollmentRepository)
+
+const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository)
+
+
+const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service)
 
 export const courseController=new CourseController(
     createCourseUseCase,
@@ -60,5 +78,10 @@ export const courseController=new CourseController(
     deleteChapterUseCase,
     submitCourseForReviewUseCase,
     updateCourseVerificationUseCase,
-    getCoursesForAdminUseCase
+    getCoursesForAdminUseCase,
+    updateCourseStatusUseCase,
+    getCoursesForLearnerUseCase,
+    getCourseDetailsForLearner,
+    getFullCourseForLearnerUseCase,
+    getCourseDetailsForCheckout
 );

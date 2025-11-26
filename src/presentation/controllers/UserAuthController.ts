@@ -54,18 +54,18 @@ export class UserAuthController {
 
         private _businessGoogleSigninUseCase: IBusinessGoogleSigninUseCase,
 
-        private _verifyEmailUseCase:IVerifyEmailUseCase,
+        private _verifyEmailUseCase: IVerifyEmailUseCase,
 
-        private _otpVerificationUseCase:IUserOTPVerificationUseCase,
+        private _otpVerificationUseCase: IUserOTPVerificationUseCase,
 
-        private _resetPasswordUseCase:IResetPasswordUseCase
+        private _resetPasswordUseCase: IResetPasswordUseCase
     ) { }
 
     signup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("User signup request recieved");
             const result = await this._userSignupUseCase.execute(req.body);
-            
+
             const response: UserSignupResponseDTO = {
                 success: true,
                 message: MESSAGES.OTP_SENT,
@@ -85,20 +85,20 @@ export class UserAuthController {
     verifyOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("OTP verification request recieved for user signup");
-            const { role,email,otp } = req.body;
+            const { role, email, otp } = req.body;
             let message;
             if (role === 'learner') {
-                message=MESSAGES.LEARNER_CREATED
-                await this._learnerOTPVerificationUseCase.execute({email,otp})
+                message = MESSAGES.LEARNER_CREATED
+                await this._learnerOTPVerificationUseCase.execute({ email, otp })
             } else if (role === 'instructor') {
-                message=MESSAGES.INSTRUCTOR_CREATED
-                await this._instructorOTPVerificationUseCase.execute({email,otp})
+                message = MESSAGES.INSTRUCTOR_CREATED
+                await this._instructorOTPVerificationUseCase.execute({ email, otp })
             } else {
-                message=MESSAGES.BUSINESS_CREATED
-                await this._businessOTPVerificationUseCase.execute({email,otp})
+                message = MESSAGES.BUSINESS_CREATED
+                await this._businessOTPVerificationUseCase.execute({ email, otp })
             }
             logger.info("User registration completed.");
-            res.status(STATUS_CODES.CREATED).json({success:true,message});
+            res.status(STATUS_CODES.CREATED).json({ success: true, message });
 
         } catch (error) {
             logger.warn("Failed to verify OTP for user registration.");
@@ -136,23 +136,23 @@ export class UserAuthController {
             switch (role) {
                 case "learner":
                     result = await this._learnerSigninUseCase.execute(req.body);
-                    user=result.user
+                    user = result.user
                     break;
-                    
+
                 case "instructor":
                     result = await this._instructorSigninUseCase.execute(req.body);
-                    user=result.user
+                    user = result.user
                     break;
                 case "business":
                     result = await this._businessSigninUseCase.execute(req.body);
-                    user=result.user
+                    user = result.user
                     break;
             }
 
-            
-            
-            if(!result || !user){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+
+
+            if (!result || !user) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             logger.info("User signed in successfully");
             res.cookie("refreshToken", result.refreshToken, {
@@ -162,7 +162,7 @@ export class UserAuthController {
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
-            
+
 
             const response: UserSigninResponseDTO = {
                 success: true,
@@ -245,7 +245,7 @@ export class UserAuthController {
     googleSignin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("Google signin request recieved.");
-            const {role,token}= req.body
+            const { role, token } = req.body
 
             let result;
 
@@ -254,7 +254,7 @@ export class UserAuthController {
                     const learnerResult = await this._learnerGoogleSigninUseCase.execute(token);
                     result = {
                         ...learnerResult,
-                        user: learnerResult.user, 
+                        user: learnerResult.user,
                     };
                     break;
                 }
@@ -276,8 +276,8 @@ export class UserAuthController {
                 }
             }
 
-            if(!result){
-                throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            if (!result) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             logger.info("User singed in via google authentication successfully.");
             res.cookie("refreshToken", result.refreshToken, {
@@ -305,8 +305,8 @@ export class UserAuthController {
     verifyEmail = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("Email verification request recieved");
-            const {email,role} = req.body;
-            const result = await this._verifyEmailUseCase.execute(email,role);
+            const { email, role } = req.body;
+            const result = await this._verifyEmailUseCase.execute(email, role);
 
             res.status(STATUS_CODES.OK).json({
                 success: true,
@@ -324,8 +324,8 @@ export class UserAuthController {
     verifyResetOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("OTP verification request recieved for password reset");
-            const {email,otp} = req.body;
-            await this._otpVerificationUseCase.execute({otp,email})
+            const { email, otp } = req.body;
+            await this._otpVerificationUseCase.execute({ otp, email })
             logger.info("OTP verificaiton successfull")
             res.status(STATUS_CODES.OK).json({
                 success: true,
@@ -341,8 +341,8 @@ export class UserAuthController {
     resetPassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info("Password reset request recieved")
-            const {email,role,password} = req.body;
-            await this._resetPasswordUseCase.execute(role,email,password);
+            const { email, role, password } = req.body;
+            await this._resetPasswordUseCase.execute(role, email, password);
             logger.info("Password reset successfully successfully")
             res.status(STATUS_CODES.OK).json({
                 success: true,

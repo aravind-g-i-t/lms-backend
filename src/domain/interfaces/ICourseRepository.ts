@@ -1,5 +1,5 @@
 import { Category } from "@domain/entities/Category";
-import { Chapter, Course, CourseLevel, CourseStatus, Module, VerificationStatus } from "@domain/entities/Course";
+import { Chapter, Course, CourseLevel, CourseStatus, Module, Resource, VerificationStatus } from "@domain/entities/Course";
 import { Instructor } from "@domain/entities/Instructor";
 
 interface FindAllInput {
@@ -107,5 +107,9 @@ export interface ICourseRepository {
     updateChapterInfo(input:{courseId: string, moduleId: string, chapterId: string, updates:{title:string,description:string} }): Promise<Course | null>;
 
     updateChapterVideo({ courseId,moduleId,chapterId,video,duration}: {courseId: string;moduleId: string;chapterId: string;video: string;duration: number}): Promise<Course | null>;
+
+    addResource({ courseId, moduleId, chapterId, resource }: { courseId: string; moduleId: string; chapterId: string; resource: Resource }): Promise<Course | null>
+
+    removeResource({ courseId, moduleId, chapterId, resourceId }: { courseId: string; moduleId: string; chapterId: string; resourceId: string }): Promise<Course | null>
 
 }

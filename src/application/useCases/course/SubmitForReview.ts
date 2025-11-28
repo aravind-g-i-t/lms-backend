@@ -30,6 +30,14 @@ export class SubmitCourseForReviewUseCase implements ISubmitCourseForReviewUseCa
             throw new AppError("Please fill all the required fields before submitting for review.",STATUS_CODES.BAD_REQUEST);
         }
 
+        const totalChapters=course.modules.reduce((c,module)=>{
+            c+=module.chapters.length;
+            return c;
+        },0);
+        if(totalChapters<3){
+            throw new AppError("A minimum of 3 chapters is required.")
+        }
+
         // Ensure modules exist
         if (!course.modules || course.modules.length === 0) {
             throw new AppError("A course must contain at least one module before submitting for review.",STATUS_CODES.BAD_REQUEST);

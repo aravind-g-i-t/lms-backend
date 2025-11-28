@@ -19,14 +19,20 @@ export enum VerificationStatus {
 }
 
 
-export enum ResourceType {
-    PDF = "pdf",
-    DOCS = "docs",
-    EXE = "exe",
-    ZIP = "zip",
-    OTHER = "other"
-}
+// export enum ResourceType {
+//     PDF = "pdf",
+//     DOCS = "docs",
+//     EXE = "exe",
+//     ZIP = "zip",
+//     OTHER = "other"
+// }
 
+export interface Resource {
+    id:string
+    name: string;
+    file: string;
+    size: number;
+}
 
 export interface Chapter {
     id:string;
@@ -36,16 +42,6 @@ export interface Chapter {
     duration: number;
     resources: Resource[];
 }
-
-
-export interface Resource {
-    id:string
-    title: string;
-    file: string;
-    size: number;
-    type: ResourceType;
-}
-
 export interface Module {
     id:string;
     title: string;

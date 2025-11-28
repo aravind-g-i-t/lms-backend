@@ -22,6 +22,8 @@ import { instructorRepository } from "../instructor/instructorRepository";
 import { enrollmentRepository, learnerProgressRepository } from "./dependencies";
 import { GetFullCourseForLearnerUseCase } from "@application/useCases/course/GetFullCourseForLearner";
 import { GetCourseDetailsForCheckoutUseCase } from "@application/useCases/course/GetCourseForCheckout";
+import { DeleteResourceUseCase } from "@application/useCases/course/DeleteResource";
+import { AddResourceUseCase } from "@application/useCases/course/AddResource";
 
 export const courseRepository= new CourseRepository();
 
@@ -62,7 +64,11 @@ const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseR
 const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository)
 
 
-const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service)
+const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service);
+
+const addResourceUseCase = new AddResourceUseCase(courseRepository,s3Service)
+
+const deleteResourceUseCase= new DeleteResourceUseCase(courseRepository)
 
 export const courseController=new CourseController(
     createCourseUseCase,
@@ -83,5 +89,7 @@ export const courseController=new CourseController(
     getCoursesForLearnerUseCase,
     getCourseDetailsForLearner,
     getFullCourseForLearnerUseCase,
-    getCourseDetailsForCheckout
+    getCourseDetailsForCheckout,
+    addResourceUseCase,
+    deleteResourceUseCase
 );

@@ -87,5 +87,8 @@ instructorRouter.patch("/course/verification",userAuthMiddleware,(req:Request,re
 
 instructorRouter.patch(ROUTES.COURSE_STATUS,userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateStatus(req,res,next));
 
+instructorRouter.patch("/course/resource/add",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.addResource(req,res,next));
+
+instructorRouter.patch("/course/resource/delete",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteResource(req,res,next));
 
 export default instructorRouter

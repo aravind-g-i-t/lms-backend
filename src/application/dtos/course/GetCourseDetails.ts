@@ -1,4 +1,4 @@
-import { CourseLevel, CourseStatus, ResourceType, VerificationStatus } from "@domain/entities/Course";
+import { CourseLevel, CourseStatus, VerificationStatus } from "@domain/entities/Course";
 
 
 
@@ -14,10 +14,9 @@ export interface Chapter {
 
 export interface Resource {
     id:string;
-    title: string;
+    name: string;
     file: string;
     size: number;
-    type: ResourceType;
 }
 
 export interface Module {

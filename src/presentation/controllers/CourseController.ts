@@ -1,8 +1,10 @@
 import { IAddChapterUseCase } from "@application/IUseCases/course/IAddChapter";
 import { IAddModuleUseCase } from "@application/IUseCases/course/IAddModule";
+import { IAddResourceUseCase } from "@application/IUseCases/course/IAddResource";
 import { ICreateCourseUseCase } from "@application/IUseCases/course/ICreateCourse";
 import { IDeleteChaperUseCase } from "@application/IUseCases/course/IDeleteChapter";
 import { IDeleteModuleUseCase } from "@application/IUseCases/course/IDeleteModule";
+import { IDeleteResourceUseCase } from "@application/IUseCases/course/IDeleteResource";
 import { IGetCourseDetailsUseCase } from "@application/IUseCases/course/IGetCourseDetails";
 import { IGetCourseDetailsForLearnerUseCase } from "@application/IUseCases/course/IGetCourseDetailsForLearner";
 import { IGetCourseDetailsForCheckoutUseCase } from "@application/IUseCases/course/IGetCourseForCheckout";
@@ -48,7 +50,9 @@ export class CourseController {
         private _getCoursesForLearnerUseCase: IGetCoursesForLearnerUseCase,
         private _getCoureDetailsForLearnerUseCase: IGetCourseDetailsForLearnerUseCase,
         private _getFullCourseForLearnerUseCase: IGetFullCourseForLearnerUseCase,
-        private _getCourseDetailsForCheckoutUseCase:IGetCourseDetailsForCheckoutUseCase
+        private _getCourseDetailsForCheckoutUseCase:IGetCourseDetailsForCheckoutUseCase,
+        private _addResourceUseCase: IAddResourceUseCase,
+        private _deleteResourceUseCase: IDeleteResourceUseCase
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -514,6 +518,53 @@ export class CourseController {
                 success: true,
                 message: "Course details fetched successfully",
                 data: response
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async addResource(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+            const { courseId, moduleId, chapterId, name, file, size } = req.body;
+
+            const result = await this._addResourceUseCase.execute({
+                courseId,
+                moduleId,
+                chapterId,
+                resource:{
+                    name,
+                    file,
+                    size
+                }
+            });
+            res.status(201).json({
+                success: true,
+                message: "Chapter added successfully",
+                resource: result
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async deleteResource(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+            const { courseId, moduleId, chapterId, resourceId } = req.body;
+
+            await this._deleteResourceUseCase.execute({
+                courseId,
+                moduleId,
+                chapterId,
+                resourceId
+            });
+            res.status(201).json({
+                success: true,
+                message: "Chapter deleted successfully",
             });
 
         } catch (error) {

@@ -6,6 +6,7 @@ import { InstructorEntity } from "./InstructorRepository";
 import { CourseMapper } from "../mappers/CourseMapper";
 import { CategoryDoc } from "../models/CategoryModel";
 import { InstructorDoc } from "../models/InstructorModel";
+import { Resource } from "@domain/entities/Course";
 
 enum CourseLevel {
     Beginner = "beginner",
@@ -220,8 +221,8 @@ export class CourseRepository implements ICourseRepository {
             query.rating = { $gte: filter.minRating };
         }
 
-        query.status=CourseStatus.Published;
-        query["verification.status"]=VerificationStatus.Verified
+        query.status = CourseStatus.Published;
+        query["verification.status"] = VerificationStatus.Verified
 
         const sortQuery: Record<string, 1 | -1> = {};
         if (sort) {
@@ -480,5 +481,45 @@ export class CourseRepository implements ICourseRepository {
         return CourseMapper.toDomain(updated);
     }
 
+    async addResource({ courseId, moduleId, chapterId, resource }: { courseId: string; moduleId: string; chapterId: string; resource: Resource }): Promise<CourseEntity | null> {
+        const course = await CourseModel.findById(courseId).exec();
+        if (!course) return null;
 
+        const module = course.modules.find(m => m.id === moduleId);
+        if (!module) return null;
+        const chapter = module.chapters.find(c => c.id === chapterId);
+        if (!chapter) return null;
+
+        chapter.resources.push(resource)
+        await course.save();
+        return CourseMapper.toDomain(course);
+    }
+
+
+    async removeResource({
+        courseId,
+        moduleId,
+        chapterId,
+        resourceId
+    }: {
+        courseId: string;
+        moduleId: string;
+        chapterId: string;
+        resourceId:string;
+    }): Promise<CourseEntity | null> {
+        const course = await CourseModel.findById(courseId).exec();
+        if (!course) return null;
+
+        const module = course.modules.find(m => m.id === moduleId);
+        if (!module) return null;
+
+        const chapter = module.chapters.find(c => c.id === chapterId);
+        if (!chapter) return null;
+
+        chapter.resources= chapter.resources.filter(r => r.id !== resourceId);
+
+        await course.save();
+        return CourseMapper.toDomain(course);
+    }
 }
+

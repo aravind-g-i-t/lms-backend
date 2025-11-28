@@ -23,20 +23,13 @@ export enum VerificationStatus {
 
 }
 
-export enum ResourceType {
-    PDF = "pdf",
-    DOCS = "docs",
-    EXE = "exe",
-    ZIP = "zip",
-    OTHER = "other",
-}
+
 
 export interface IResource {
     id: string
-    title: string;
+    name: string;
     file: string;
     size: number;
-    type: ResourceType;
 }
 
 export interface IChapter {
@@ -70,8 +63,8 @@ export interface CourseDoc extends Document {
     price: number;
     level: CourseLevel;
     duration: number;
-    totalChapters:number;
-    totalModules:number;
+    totalChapters: number;
+    totalModules: number;
     tags: string[];
     whatYouWillLearn: string[];
     rating: number | null;
@@ -96,10 +89,9 @@ export interface HydratedCourseDoc extends Omit<CourseDoc, "categoryId" | "instr
 const ResourceSchema = new Schema<IResource>(
     {
         id: { type: String, required: true },
-        title: { type: String, required: true },
+        name: { type: String, required: true },
         file: { type: String, required: true },
         size: { type: Number, required: true },
-        type: { type: String, enum: Object.values(ResourceType), required: true },
     },
     { _id: false }
 );

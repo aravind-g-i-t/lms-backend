@@ -16,7 +16,7 @@ export class GetValidCouponsUseCase {
         const notApplicable = [];
 
         for (const coupon of coupons) {
-            const reason = await this.getReasonIfNotApplicable(coupon, amount);
+            const reason = this.getReasonIfNotApplicable(coupon, amount);
 
             if (!reason) {
                 applicable.push(coupon);
@@ -32,7 +32,7 @@ export class GetValidCouponsUseCase {
         return { applicable, notApplicable };
     }
 
-    private async getReasonIfNotApplicable(coupon: Coupon, amount: number): Promise<string | null> {
+    private  getReasonIfNotApplicable(coupon: Coupon, amount: number): string | null {
 
         const now = new Date();
         if (new Date(coupon.expiresAt) < now) {
@@ -42,10 +42,6 @@ export class GetValidCouponsUseCase {
         if (amount < coupon.minCost) {
             return `Minimum purchase ₹${coupon.minCost} required.`;
         }
-
-        // if (coupon.usageLimit === coupon.usageCount) {
-        //     return "Usage limit reached.";
-        // }
 
         return null;
     }

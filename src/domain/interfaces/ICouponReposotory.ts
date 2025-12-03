@@ -20,4 +20,16 @@ export interface ICouponRepository {
     }>
 
     updateStatus(id: string): Promise<Coupon | null>;
+
+    isApplicable(input: { couponId: string; amount: number }): Promise<{
+        applicable: boolean;
+        reason?: string;
+        coupon?: Coupon;
+    }>
+
+    applyCoupon(input: { couponId: string; amount: number }): Promise<{
+        finalAmount: number;
+        discount: number;
+        coupon: Coupon;
+    }>
 }

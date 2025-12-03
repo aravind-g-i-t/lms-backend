@@ -28,7 +28,7 @@ const EnrollmentSchema = new Schema<EnrollmentDoc>(
             type: String,
             enum: Object.values(EnrollmentStatus),
             required: true,
-            default: EnrollmentStatus.Active,
+            default: EnrollmentStatus.Pending,
         },
         paymentId: { type: Schema.Types.ObjectId, ref: "Payment", required: true },
         certificate: { type: String, default: null },
@@ -43,7 +43,7 @@ const EnrollmentSchema = new Schema<EnrollmentDoc>(
     { timestamps: true }
 );
 
-EnrollmentSchema.index({ learnerId: 1, courseId: 1 }, { unique: true });
+// EnrollmentSchema.index({ learnerId: 1, courseId: 1 }, { unique: true });
 
 export const EnrollmentModel = model<EnrollmentDoc>(
     "Enrollment",

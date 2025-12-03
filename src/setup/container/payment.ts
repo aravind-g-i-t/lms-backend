@@ -4,6 +4,7 @@ import { VerifyPaymentUseCase } from "@application/useCases/payment/VerifyPaymen
 import { PaymentController } from "@presentation/controllers/PaymentController";
 import { instructorEarningsRepository, instructorWalletRepository } from "./instructor/instructorRepository";
 import { courseRepository } from "./shared/courseController";
+import { couponRepository } from "./coupon";
 
 export const createPaymentUseCase = new CreatePaymentUseCase(paymentRepository);
 
@@ -14,7 +15,8 @@ export const verifyPaymentUseCase = new VerifyPaymentUseCase(
     instructorWalletRepository,
     instructorEarningsRepository,
     learnerProgressRepository,
-    courseRepository
+    courseRepository,
+    couponRepository
 );
 
 export const paymentController = new PaymentController(verifyPaymentUseCase);

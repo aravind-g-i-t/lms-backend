@@ -101,6 +101,88 @@ export class CouponRepository implements ICouponRepository {
         }
         logger.info("Coupon status updated successfully.")
         return CouponMapper.toDomain(coupon);
-
     }
+
+    async isApplicable(input: { couponId: string; amount: number }): Promise<{
+        applicable: boolean;
+        reason?: string;
+        coupon?: Coupon;
+    }> {
+        const { couponId, amount } = input;
+
+        const couponDoc = await CouponModel.findById(couponId);
+        if (!couponDoc) {
+            return { applicable: false, reason: "Coupon not found" };
+        }
+
+        const coupon = CouponMapper.toDomain(couponDoc);
+
+        // Check if coupon is active
+        if (!coupon.isActive) {
+            return { applicable: false, reason: "Coupon is inactive" };
+        }
+
+        // Check expiration
+        if (coupon.expiresAt && coupon.expiresAt < new Date()) {
+            return { applicable: false, reason: "Coupon has expired" };
+        }
+
+        // Check usage limit
+        if (coupon.usageCount >= coupon.usageLimit) {
+            return { applicable: false, reason: "Usage limit exceeded" };
+        }
+
+        // Check minimum purchase
+        if (coupon.minCost && amount < coupon.minCost) {
+            return {
+                applicable: false,
+                reason: `Minimum purchase amount is ${coupon.minCost}`
+            };
+        }
+
+        return { applicable: true, coupon };
+    }
+
+    async applyCoupon(input: { couponId: string; amount: number }): Promise<{
+        finalAmount: number;
+        discount: number;
+        coupon: Coupon;
+    }> {
+        const { couponId, amount } = input;
+
+        const result = await this.isApplicable({ couponId, amount });
+
+        if (!result.applicable || !result.coupon) {
+            throw new AppError(result.reason || "Coupon not applicable", 400);
+        }
+
+        const coupon = result.coupon;
+
+        let discount = 0;
+
+        // Percentage discount
+        if (coupon.discountType === "percentage") {
+            discount = (amount * coupon.discountValue) / 100;
+
+            // Apply max discount cap if exists
+            if (coupon.maxDiscount) {
+                discount = Math.min(discount, coupon.maxDiscount);
+            }
+        }
+
+        // Flat discount
+        if (coupon.discountType === "amount") {
+            discount = coupon.discountValue;
+        }
+
+        const finalAmount = Math.max(amount - discount, 0);
+
+        return {
+            finalAmount,
+            discount,
+            coupon
+        };
+    }
+
+
 }

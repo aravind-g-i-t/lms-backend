@@ -16,7 +16,7 @@ export class EnrollmentController {
     async initiateEnrollment(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const { courseId, method,couponId } = req.body;
-            console.log(courseId, method);
+            console.log(courseId, method,couponId);
 
             const learnerId = req.user?.id
             if (!learnerId) {

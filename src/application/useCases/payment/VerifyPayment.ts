@@ -2,6 +2,7 @@ import { IVerifyPaymentUseCase } from "@application/IUseCases/payment/IVerifyPay
 import { EnrollmentStatus } from "@domain/entities/Enrollment";
 import { EarningStatus } from "@domain/entities/InstructorEarning";
 import { PaymentStatus } from "@domain/entities/Payment";
+import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { IInstructorEarningsRepository } from "@domain/interfaces/IInstructorEarningsRepo";
@@ -12,6 +13,9 @@ import { IPaymentRepository } from "@domain/interfaces/IPaymentRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
+const PLATFORM_CUT = Number(process.env.PLATFORM_CUT) || 30;
+
+
 export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
     constructor(
         private paymentRepo: IPaymentRepository,
@@ -20,7 +24,8 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         private _instructorWalletReposotory: IInstructorWalletRepository,
         private _instructorEarningsRepository: IInstructorEarningsRepository,
         private _learnerProgress: ILearnerProgressRepository,
-        private _courseRepository: ICourseRepository
+        private _courseRepository: ICourseRepository,
+        private _couponRepository:ICouponRepository
     ) { }
 
     async execute(sessionId: string): Promise<{ status: string }> {
@@ -73,7 +78,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             if (!enrollment) {
                 throw new AppError("Failed to activate enrollment", STATUS_CODES.BAD_REQUEST)
             }
-            const instructorShare = payment.grossAmount * 70 / 100;
+            const instructorShare = payment.grossAmount * (100 - PLATFORM_CUT) / 100;
             const releaseAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             const instructorEarnings = await this._instructorEarningsRepository.create({
                 instructorId: enrollment.instructorId,
@@ -102,7 +107,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 throw new AppError("Failed to fetch course", STATUS_CODES.BAD_REQUEST)
             }
 
-            const _learnerProgress = await this._learnerProgress.create({
+            const learnerProgress = await this._learnerProgress.create({
                 learnerId: enrollment.learnerId,
                 courseId: enrollment.courseId,
                 completedChapters: [],
@@ -112,8 +117,13 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 lastAccessedAt: null,
             });
 
-            console.log(_learnerProgress);
-            
+            if (!learnerProgress) {
+                throw new AppError("Failed to update initiate learner progress", STATUS_CODES.BAD_REQUEST,false)
+            }
+
+            if(payment.coupon){
+                await this._couponRepository.incrementUsage(payment.coupon)
+            }
 
             return { status: "success" };
         }
@@ -123,10 +133,11 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             await this.paymentRepo.update(paymentId, {
                 status: PaymentStatus.Failed,
                 transactionId: null,
+                enrollmentId
             });
 
             await this.enrollmentRepo.update(enrollmentId, {
-                status: EnrollmentStatus.Cancelled,
+                status: EnrollmentStatus.Failed,
             });
 
         }

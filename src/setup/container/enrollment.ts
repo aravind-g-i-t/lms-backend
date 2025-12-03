@@ -7,6 +7,7 @@ import { EnrollmentController } from "@presentation/controllers/EnrollmentContro
 import { instructorRepository } from "./instructor/instructorRepository";
 import { GetEnrollmentsUseCase } from "@application/useCases/enrollment/GetEnrollments";
 import { s3Service } from "./shared/s3Controller";
+import { couponRepository } from "./coupon";
 
 export const createEnrollmentUseCase = new CreateEnrollmentUseCase(enrollmentRepository);
 
@@ -16,7 +17,8 @@ export const initiateEnrollmentUseCase = new InitiateEnrollmentUseCase(
     createPaymentUseCase,
     createEnrollmentUseCase,
     stripeService,
-    instructorRepository
+    instructorRepository,
+    couponRepository
 );
 
 export const getEnrollmentsUseCase = new GetEnrollmentsUseCase(enrollmentRepository,learnerProgressRepository,s3Service)

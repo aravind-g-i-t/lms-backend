@@ -53,13 +53,14 @@ export interface CourseForLearnerListing {
     description: string;
     thumbnail: string | null;
     totalRatings: number;
+    isFavourite?: boolean
 }
 
 export interface CourseForCheckout {
     id: string;
     title: string;
     price: number;
-    instructor: {id:string; name: string; profilePic: string };
+    instructor: { id: string; name: string; profilePic: string };
     thumbnail: string;
     description: string;
 }

@@ -13,4 +13,3 @@ export interface CategoryAsRaw {
     createdAt?: Date;
     updatedAt?: Date;
 }
-

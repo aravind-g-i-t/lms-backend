@@ -6,9 +6,16 @@ export interface ILearnerProgressRepository {
     findManyByCourseIds(learnerId: string, courseIds: string[]): Promise<LearnerProgress[]>;
     findByIdAndUpdate(id: string, updateData: Partial<LearnerProgress>): Promise<LearnerProgress | null>;
     markChapterCompleted(
-        {learnerId,courseId,chapterId}
-        :{learnerId: string,
+        { learnerId, courseId, chapterId }
+            : {
+                learnerId: string,
+                courseId: string,
+                chapterId: string
+            }
+    ): Promise<LearnerProgress | null>
+    findByLearnerAndCourseAndUpdate(
+        learnerId: string,
         courseId: string,
-        chapterId: string}
+        updateData: Partial<LearnerProgress>
     ): Promise<LearnerProgress | null>
 }

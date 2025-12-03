@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {  z } from "zod";
 
 const StringToNumber = z.string().pipe(
     z.coerce.number({
@@ -74,5 +74,7 @@ export const GetCoursesForLearnerRequestSchema = z.object({
         }),
 
         sort: z.string().default('latest'),
+
+        learnerId:ObjectIDSchema.nullable()
     }),
 });

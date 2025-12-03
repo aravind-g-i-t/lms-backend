@@ -7,7 +7,7 @@ import { IS3Service } from "@domain/interfaces/IS3Service";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
-export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerUseCase{
+export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
         private _fileStorageService: IS3Service,
@@ -15,11 +15,11 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
     ) { }
 
     async execute({ courseId, learnerId }: { courseId: string; learnerId: string }): Promise<GetFullCourseForLearnerOutput> {
-        console.log("courseId",courseId);
+        console.log("courseId", courseId);
 
         const course = await this._courseRepository.findHydratedCourseById(courseId);
-        console.log("course",course);
-        
+        console.log("course", course);
+
         if (!course) {
             throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
         }
@@ -29,7 +29,7 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         const previewVideo = course.previewVideo
             ? await this._fileStorageService.getDownloadUrl(course.previewVideo)
             : null;
-        console.log(thumbnail,previewVideo);
+        console.log(thumbnail, previewVideo);
         const modules = await Promise.all(
             course.modules.map(async (module) => {
                 const updatedChapters = await Promise.all(
@@ -46,7 +46,12 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             })
         );
         console.log(modules);
-        const progress = await this._progressRepository.findByLearnerAndCourse(learnerId, courseId);
+        const progress = await this._progressRepository.findByLearnerAndCourseAndUpdate(
+            learnerId,
+            courseId,
+            { lastAccessedAt: new Date() }
+        );
+
         console.log(progress);
         if (!progress) {
             throw new AppError("Failed to get learner progress")

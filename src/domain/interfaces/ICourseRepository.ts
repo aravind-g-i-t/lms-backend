@@ -26,6 +26,7 @@ export interface FindAllCoursesInput {
         durationRange?: [number, number];
         priceRange?: [number, number];
         minRating?: number;
+        courseIds?:string[];
     };
 }
 

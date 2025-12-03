@@ -17,9 +17,10 @@ export class InitiateEnrollmentUseCase{
         private _instructorRepository:IInstructorRepository
     ){}
 
-async execute(input:{courseId:string,learnerId:string,paymentMethod:"wallet"|"stripe"}):Promise<{sessionId?:string}>{
+async execute(input:{courseId:string,learnerId:string,paymentMethod:"wallet"|"stripe",couponId:string|null}):Promise<{sessionId?:string}>{
 
         const {courseId,paymentMethod,learnerId}= input;
+        
 
         const course = await this._courseRepository.findById(courseId);
         if(!course){
@@ -60,7 +61,6 @@ async execute(input:{courseId:string,learnerId:string,paymentMethod:"wallet"|"st
         });
 
         console.log("enrollment",enrollment);
-        
 
         const sessionId = await this._paymentGatewayService.createCheckoutSession({
             amount:course.price,

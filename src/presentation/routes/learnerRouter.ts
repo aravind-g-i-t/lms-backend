@@ -40,5 +40,10 @@ learnerRouter.get("/course/checkout",userAuthMiddleware,(req:Request,res:Respons
 
 learnerRouter.patch("/progress/chapter/complete",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.markChapterAsCompleted(req,res,next));
 
+learnerRouter.post("/favourites",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.addToFavourites(req,res,next));
+
+learnerRouter.delete("/favourites/:courseId",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.removeFromFavourites(req,res,next));
+
+learnerRouter.get("/favourites",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getFavourites(req,res,next));
 
 export default learnerRouter;

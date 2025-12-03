@@ -46,10 +46,12 @@ export class LearnerProgressRepository implements ILearnerProgressRepository {
     }
 
     async markChapterCompleted(
-        {learnerId,courseId,chapterId}
-        :{learnerId: string,
-        courseId: string,
-        chapterId: string}
+        { learnerId, courseId, chapterId }
+            : {
+                learnerId: string,
+                courseId: string,
+                chapterId: string
+            }
     ): Promise<LearnerProgress | null> {
 
         const updated = await LearnerProgressModel.findOneAndUpdate(
@@ -57,6 +59,21 @@ export class LearnerProgressRepository implements ILearnerProgressRepository {
             {
                 $addToSet: { completedChapters: chapterId },
             },
+            { new: true }
+        );
+
+        return updated ? LearnerProgressMapper.toDomain(updated) : null;
+    }
+
+    async findByLearnerAndCourseAndUpdate(
+        learnerId: string,
+        courseId: string,
+        updateData: Partial<LearnerProgress>
+    ): Promise<LearnerProgress | null> {
+
+        const updated = await LearnerProgressModel.findOneAndUpdate(
+            { learnerId, courseId },
+            { $set: updateData },
             { new: true }
         );
 

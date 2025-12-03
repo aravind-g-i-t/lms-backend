@@ -1,4 +1,4 @@
-import { CategoryForListing } from "./categoryDTO";
+import { CategoryForListing } from "./CategoryDTO";
 
 export interface GetCategoriesInput {
   page: number;

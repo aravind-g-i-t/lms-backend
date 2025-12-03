@@ -1,4 +1,3 @@
-// src/application/useCases/category/ToggleCategoryStatusUseCase.ts
 
 import { ICategoryRepository } from "@domain/interfaces/ICategoryRepository";
 import { IUpdateCategoryStatusUseCase } from "@application/IUseCases/category/IUpdateStatus";

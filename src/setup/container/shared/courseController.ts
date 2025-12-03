@@ -24,6 +24,9 @@ import { GetFullCourseForLearnerUseCase } from "@application/useCases/course/Get
 import { GetCourseDetailsForCheckoutUseCase } from "@application/useCases/course/GetCourseForCheckout";
 import { DeleteResourceUseCase } from "@application/useCases/course/DeleteResource";
 import { AddResourceUseCase } from "@application/useCases/course/AddResource";
+import { favouriteRepository } from "../learner/learnerRepository";
+import { GetFavouritesUseCase } from "@application/useCases/favourite/GetFavourites";
+import { getValidCouponsUseCase } from "../coupon";
 
 export const courseRepository= new CourseRepository();
 
@@ -57,18 +60,20 @@ const getCoursesForAdminUseCase= new GetCoursesForAdminUseCase(courseRepository,
 
 const updateCourseStatusUseCase = new UpdateCourseStatusUseCase(courseRepository)
 
-const getCoursesForLearnerUseCase = new GetCoursesForLearnerUseCase(courseRepository,s3Service);
+const getCoursesForLearnerUseCase = new GetCoursesForLearnerUseCase(courseRepository,s3Service,favouriteRepository);
 
-const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseRepository,s3Service,enrollmentRepository)
+const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseRepository,s3Service,enrollmentRepository,favouriteRepository)
 
 const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository)
 
 
-const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service);
+const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service,getValidCouponsUseCase);
 
 const addResourceUseCase = new AddResourceUseCase(courseRepository,s3Service)
 
-const deleteResourceUseCase= new DeleteResourceUseCase(courseRepository)
+const deleteResourceUseCase= new DeleteResourceUseCase(courseRepository);
+
+const getFavouritesUseCase = new GetFavouritesUseCase(courseRepository,s3Service,favouriteRepository)
 
 export const courseController=new CourseController(
     createCourseUseCase,
@@ -91,5 +96,6 @@ export const courseController=new CourseController(
     getFullCourseForLearnerUseCase,
     getCourseDetailsForCheckout,
     addResourceUseCase,
-    deleteResourceUseCase
+    deleteResourceUseCase,
+    getFavouritesUseCase
 );

@@ -3,6 +3,7 @@ import { GetCoursesForLearnerOutput } from "@application/dtos/course/GetCourseFo
 import { IGetCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetCoursesForLearner";
 import { Course, CourseLevel } from "@domain/entities/Course";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
+import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { IS3Service } from "@domain/interfaces/IS3Service";
 
 const sortMapper = {
@@ -18,12 +19,14 @@ type Sort = "latest" | "rating" | "popularity" | "price_low" | "price_high"
 export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IS3Service,
+        private _favouriteRepository: IFavouriteRepository
     ) { }
 
-    async execute(input: { page?: number, limit: number, search?: string; sort: Sort; instructorIds?: string[]; categoryIds?: string[]; levels?: string[]; durationRange?: [number, number]; priceRange?: [number, number]; minRating?: number; }): Promise<GetCoursesForLearnerOutput> {
+    async execute(input: { page?: number, limit: number, search?: string; sort: Sort; instructorIds?: string[]; categoryIds?: string[]; levels?: string[]; durationRange?: [number, number]; priceRange?: [number, number]; minRating?: number;learnerId:string |null}): Promise<GetCoursesForLearnerOutput> {
 
-
+        console.log(input);
+        
         const { page, limit, search, sort, instructorIds, categoryIds, levels, durationRange, priceRange, minRating } = input;
         const result = await this._courseRepository.findAllCourses({
             pagination: {
@@ -43,8 +46,7 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
         });
 
 
-
-        const courses = await Promise.all(
+        let courses = await Promise.all(
             result.courses.map(async (course) => {
                 const thumbnailURL = course.thumbnail
                     ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
@@ -58,6 +60,21 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
             })
         );
 
+        if(input.learnerId){
+            const favourites=await this._favouriteRepository.getFavouriteCourseIdsByLearner(input.learnerId);
+            const favSet= new Set(favourites);
+            courses=courses.map(course=>{
+                if(favSet.has(course.id)){
+                    course.isFavourite=true
+                }else{
+                    course.isFavourite=false
+                }
+                return course
+            })
+        }
+
+        console.log(courses);
+        
 
         return { pagination: result.pagination, courses };
     }
@@ -81,6 +98,7 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
             description: doc.description,
             thumbnail: doc.thumbnail,
             totalRatings: doc.totalRatings,
+
         }
     }
 }

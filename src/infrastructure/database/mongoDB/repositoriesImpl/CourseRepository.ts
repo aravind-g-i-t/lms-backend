@@ -102,6 +102,7 @@ export interface FindAllCoursesInput {
         durationRange?: [number, number];
         priceRange?: [number, number];
         minRating?: number;
+        courseIds?:string[];
     };
 }
 
@@ -201,6 +202,10 @@ export class CourseRepository implements ICourseRepository {
 
         if (filter?.categoryIds?.length) {
             query.categoryId = { $in: filter.categoryIds };
+        }
+
+        if (filter?.courseIds?.length) {
+            query._id = { $in: filter.courseIds };
         }
 
         if (filter?.levels?.length) {

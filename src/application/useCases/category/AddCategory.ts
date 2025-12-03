@@ -2,7 +2,7 @@
 import { ICategoryRepository } from "@domain/interfaces/ICategoryRepository";
 import { IAddCategoryUseCase } from "@application/IUseCases/category/IAddCategory";
 import { CategoryDTOMapper } from "@application/mappers/CategoryMapper";
-import { CategoryForListing } from "@application/dtos/category/categoryDTO";
+import { CategoryForListing } from "@application/dtos/category/CategoryDTO";
 import { AppError } from "shared/errors/AppError";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 

@@ -12,6 +12,8 @@ import { GetLearnerProfileResponseDTO } from "@presentation/dtos/learner/GetProf
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 import { AppError } from "shared/errors/AppError";
 import { logger } from "@infrastructure/logging/Logger";
+import { IAddtoFavouritesUseCase } from "@application/IUseCases/favourite/IAddToFavourites";
+import { IRemoveFromFavouritesUseCase } from "@application/IUseCases/favourite/IRemoveFromFavourites";
 
 export class LearnerController {
     constructor(
@@ -20,6 +22,8 @@ export class LearnerController {
         private _updateLearnerDataUseCase: IUpdateLearnerDataUseCase,
         private _updatePassword: IUpdateUserPassword,
         private _getLearnerData: IGetLearnerDataUseCase,
+        private _addToFavouritesUseCase:IAddtoFavouritesUseCase,
+        private _removeFromFavouritesUseCase:IRemoveFromFavouritesUseCase
     ) { }
 
     getLearners = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -166,5 +170,46 @@ export class LearnerController {
         }
     }
 
+    addToFavourites = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to add course to favourites.");
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            const { courseId } = req.body;
+
+            await this._addToFavouritesUseCase.execute({
+                courseId,
+                learnerId
+            });
+            logger.info("Course added to favourites successfully");
+            res.status(STATUS_CODES.OK).json({ success: true, message: "Course added to favourites successfully" })
+        } catch (error) {
+            logger.warn("Failed to update learner password.")
+            next(error)
+        }
+    }
+
+    removeFromFavourites = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to remove course from favourites.");
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            const courseId  = req.params.courseId;
+
+            await this._removeFromFavouritesUseCase.execute({
+                learnerId,
+                courseId
+            });
+            logger.info("Course removed from favourites successfully");
+            res.status(STATUS_CODES.OK).json({ success: true, message: "Course removed from favourites successfully" })
+        } catch (error) {
+            logger.warn("Failed to remove course from favourites.")
+            next(error)
+        }
+    }
 
 }

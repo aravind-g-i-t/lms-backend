@@ -15,7 +15,7 @@ export class EnrollmentController {
 
     async initiateEnrollment(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { courseId, method } = req.body;
+            const { courseId, method,couponId } = req.body;
             console.log(courseId, method);
 
             const learnerId = req.user?.id
@@ -23,7 +23,7 @@ export class EnrollmentController {
                 throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
             }
 
-            const result = await this._initatiatEnrollmentUseCase.execute({ learnerId, courseId, paymentMethod: method });
+            const result = await this._initatiatEnrollmentUseCase.execute({ learnerId, courseId, paymentMethod: method ,couponId});
 
             const message = method === "wallet" ? "Enrollment created successfully." : "Enrollment initialted successfully";
 

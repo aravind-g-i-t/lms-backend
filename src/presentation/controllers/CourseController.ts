@@ -19,10 +19,12 @@ import { IUpdateCourseUseCase } from "@application/IUseCases/course/IUpdateCours
 import { IUpdateModuleInfoUseCase } from "@application/IUseCases/course/IUpdateModuleInfo";
 import { IUpdateCourseStatusUseCase } from "@application/IUseCases/course/IUpdateStatus";
 import { IUpdateCourseVerificationUseCase } from "@application/IUseCases/course/IUpdateVerification";
+import { IGetFavouritesUseCase } from "@application/IUseCases/favourite/IGetFavourites";
 import { GetCourseDeatailsForLearnerRequestSchema } from "@presentation/dtos/course/GetCourseDetailsForLearner";
 import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
 import { GetCoursesForInstructorRequestSchema } from "@presentation/dtos/course/GetCoursesForInstructor";
 import { GetCoursesForLearnerRequestSchema } from "@presentation/dtos/course/GetCoursesForLearner";
+import { GetFavouritesRequestSchema } from "@presentation/dtos/course/GetFavourites";
 import { AuthenticatedRequest } from "@presentation/middlewares/createAuthMiddleware";
 import { NextFunction, Response } from "express";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -52,7 +54,8 @@ export class CourseController {
         private _getFullCourseForLearnerUseCase: IGetFullCourseForLearnerUseCase,
         private _getCourseDetailsForCheckoutUseCase:IGetCourseDetailsForCheckoutUseCase,
         private _addResourceUseCase: IAddResourceUseCase,
-        private _deleteResourceUseCase: IDeleteResourceUseCase
+        private _deleteResourceUseCase: IDeleteResourceUseCase,
+        private _getFavouritesUseCase: IGetFavouritesUseCase
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -421,12 +424,12 @@ export class CourseController {
         try {
             const { query } = GetCoursesForLearnerRequestSchema.parse(req);
 
-
             const {
                 page,
                 limit,
                 search,
                 sort,
+                learnerId,
                 // Renamed from 'categoryIds[]'
                 'categoryIds[]': categoryIds,
                 'instructorIds[]': instructorIds,
@@ -448,7 +451,8 @@ export class CourseController {
                 priceRange,
                 levels,
                 durationRange,
-                minRating
+                minRating,
+                learnerId
             });
 
             res.status(201).json({
@@ -569,6 +573,40 @@ export class CourseController {
 
         } catch (error) {
             next(error)
+        }
+    }
+
+    async getFavourites(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { query } = GetFavouritesRequestSchema.parse(req);
+
+            const {
+                page,
+                limit,
+                search,
+            } = query 
+
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+
+            const response = await this._getFavouritesUseCase.execute({
+                page,
+                limit,
+                search,
+                learnerId
+            });
+
+            res.status(201).json({
+                success: true,
+                message: "Courses fetched successfully",
+                pagination: response.pagination,
+                courses: response.courses
+            });
+
+        } catch (error) {
+            next(error);
         }
     }
 

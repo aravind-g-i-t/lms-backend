@@ -1,4 +1,4 @@
-import { CategoryAsRaw, CategoryForListing } from "@application/dtos/category/categoryDTO";
+import { CategoryAsRaw, CategoryForListing } from "@application/dtos/category/CategoryDTO";
 
 export class CategoryDTOMapper{
     static toCategoryForListing(entity:CategoryAsRaw):CategoryForListing{

@@ -3,6 +3,7 @@ import { AdminSigninRequestSchema } from "@presentation/dtos/admin/Signin";
 import { GetBusinessesRequestSchema } from "@presentation/dtos/business/GetBusinesses";
 import { GetBusinessForAdminRequestSchema } from "@presentation/dtos/business/GetBusinessForAdmin";
 import { GetCategoriesRequestSchema } from "@presentation/dtos/category/GetCategories";
+import { GetAllCouponsRequestSchema } from "@presentation/dtos/coupon/GetAllCoupons";
 import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
 import { GetInstructorForAdminRequestSchema } from "@presentation/dtos/instructor/GetInstructorForAdmin";
 import { GetInstructorsRequestSchema } from "@presentation/dtos/instructor/GetInstructors";
@@ -15,6 +16,7 @@ import { validateRequest } from "@presentation/middlewares/validateRequest";
 
 import { adminController } from "@setup/container/admin/adminController";
 import { businessController } from "@setup/container/business/businessController";
+import { couponController } from "@setup/container/coupon";
 import { instructorController } from "@setup/container/instructor/instructorController";
 import { learnerController } from "@setup/container/learner/learnerController";
 import { categoryController } from "@setup/container/shared/categoryController";
@@ -100,7 +102,13 @@ adminRouter.patch(ROUTES.COURSE_VERIFICATION,userAuthMiddleware,(req:Request,res
 
 adminRouter.get(ROUTES.COURSES,userAuthMiddleware, validateRequest(GetCoursesForAdminRequestSchema),(req:Request,res:Response,next:NextFunction)=>courseController.getCoursesForAdmin(req,res,next));
 
+adminRouter.post("/coupon",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.createCoupon(req,res,next));
 
+adminRouter.get("/coupons",userAuthMiddleware,validateRequest(GetAllCouponsRequestSchema),(req:Request,res:Response,next:NextFunction)=>couponController.getAllCoupons(req,res,next));
+
+adminRouter.put("/coupon",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateCoupon(req,res,next));
+
+adminRouter.patch("/coupon/status",userAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateStatus(req,res,next));
 
 
 export default adminRouter;

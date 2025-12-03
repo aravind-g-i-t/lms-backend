@@ -51,4 +51,5 @@ export interface GetCourseDetailsForLearnerOutput {
     publishedAt: Date | null;
     isEnrolled:boolean;
     enrolledAt:Date | null;
+    isFavourite:boolean
 }

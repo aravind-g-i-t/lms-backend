@@ -75,6 +75,6 @@ export const GetCoursesForLearnerRequestSchema = z.object({
 
         sort: z.string().default('latest'),
 
-        learnerId:ObjectIDSchema.nullable()
+        learnerId:ObjectIDSchema.nullable().optional()
     }),
 });

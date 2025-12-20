@@ -4,8 +4,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import router from '@presentation/routes/appRouter';
-import { errorHandler } from '@presentation/middlewares/errorHandler';
+import router from '@presentation/http/routes/appRouter';
+import { errorHandler } from '@presentation/http/middlewares/errorHandler';
 
 
 const env=process.env.NODE_ENV || 'production'

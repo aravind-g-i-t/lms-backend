@@ -1,5 +1,5 @@
 import { UserSignupUseCase } from "@application/useCases/shared/Signup";
-import { UserAuthController } from "@presentation/controllers/UserAuthController";
+import { UserAuthController } from "@presentation/http/controllers/UserAuthController";
 import { learnerRepository, walletRepository } from "../learner/learnerRepository";
 import { instructorRepository, instructorWalletRepository } from "../instructor/instructorRepository";
 import { businessRepository } from "../business/businessRepository";

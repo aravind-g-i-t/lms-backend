@@ -40,6 +40,7 @@ export interface CourseEntity {
     whatYouWillLearn: string[];
     rating: number | null;
     totalRatings: number;
+    quizId:string|null;
     status: CourseStatus;
     verification: {
         status: VerificationStatus;
@@ -75,6 +76,7 @@ export interface HydratedCourseEntity {
     whatYouWillLearn: string[];
     rating: number | null;
     totalRatings: number;
+    quizId:string|null;
     status: CourseStatus;
     verification: {
         status: VerificationStatus;

@@ -44,4 +44,20 @@ export class S3ServiceImpl implements IS3Service {
         const url = await getSignedUrl(this.s3, command, { expiresIn: this.downloadUrlExpiry });
         return url;
     }
+
+    async uploadBuffer(
+        key: string,
+        file: Buffer,
+        options?: { contentType?: string }
+    ): Promise<void> {
+        const command = new PutObjectCommand({
+            Bucket: this.bucketName,
+            Key: key,
+            Body: file,
+            ContentType: options?.contentType || "application/octet-stream"
+        });
+
+        await this.s3.send(command);
+    }
+
 }

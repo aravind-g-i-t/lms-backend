@@ -2,7 +2,7 @@ import { AdminRefreshTokenUseCase } from "@application/useCases/admin/RefreshTok
 import { AdminSigninUseCase } from "@application/useCases/admin/Signin";
 import { AdminRepository } from "@infrastructure/database/mongoDB/repositoriesImpl/AdminRepository";
 
-import { AdminController } from "@presentation/controllers/AdminController";
+import { AdminController } from "@presentation/http/controllers/AdminController";
 import { tokenService } from "../shared/tokenService";
 
 

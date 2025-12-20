@@ -1,4 +1,4 @@
-import { ProgressController } from "@presentation/controllers/ProgressController";
+import { ProgressController } from "@presentation/http/controllers/ProgressController";
 import { learnerProgressRepository } from "./shared/dependencies";
 import { MarkChapterAsCompletedUseCase } from "@application/useCases/learnerProgress/MarkChapterAsCompleted";
 

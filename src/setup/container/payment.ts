@@ -1,9 +1,9 @@
 import { CreatePaymentUseCase } from "@application/useCases/payment/CreatePayment";
 import { paymentRepository, enrollmentRepository, stripeService, learnerProgressRepository } from "./shared/dependencies";
 import { VerifyPaymentUseCase } from "@application/useCases/payment/VerifyPayment";
-import { PaymentController } from "@presentation/controllers/PaymentController";
+import { PaymentController } from "@presentation/http/controllers/PaymentController";
 import { instructorEarningsRepository, instructorWalletRepository } from "./instructor/instructorRepository";
-import { courseRepository } from "./shared/courseController";
+import { courseRepository } from "./course";
 import { couponRepository } from "./coupon";
 
 export const createPaymentUseCase = new CreatePaymentUseCase(paymentRepository);

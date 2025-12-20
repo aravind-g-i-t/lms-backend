@@ -4,7 +4,7 @@ import { GetCategoryOptionsUseCase } from "@application/useCases/category/GetCat
 import { UpdateCategoryUseCase } from "@application/useCases/category/UpdateCategory";
 import { UpdateCategoryStatusUseCase } from "@application/useCases/category/UpdateStatus";
 import { CategoryRepositoryImpl } from "@infrastructure/database/mongoDB/repositoriesImpl/CategoryRepository";
-import { CategoryController } from "@presentation/controllers/CategoryController";
+import { CategoryController } from "@presentation/http/controllers/CategoryController";
 
 const categoryRepository=new CategoryRepositoryImpl()
 

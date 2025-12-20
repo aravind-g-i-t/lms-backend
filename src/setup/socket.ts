@@ -1,0 +1,320 @@
+import { Server, Socket } from "socket.io";
+import http from "http";
+import { UserRole } from "@domain/entities/Message";
+import { markMessagesReadUseCase, sendMessageUseCase } from "./container/message";
+import { MessageForListing } from "@application/dtos/message/GetConversations";
+import { presenceService } from "./container/presence";
+
+// interface OnlineUser {
+//     userId: string;
+//     socketId: string;
+//     userType: 'learner' | 'instructor';
+// }
+
+export interface Attachment {
+    fileName: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+}
+
+interface MessageInput {
+    content: string;
+    attachments: Attachment[]
+}
+
+interface AuthenticatedSocket extends Socket {
+    userId?: string;
+    userType?: 'learner' | 'instructor';
+}
+
+export function initializeSockets(server: http.Server) {
+    const io = new Server(server, {
+        cors: {
+            origin: process.env.CLIENT_URL,
+            credentials: true
+        },
+        pingTimeout: 60000,
+        pingInterval: 25000
+    });
+
+    // Track multiple sockets per user: userId -> Set of socket IDs
+    const userSockets = new Map<string, Set<string>>();
+    // Track socket metadata: socketId -> user info
+    const socketMetadata = new Map<string, { userId: string, userType: 'learner' | 'instructor' }>();
+
+    io.use((socket: AuthenticatedSocket, next) => {
+        // TODO: Validate token/session here
+        next();
+    });
+
+    io.on("connection", (socket: AuthenticatedSocket) => {
+        console.log("User connected", socket.id);
+
+        socket.on("register", ({ userId, userType }: { userId: string, userType: 'learner' | 'instructor' }) => {
+            if (!userId || !userType) {
+                socket.emit("error", { message: "userId and userType are required" });
+                return;
+            }
+
+            // Check if user was previously offline
+            const wasOffline = !presenceService.isOnline(userId);
+
+            // Store user info on socket
+            socket.userId = userId;
+            socket.userType = userType;
+
+            // Join user's personal room
+            socket.join(userId);
+
+            // Add socket to user's socket set
+            if (!userSockets.has(userId)) {
+                userSockets.set(userId, new Set());
+            }
+            userSockets.get(userId)!.add(socket.id);
+
+            // Store socket metadata
+            socketMetadata.set(socket.id, { userId, userType });
+
+            // Register connection in presence service
+            presenceService.userConnected(userId);
+
+            console.log(`${userType} ${userId} is now online (${userSockets.get(userId)!.size} connection(s))`);
+
+            // Only emit status change if user wasn't online before
+            if (wasOffline) {
+                const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
+                const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
+
+                io.emit(eventName, {
+                    [userIdKey]: userId,
+                    isOnline: true,
+                    timestamp: new Date()
+                });
+            }
+
+            // Send current online users to the newly connected user
+            const onlineUserIds = Array.from(userSockets.keys());
+            const onlineUsersList = onlineUserIds.map(uid => {
+                const socketIds = userSockets.get(uid)!;
+                const firstSocketId = Array.from(socketIds)[0];
+                const metadata = socketMetadata.get(firstSocketId);
+                return {
+                    userId: uid,
+                    userType: metadata?.userType
+                };
+            });
+            socket.emit("onlineUsers", onlineUsersList);
+        });
+
+        socket.on("joinChat", (conversationId: string) => {
+            if (!conversationId) {
+                socket.emit("error", { message: "conversationId is required" });
+                return;
+            }
+            socket.join(`chat:${conversationId}`);
+            console.log(`User ${socket.userId} joined chat ${conversationId}`);
+        });
+
+        socket.on("leaveChat", (conversationId: string) => {
+            socket.leave(`chat:${conversationId}`);
+            console.log(`User ${socket.userId} left chat ${conversationId}`);
+        });
+
+        socket.on("sendMessage",
+            async (
+                data: { receiverId: string, conversationId?: string, courseId: string; message: MessageInput },
+                ack?: (response: { success: boolean; error?: string; message?: MessageForListing, conversationId?: string }) => void) => {
+                try {
+                    console.log("message received on socket", data);
+
+                    if (!socket.userId) {
+                        console.log("User not registered");
+                        ack?.({ success: false, error: "User not registered" });
+                        return;
+                    }
+
+                    const result = await sendMessageUseCase.execute({
+                        conversationId: data.conversationId!,
+                        receiverId: data.receiverId,
+                        senderId: socket.userId,
+                        senderRole: socket.userType as UserRole,
+                        content: data.message.content,
+                        attachments: data.message.attachments,
+                        courseId: data.courseId
+                    });
+
+                    if (!result.message) {
+                        ack?.({ success: false, error: "Failed to save message" });
+                        return;
+                    }
+
+                    ack?.({
+                        success: true,
+                        message: result.message,
+                        conversationId: result.conversation.id as string
+                    });
+
+                    if (data.receiverId) {
+                        console.log(result.conversation);
+
+                        io.to([data.receiverId, socket.userId]).emit("conversationUpdated", {
+                            conversation: result.conversation
+                        });
+                    }
+
+                    if (result.conversation.id) {
+                        socket.to(`chat:${result.conversation.id}`).emit("receiveMessage", {
+                            message: result.message,
+                            senderId: socket.userId,
+                            conversationId: data.conversationId,
+                            timestamp: new Date()
+                        });
+                    } else {
+                        socket.emit("error", { message: "Either receiverId or conversationId is required" });
+                    }
+                } catch (error) {
+                    console.error("Error sending message:", error);
+                    socket.emit("error", { message: "Failed to send message" });
+                }
+            }
+        );
+
+        socket.on(
+            "markMessagesRead",
+            async (
+                data: { conversationId: string },
+                ack?: (res: { success: boolean; error?: string }) => void
+            ) => {
+                try {
+                    console.log("received markMessagesRead request");
+
+                    if (!socket.userId || !socket.userType) {
+                        ack?.({ success: false, error: "User not authenticated" });
+                        return;
+                    }
+
+                    const { conversationId } = data;
+
+                    await markMessagesReadUseCase.execute({
+                        conversationId,
+                        readerRole: socket.userType as UserRole
+                    });
+
+                    console.log("read status updated in db");
+
+                    io.to(`chat:${data.conversationId}`).emit("messagesRead", {
+                        conversationId,
+                        readerId: socket.userId,
+                        readAt: new Date()
+                    });
+
+                    console.log("messagesRead sent to chats");
+                    ack?.({ success: true });
+                } catch (error) {
+                    console.error("markMessagesRead error:", error);
+                    ack?.({ success: false, error: "Failed to mark messages as read" });
+                }
+            }
+        );
+
+        socket.on("typing", (data: { receiverId?: string, conversationId?: string, isTyping: boolean }) => {
+            if (data.receiverId) {
+                io.to(data.receiverId).emit("userTyping", {
+                    userId: socket.userId,
+                    isTyping: data.isTyping
+                });
+            } else if (data.conversationId) {
+                socket.to(`chat:${data.conversationId}`).emit("userTyping", {
+                    userId: socket.userId,
+                    isTyping: data.isTyping
+                });
+            }
+        });
+
+        socket.on("disconnect", (reason) => {
+            console.log(`Socket disconnected: ${socket.id}, reason: ${reason}`);
+
+            const metadata = socketMetadata.get(socket.id);
+
+            if (metadata) {
+                const { userId, userType } = metadata;
+
+                // Remove socket from user's socket set
+                const sockets = userSockets.get(userId);
+                if (sockets) {
+                    sockets.delete(socket.id);
+
+                    // If no more sockets for this user, remove from map
+                    if (sockets.size === 0) {
+                        userSockets.delete(userId);
+                    }
+                }
+
+                // Clean up socket metadata
+                socketMetadata.delete(socket.id);
+
+                // Unregister from presence service
+                presenceService.userDisconnected(userId);
+
+                // Only emit status change if user is now completely offline
+                if (!presenceService.isOnline(userId)) {
+                    const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
+                    const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
+
+                    io.emit(eventName, {
+                        [userIdKey]: userId,
+                        isOnline: false,
+                        timestamp: new Date()
+                    });
+
+                    console.log(`${userType} ${userId} went offline (all connections closed)`);
+                } else {
+                    console.log(`${userType} ${userId} still has ${userSockets.get(userId)?.size || 0} connection(s)`);
+                }
+            }
+        });
+
+        socket.on(
+            "call:request",
+            ({ conversationId, receiverId, callType }, ack) => {
+                const roomId = `conversation_${conversationId}`;
+
+                io.to(receiverId).emit("call:incoming", {
+                    roomId,
+                    callerId: socket.userId,
+                    callType
+                });
+
+                ack?.({ success: true, roomId });
+            }
+        );
+
+        socket.on("call:response", ({ roomId, callerId, accepted }) => {
+            io.to(callerId).emit(
+                accepted ? "call:accepted" : "call:rejected",
+                { roomId }
+            );
+        });
+
+        socket.on("call:end", ({ roomId }) => {
+            socket.to(roomId).emit("call:ended", { roomId });
+        });
+
+
+
+
+        socket.on("error", (error) => {
+            console.error(`Socket error for ${socket.id}:`, error);
+        });
+    });
+
+    process.on('SIGTERM', () => {
+        console.log('SIGTERM received, closing socket server...');
+        io.close(() => {
+            console.log('Socket server closed');
+        });
+    });
+
+    return io;
+}

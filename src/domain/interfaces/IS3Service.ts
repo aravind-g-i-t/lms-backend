@@ -5,4 +5,10 @@ export interface IS3Service {
     ): Promise<{ url: string; key: string }>;
 
     getDownloadUrl(key: string): Promise<string>;
+
+    uploadBuffer(
+        key: string,
+        file: Buffer,
+        options?: { contentType?: string }
+    ): Promise<void> 
 }

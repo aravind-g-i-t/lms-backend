@@ -1,4 +1,4 @@
-import { LearnerController } from "@presentation/controllers/LearnerController";
+import { LearnerController } from "@presentation/http/controllers/LearnerController";
 
 import { GetLearnersUseCase } from "@application/useCases/learner/GetLearners";
 import { favouriteRepository, learnerRepository } from "./learnerRepository";

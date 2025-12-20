@@ -1,4 +1,5 @@
 import { CourseLevel, CourseStatus, VerificationStatus } from "@domain/entities/Course";
+import { Quiz } from "@domain/entities/Quiz";
 
 
 
@@ -66,5 +67,6 @@ export interface GetCourseDetailsOutput {
         reviewedAt: Date | null;
         submittedAt: Date | null;
         remarks: string | null
-    }
+    },
+    quiz:Quiz|null;
 }

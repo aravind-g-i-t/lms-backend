@@ -71,7 +71,7 @@ export interface HydratedCourse {
     publishedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
-
+    quizId:string|null
 }
 
 export interface ICourseRepository {

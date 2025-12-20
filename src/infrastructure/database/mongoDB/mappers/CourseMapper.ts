@@ -29,7 +29,8 @@ export class CourseMapper {
             publishedAt: doc.publishedAt,
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
-            verification:doc.verification
+            verification:doc.verification,
+            quizId:doc.quizId?doc.quizId.toString():null
         }
     }
 
@@ -58,7 +59,8 @@ export class CourseMapper {
             publishedAt: doc.publishedAt,
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
-            verification:doc.verification
+            verification:doc.verification,
+            quizId:doc.quizId?doc.quizId.toString():null
         }
     }
 }

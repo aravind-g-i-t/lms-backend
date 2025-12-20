@@ -1,6 +1,6 @@
 import { GetInstructorsUseCase } from "@application/useCases/instructor/GetInstructors";
 import { instructorRepository } from "./instructorRepository";
-import { InstructorController } from "@presentation/controllers/InstructorController";
+import { InstructorController } from "@presentation/http/controllers/InstructorController";
 import { UpdateInstructorStatusUseCase } from "@application/useCases/instructor/UpdateInstructorStatus";
 import { GetInstructorDataUseCase } from "@application/useCases/instructor/GetInstructorData";
 import { UpdateInstructorPasswordUseCase } from "@application/useCases/instructor/UpdatePassword";

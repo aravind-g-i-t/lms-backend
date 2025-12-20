@@ -19,14 +19,6 @@ export enum VerificationStatus {
 }
 
 
-// export enum ResourceType {
-//     PDF = "pdf",
-//     DOCS = "docs",
-//     EXE = "exe",
-//     ZIP = "zip",
-//     OTHER = "other"
-// }
-
 export interface Resource {
     id:string
     name: string;
@@ -81,4 +73,5 @@ export interface Course {
         remarks: string | null
     }
     publishedAt: Date | null;
+    quizId:string|null;
 }

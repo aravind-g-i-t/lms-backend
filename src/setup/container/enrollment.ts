@@ -1,9 +1,9 @@
 import { enrollmentRepository, learnerProgressRepository, stripeService } from "./shared/dependencies";
 import { createPaymentUseCase } from "./payment";
-import { courseRepository } from "./shared/courseController";
+import { courseRepository } from "./course";
 import { InitiateEnrollmentUseCase } from "@application/useCases/enrollment/InitiateEnrollment";
 import { CreateEnrollmentUseCase } from "@application/useCases/enrollment/CreateEnrollment";
-import { EnrollmentController } from "@presentation/controllers/EnrollmentController";
+import { EnrollmentController } from "@presentation/http/controllers/EnrollmentController";
 import { instructorRepository } from "./instructor/instructorRepository";
 import { GetEnrollmentsUseCase } from "@application/useCases/enrollment/GetEnrollments";
 import { s3Service } from "./shared/s3Controller";

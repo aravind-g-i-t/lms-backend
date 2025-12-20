@@ -5,6 +5,7 @@ import { PaymentStatus } from "@domain/entities/Payment";
 import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
+// import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { IInstructorEarningsRepository } from "@domain/interfaces/IInstructorEarningsRepo";
 import { IInstructorWalletRepository } from "@domain/interfaces/IInstructorWalletRepository";
 import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
@@ -25,7 +26,8 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         private _instructorEarningsRepository: IInstructorEarningsRepository,
         private _learnerProgress: ILearnerProgressRepository,
         private _courseRepository: ICourseRepository,
-        private _couponRepository:ICouponRepository
+        private _couponRepository: ICouponRepository,
+        // private _favouriteRepository: IFavouriteRepository,
     ) { }
 
     async execute(sessionId: string): Promise<{ status: string }> {
@@ -78,6 +80,17 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             if (!enrollment) {
                 throw new AppError("Failed to activate enrollment", STATUS_CODES.BAD_REQUEST)
             }
+
+            // const isFavourite = await this._favouriteRepository.exists({
+            //     learnerId: enrollment.learnerId,
+            //     courseId: enrollment.courseId
+            // })
+            // if (isFavourite) {
+            //     await this._favouriteRepository.remove({
+            //         learnerId: enrollment.learnerId,
+            //         courseId: enrollment.courseId
+            //     })
+            // }
             const instructorShare = payment.grossAmount * (100 - PLATFORM_CUT) / 100;
             const releaseAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             const instructorEarnings = await this._instructorEarningsRepository.create({
@@ -91,15 +104,15 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             });
 
             console.log(instructorEarnings);
-            
 
-            const instructorWallet=await this._instructorWalletReposotory.updateBalance({
+
+            const instructorWallet = await this._instructorWalletReposotory.updateBalance({
                 instructorId: enrollment.instructorId,
                 pendingBalance: instructorShare
             });
 
             console.log(instructorWallet);
-            
+
 
             const course = await this._courseRepository.incrementEnrollment(enrollment.courseId);
 
@@ -118,10 +131,10 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             });
 
             if (!learnerProgress) {
-                throw new AppError("Failed to update initiate learner progress", STATUS_CODES.BAD_REQUEST,false)
+                throw new AppError("Failed to update initiate learner progress", STATUS_CODES.BAD_REQUEST, false)
             }
 
-            if(payment.coupon){
+            if (payment.coupon) {
                 await this._couponRepository.incrementUsage(payment.coupon)
             }
 

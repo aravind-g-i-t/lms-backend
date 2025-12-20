@@ -1,44 +1,22 @@
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { EnrollmentModel } from "../models/EnrollmentModel";
 import { EnrollmentMapper } from "../mappers/EnrollmentMapper";
+import { Enrollment, EnrollmentStatus } from "@domain/entities/Enrollment";
 
-enum EnrollmentStatus {
-    Pending = "pending",
-    Active = "active",
-    Completed = "completed",
-    Cancelled = "cancelled"
-}
 
-export interface EnrollmentEntity {
-    id: string;
-    learnerId: string;
-    courseId: string;
-    enrolledAt: Date | null;
-    status: EnrollmentStatus;
-    paymentId: string;
-    certificate: string | null;
-    completedAt: Date | null;
-    cancelledAt: Date | null;
-    createdAt: Date;
-    instructorId: string;
-    courseTitle: string;
-    instructorName: string
-    thumbnail: string;
-    duration: number;
-}
 
 export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
-    async create(data: Partial<EnrollmentEntity>): Promise<EnrollmentEntity | null> {
+    async create(data: Partial<Enrollment>): Promise<Enrollment | null> {
         const created = await EnrollmentModel.create(data);
         return created ? EnrollmentMapper.toDomain(created) : null;
     }
 
-    async findOne(filter: Partial<EnrollmentEntity>): Promise<EnrollmentEntity | null> {
+    async findOne(filter: Partial<Enrollment>): Promise<Enrollment | null> {
         const result = await EnrollmentModel.findOne(filter).exec();
         return result ? EnrollmentMapper.toDomain(result) : null;
     }
 
-    async findMany(filter: Partial<EnrollmentEntity>): Promise<EnrollmentEntity[]> {
+    async findMany(filter: Partial<Enrollment>): Promise<Enrollment[]> {
         const results = await EnrollmentModel.find(filter).exec();
         return results.map(r => EnrollmentMapper.toDomain(r));
     }
@@ -53,7 +31,7 @@ export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
             instructorIds?: string[];
             status?: EnrollmentStatus[]
         }}
-    ): Promise<{ data: EnrollmentEntity[]; total: number }> {
+    ): Promise<{ data: Enrollment[]; total: number }> {
 
         const skip = (page - 1) * limit;
 
@@ -99,7 +77,7 @@ export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
 
 
 
-    async update(id: string, updates: Partial<EnrollmentEntity>): Promise<EnrollmentEntity | null> {
+    async update(id: string, updates: Partial<Enrollment>): Promise<Enrollment | null> {
         const updated = await EnrollmentModel.findByIdAndUpdate(id, updates, { new: true }).exec();
         return updated ? EnrollmentMapper.toDomain(updated) : null;
     }
@@ -112,7 +90,7 @@ export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
         id: string,
         progress: number,
         completedChapters: string[]
-    ): Promise<EnrollmentEntity | null> {
+    ): Promise<Enrollment | null> {
         const updated = await EnrollmentModel.findByIdAndUpdate(
             id,
             { $set: { progress, completedChapters, lastAccessedAt: new Date() } },

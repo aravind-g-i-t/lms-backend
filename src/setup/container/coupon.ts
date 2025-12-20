@@ -4,7 +4,7 @@ import { GetValidCouponsUseCase } from "@application/useCases/coupon/GetValidCou
 import { UpdateCouponUseCase } from "@application/useCases/coupon/UpdateCoupon";
 import { UpdateCouponStatusUseCase } from "@application/useCases/coupon/UpdateStatus";
 import { CouponRepository } from "@infrastructure/database/mongoDB/repositoriesImpl/CouponRepository";
-import { CouponController } from "@presentation/controllers/CouponController";
+import { CouponController } from "@presentation/http/controllers/CouponController";
 
 export const couponRepository=new CouponRepository();
 

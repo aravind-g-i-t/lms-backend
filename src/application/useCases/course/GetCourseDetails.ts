@@ -1,6 +1,8 @@
 import { GetCourseDetailsOutput } from "@application/dtos/course/GetCourseDetails";
 import { IGetCourseDetailsUseCase } from "@application/IUseCases/course/IGetCourseDetails";
+import { Quiz } from "@domain/entities/Quiz";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
+import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
 import { IS3Service } from "@domain/interfaces/IS3Service";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
@@ -8,13 +10,21 @@ import { AppError } from "shared/errors/AppError";
 export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IS3Service,
+        private _quizRepository:IQuizRepository
     ) { }
     async execute(id: string): Promise<GetCourseDetailsOutput> {
 
         const course = await this._courseRepository.findHydratedCourseById(id);
         if (!course) {
             throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
+        }
+        let quiz:Quiz|null=null;
+        if(course.quizId){
+            quiz= await this._quizRepository.findById(course.quizId);
+            if(!quiz){
+                throw new AppError("Failed to fetch quiz details.", STATUS_CODES.BAD_REQUEST)
+            }
         }
         const thumbnail = course.thumbnail
             ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
@@ -39,10 +49,10 @@ export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
             })
         );
 
-        return this._toCourseDetails({ ...course, thumbnail, previewVideo, modules })
+        return this._toCourseDetails({ ...course, thumbnail, previewVideo, modules },quiz)
     }
 
-    private _toCourseDetails(input: HydratedCourse): GetCourseDetailsOutput {
+    private _toCourseDetails(input: HydratedCourse,quiz:Quiz|null): GetCourseDetailsOutput {
         return {
             id: input.id,
             title: input.title,
@@ -72,7 +82,8 @@ export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
             publishedAt: input.publishedAt,
             createdAt: input.createdAt,
             updatedAt: input.updatedAt,
-            verification: input.verification
+            verification: input.verification,
+            quiz:quiz
         }
     }
 }

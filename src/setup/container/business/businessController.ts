@@ -1,6 +1,6 @@
 import { GetBusinessesUseCase } from "@application/useCases/business/GetBusinesses";
 import { businessRepository } from "./businessRepository";
-import { BusinessController } from "@presentation/controllers/BusinessController";
+import { BusinessController } from "@presentation/http/controllers/BusinessController";
 import { UpdateBusinessStatusUseCase } from "@application/useCases/business/UpdateBusinessStatus";
 import { GetBusinessDataUseCase } from "@application/useCases/business/GetBusinessData";
 import { UpdateBusinessDataUseCase } from "@application/useCases/business/UpdateBusinessData";

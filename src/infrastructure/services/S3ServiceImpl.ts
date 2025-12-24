@@ -18,7 +18,7 @@ export class S3ServiceImpl implements IS3Service {
         });
         this.bucketName = process.env.S3_BUCKET_NAME!;
         this.uploadUrlExpiry = Number(process.env.S3_UPLOAD_URL_EXPIRY) || 60;
-        this.downloadUrlExpiry = Number(process.env.S3_DOWNLOAD_URL_EXPIRY) || 300;
+        this.downloadUrlExpiry = Number(process.env.S3_DOWNLOAD_URL_EXPIRY) || 10;
     }
 
     async getUploadUrl(

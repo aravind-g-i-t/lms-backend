@@ -1,4 +1,4 @@
-import { CourseLevel, Module } from "@domain/entities/Course";
+import { CourseLevel } from "@domain/entities/Course";
 
 interface Instructor {
     id: string;
@@ -7,9 +7,32 @@ interface Instructor {
 
 }
 
-export interface Category {
+ interface Category {
     id: string;
     name: string;
+}
+
+ interface Resource {
+    id:string
+    name: string;
+    file: string;
+    size: number;
+}
+
+ interface Chapter {
+    id:string;
+    title: string;
+    description: string;
+    video: string|null;
+    duration: number;
+    resources: Resource[];
+}
+ interface Module {
+    id:string;
+    title: string;
+    description: string;
+    duration: number;
+    chapters: Chapter[];
 }
 
 export interface GetFullCourseForLearnerOutput {

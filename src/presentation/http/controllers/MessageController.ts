@@ -1,6 +1,7 @@
 import { IGetInstructorConversationsUseCase } from "@application/IUseCases/message/IGetInstructorConversations";
 import { IGetLearnerConversationsUseCase } from "@application/IUseCases/message/IGetLearnerConversations";
 import { IGetMessagesUseCase } from "@application/IUseCases/message/IGetMessages";
+import { IGetVideoCallTokenUseCase } from "@application/IUseCases/videoCall/IGetVideoCallToken";
 import { logger } from "@infrastructure/logging/Logger";
 import { AuthenticatedRequest } from "@presentation/http/middlewares/createAuthMiddleware";
 import { NextFunction, Response } from "express";
@@ -15,7 +16,8 @@ export class MessageController {
 
         private _getLearnerConversationsUseCase: IGetLearnerConversationsUseCase,
         private _getMessagesUseCase: IGetMessagesUseCase,
-        private _getInstructorConversationsUseCase: IGetInstructorConversationsUseCase
+        private _getInstructorConversationsUseCase: IGetInstructorConversationsUseCase,
+        private _getVideoCallToken: IGetVideoCallTokenUseCase
     ) { }
 
 
@@ -101,4 +103,30 @@ export class MessageController {
             next(err)
         }
     }
+
+    async getVideoCallToken(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { roomId} = req.body;
+            const userId = req.user?.id
+            if (!userId) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            const result = this._getVideoCallToken.execute(userId,roomId);
+
+            console.log(result);
+            
+
+            res.status(STATUS_CODES.CREATED).json({
+                success: true,
+                message: "Video-call token generated successfully",
+                token:result
+            });
+        } catch (err) {
+            logger.warn("Failed to get video call token.")
+            next(err)
+        }
+    }
+
+    
 }

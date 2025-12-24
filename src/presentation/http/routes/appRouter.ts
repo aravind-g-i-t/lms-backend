@@ -7,6 +7,7 @@ import instructorRouter from './instructotRoutes';
 import { ROUTES } from 'shared/constants/routes';
 import s3Router from './s3Routes';
 import paymentRoutes from './paymentRoutes';
+import videoRoutes from './videoRoutes';
 const router = express.Router();
 
 router.use(ROUTES.AUTH,userAuthRouter)
@@ -16,6 +17,7 @@ router.use(ROUTES.INSTRUCTOR,instructorRouter);
 router.use(ROUTES.BUSINESS,businessRouter);
 router.use(ROUTES.S3,s3Router);
 router.use("/payment",paymentRoutes);
+router.use("/video",videoRoutes);
 
 
 export default router;

@@ -13,14 +13,16 @@ export interface AuthenticatedRequest extends Request {
 
 interface DecodedToken {
   id: string;
-  role: string;
+  role: Role;
   exp?: number;
   iat?: number;
 }
 
+type Role= "admin"|"learner"|"instructor"|"business"
 
 
-export const createAuthMiddleware = (tokenService: ITokenService, authorizationService: IAuthorizationService,role?:"admin"|"learner"|"instructor"|"business") => {
+
+export const createAuthMiddleware = (tokenService: ITokenService, authorizationService: IAuthorizationService,roles?:Role[]) => {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
 
     const authHeader = req.headers["authorization"];
@@ -36,7 +38,7 @@ export const createAuthMiddleware = (tokenService: ITokenService, authorizationS
       return res.status(401).json({ message: MESSAGES.INVALID_TOKEN });
     }
 
-    if(decoded.role !==role){
+    if(!roles?.includes(decoded.role)){
       return res.status(401).json({message:MESSAGES.UNAUTHORIZED})
     }
 

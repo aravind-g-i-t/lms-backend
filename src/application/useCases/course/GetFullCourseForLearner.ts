@@ -19,10 +19,20 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
 
         const course = await this._courseRepository.findHydratedCourseById(courseId);
         console.log("course", course);
-
         if (!course) {
             throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
         }
+        const progress = await this._progressRepository.findByLearnerAndCourseAndUpdate(
+            learnerId,
+            courseId,
+            { lastAccessedAt: new Date() }
+        );
+
+        if (!progress) {
+            throw new AppError("Failed to get learner progress")
+        }
+        const currentChapterId=progress.currentChapterId || course.modules[0].chapters[0].id;
+
         const thumbnail = course.thumbnail
             ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
             : null;
@@ -34,10 +44,11 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             course.modules.map(async (module) => {
                 const updatedChapters = await Promise.all(
                     module.chapters.map(async (chapter) => {
-                        if (chapter.video) {
-                            const videoUrl = await this._fileStorageService.getDownloadUrl(chapter.video);
-                            chapter.video = videoUrl;
+                        let videoUrl
+                        if (chapter.id===currentChapterId &&chapter.video) {
+                            videoUrl = await this._fileStorageService.getDownloadUrl(chapter.video);
                         }
+                        chapter.video = videoUrl||null;
                         return chapter;
                     })
                 );
@@ -45,17 +56,7 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
                 return module;
             })
         );
-        console.log(modules);
-        const progress = await this._progressRepository.findByLearnerAndCourseAndUpdate(
-            learnerId,
-            courseId,
-            { lastAccessedAt: new Date() }
-        );
-
-        console.log(progress);
-        if (!progress) {
-            throw new AppError("Failed to get learner progress")
-        }
+        
 
         return this._toCourseDetails(
             {

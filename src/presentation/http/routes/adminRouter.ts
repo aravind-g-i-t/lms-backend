@@ -110,5 +110,7 @@ adminRouter.put("/coupon",adminAuthMiddleware,(req:Request,res:Response,next:Nex
 
 adminRouter.patch("/coupon/status",adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateStatus(req,res,next));
 
+adminRouter.get(ROUTES.COURSE,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseDetails(req,res,next));
+
 
 export default adminRouter;

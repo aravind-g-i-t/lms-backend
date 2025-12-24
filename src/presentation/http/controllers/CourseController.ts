@@ -12,6 +12,7 @@ import { IGetCoursesForAdminUseCase } from "@application/IUseCases/course/IGetCo
 import { IGetCoursesForInstructorUseCase } from "@application/IUseCases/course/IGetCoursesForInstructor";
 import { IGetCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetCoursesForLearner";
 import { IGetFullCourseForLearnerUseCase } from "@application/IUseCases/course/IGetFullCourseForLearner";
+import { IGetVideoUseCase } from "@application/IUseCases/course/IGetVideo";
 import { ISubmitCourseForReviewUseCase } from "@application/IUseCases/course/ISubmitForReview";
 import { IUpdateChapterInfoUseCase } from "@application/IUseCases/course/IUpdateChapterInfo";
 import { IUpdateChapterVideoUseCase } from "@application/IUseCases/course/IUpdateChapterVideo";
@@ -56,6 +57,7 @@ export class CourseController {
         private _addResourceUseCase: IAddResourceUseCase,
         private _deleteResourceUseCase: IDeleteResourceUseCase,
         private _getFavouritesUseCase: IGetFavouritesUseCase,
+        private _getVideoUseCase:IGetVideoUseCase
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -610,6 +612,43 @@ export class CourseController {
         }
     }
 
+    async getVideo(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+
+            const {
+                courseId,
+                moduleId,
+                chapterId,
+            } = req.query 
+
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+            console.log("controller",learnerId,courseId,chapterId,moduleId);
+
+            
+            
+            const response = await this._getVideoUseCase.execute({
+                courseId:courseId as string,
+                moduleId:moduleId as string,
+                chapterId:chapterId as string,
+                learnerId
+            });
+
+            console.log("response",response);
+            
+            res.status(201).json({
+                success: true,
+                message: "Video fetched successfully",
+                video: response
+            });
+
+        } catch (error) {
+            next(error);
+        }
+    }
 
 
 }

@@ -12,6 +12,7 @@ import { learnerRepository } from "./learner/learnerRepository";
 import { GetMessagesUseCase } from "@application/useCases/message/GetMessages";
 import { GetInstructorConversationUseCase } from "@application/useCases/message/GetInstructorConversations";
 import { presenceService } from "./presence";
+import { getVideoCallTokenUseCase } from "./videoCall";
 
 export const messageRepository= new MessageRepositoryImpl();
 export const conversationRepository = new ConversationRepositoryImpl()
@@ -26,10 +27,12 @@ const getConversationsUseCase= new GetLearnerConversationsUseCase(conversationRe
 
 const getMessagesUseCase= new GetMessagesUseCase(messageRepository);
 
-const getInstructorConversations= new GetInstructorConversationUseCase(conversationRepository,messageRepository,courseRepository,instructorRepository,learnerRepository,s3Service,presenceService)
+const getInstructorConversations= new GetInstructorConversationUseCase(conversationRepository,messageRepository,courseRepository,instructorRepository,learnerRepository,s3Service,presenceService);
+
 
 export const messageController= new MessageController(
     getConversationsUseCase,
     getMessagesUseCase,
-    getInstructorConversations
+    getInstructorConversations,
+    getVideoCallTokenUseCase
 )

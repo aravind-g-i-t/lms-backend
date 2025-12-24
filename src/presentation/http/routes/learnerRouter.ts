@@ -57,6 +57,8 @@ learnerRouter.get("/quiz",learnerAuthMiddleware,(req:Request,res:Response,next:N
 
 learnerRouter.post("/quiz",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.submitQuiz(req,res,next))
 
-learnerRouter.get("/certificates",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getCertificates(req,res,next))
+learnerRouter.get("/certificates",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getCertificates(req,res,next));
+
+learnerRouter.get("/video",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getVideo(req,res,next))
 
 export default learnerRouter;

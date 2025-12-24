@@ -275,33 +275,41 @@ export function initializeSockets(server: http.Server) {
             }
         });
 
-        socket.on(
-            "call:request",
-            ({ conversationId, receiverId, callType }, ack) => {
-                const roomId = `conversation_${conversationId}`;
 
-                io.to(receiverId).emit("call:incoming", {
-                    roomId,
-                    callerId: socket.userId,
-                    callType
-                });
-
-                ack?.({ success: true, roomId });
+        socket.on("startVideoCall", ({ receiverId, conversationId }) => {
+            console.log("Video call initiated.",conversationId,receiverId,socket.userId);
+            
+            if (!socket.userId) return;
+            if (!presenceService.isOnline(receiverId)) {
+                console.log("User offline.");
+                io.to(socket.userId).emit("videoCallRejected", { reason: "User offline" })
+                return
             }
-        );
 
-        socket.on("call:response", ({ roomId, callerId, accepted }) => {
-            io.to(callerId).emit(
-                accepted ? "call:accepted" : "call:rejected",
-                { roomId }
-            );
+
+            io.to(receiverId).emit("incomingVideoCall", {
+                conversationId,
+                callerId: socket.userId,
+                callerRole: socket.userType,
+            });
         });
 
-        socket.on("call:end", ({ roomId }) => {
-            socket.to(roomId).emit("call:ended", { roomId });
+        socket.on("acceptVideoCall", ({ conversationId, callerId }) => {
+            console.log("Acceptiong video call.");
+            io.to(callerId).emit("videoCallAccepted", {
+                conversationId,
+            });
+
+            io.to(socket.userId!).emit("videoCallAccepted", {
+                conversationId,
+            });
         });
 
 
+        socket.on("rejectVideoCall", ({ callerId }) => {
+            console.log("Rejecting video call.");
+            io.to(callerId).emit("videoCallRejected");
+        });
 
 
         socket.on("error", (error) => {

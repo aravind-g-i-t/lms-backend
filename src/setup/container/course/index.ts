@@ -27,6 +27,7 @@ import { AddResourceUseCase } from "@application/useCases/course/AddResource";
 import { favouriteRepository } from "../learner/learnerRepository";
 import { GetFavouritesUseCase } from "@application/useCases/favourite/GetFavourites";
 import { getValidCouponsUseCase } from "../coupon";
+import { GetVideoUseCase } from "@application/useCases/course/GetVideo";
 
 export const courseRepository= new CourseRepository();
 
@@ -77,6 +78,7 @@ const deleteResourceUseCase= new DeleteResourceUseCase(courseRepository);
 
 const getFavouritesUseCase = new GetFavouritesUseCase(courseRepository,s3Service,favouriteRepository)
 
+export const getVideoUseCase= new GetVideoUseCase(enrollmentRepository,courseRepository,s3Service)
 
 
 export const courseController=new CourseController(
@@ -101,5 +103,6 @@ export const courseController=new CourseController(
     getCourseDetailsForCheckout,
     addResourceUseCase,
     deleteResourceUseCase,
-    getFavouritesUseCase
+    getFavouritesUseCase,
+    getVideoUseCase
 );

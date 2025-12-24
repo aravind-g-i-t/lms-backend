@@ -2,6 +2,7 @@
 import { IVideoCallService } from "@domain/interfaces/IVideoCallService";
 import crypto from "crypto";
 
+
 export class ZegoService implements IVideoCallService {
   generateToken(userId: string, roomId: string): string {
     const appID = Number(process.env.ZEGO_APP_ID);

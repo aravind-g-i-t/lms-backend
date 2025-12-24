@@ -476,6 +476,27 @@ export class CourseRepository implements ICourseRepository {
         return CourseMapper.toDomain(course);
     }
 
+    async getChapterVideo({
+        courseId,
+        moduleId,
+        chapterId,
+    }: {
+        courseId: string;
+        moduleId: string;
+        chapterId: string;
+    }): Promise<string | null> {
+        const course = await CourseModel.findById(courseId).exec();
+        if (!course) return null;
+
+        const module = course.modules.find(m => m.id === moduleId);
+        if (!module) return null;
+        const chapter = module.chapters.find(c => c.id === chapterId);
+        if (!chapter) return null;
+        return chapter.video
+    }
+
+
+
     async incrementEnrollment(id: string): Promise<CourseEntity | null> {
         const updated = await CourseModel.findByIdAndUpdate(
             id,

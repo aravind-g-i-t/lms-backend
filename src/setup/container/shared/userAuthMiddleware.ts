@@ -9,10 +9,12 @@ const authorizationService=new AuthorizationService(learnerRepository,instructor
 
 export const userAuthMiddleware=createAuthMiddleware(tokenService,authorizationService);
 
-export const learnerAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,"learner");
+export const learnerAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,["learner"]);
 
-export const instructorAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,"instructor")
+export const instructorAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,["instructor"])
 
-export const adminAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,"admin")
+export const adminAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,["admin"])
 
-export const businessAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,"business")
+export const businessAuthMiddleware = createAuthMiddleware(tokenService,authorizationService,["business"]);
+
+export const learnerInstructorAuthMiddleware= createAuthMiddleware(tokenService,authorizationService,["learner","instructor"])

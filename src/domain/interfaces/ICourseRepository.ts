@@ -109,6 +109,12 @@ export interface ICourseRepository {
 
     updateChapterVideo({ courseId,moduleId,chapterId,video,duration}: {courseId: string;moduleId: string;chapterId: string;video: string;duration: number}): Promise<Course | null>;
 
+    getChapterVideo(input: {
+        courseId: string;
+        moduleId: string;
+        chapterId: string;
+    }): Promise<string | null>
+
     addResource({ courseId, moduleId, chapterId, resource }: { courseId: string; moduleId: string; chapterId: string; resource: Resource }): Promise<Course | null>
 
     removeResource({ courseId, moduleId, chapterId, resourceId }: { courseId: string; moduleId: string; chapterId: string; resourceId: string }): Promise<Course | null>

@@ -1,3 +1,4 @@
+import { QuizStatus } from "@domain/entities/LearnerProgress";
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface LearnerProgressDoc extends Document {
@@ -10,6 +11,10 @@ export interface LearnerProgressDoc extends Document {
 
     totalChapters: number;
     currentChapterId: string | null;
+
+    quizAttemptStatus:QuizStatus,
+    quizAttemptId:string |null
+    
     lastAccessedAt: Date | null;
     createdAt:Date;
     updatedAt:Date;
@@ -25,6 +30,9 @@ const learnerProgressSchema = new Schema<LearnerProgressDoc>(
 
         totalChapters: { type: Number, required: true },
         currentChapterId: { type: String, default: null },
+
+        quizAttemptStatus:{type:String,enum:Object.values(QuizStatus),default:QuizStatus.NOtAttended},
+        quizAttemptId:{ type: String, default: null },
 
         lastAccessedAt: { type: Date, default: null }
     },

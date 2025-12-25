@@ -14,6 +14,9 @@ export class LearnerProgressMapper {
             totalChapters: doc.totalChapters,
             currentChapterId: doc.currentChapterId,
 
+            quizAttemptId:doc.quizAttemptId,
+            quizAttemptStatus:doc.quizAttemptStatus,
+
             lastAccessedAt: doc.lastAccessedAt,
 
             createdAt: doc.createdAt,

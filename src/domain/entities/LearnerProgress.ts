@@ -1,3 +1,9 @@
+export enum QuizStatus {
+    NOtAttended= "not_attended",
+    Passed = "passed",
+    Failed="failed"
+}
+
 export interface LearnerProgress {
     id: string;
     learnerId: string;
@@ -8,6 +14,9 @@ export interface LearnerProgress {
 
     totalChapters: number;
     currentChapterId: string | null;
+
+    quizAttemptStatus:QuizStatus,
+    quizAttemptId:string |null
     
     lastAccessedAt: Date | null;
 

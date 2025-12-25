@@ -128,9 +128,9 @@ export class BusinessRepositoryImpl implements IBusinessRepository {
     }
 
 
-    async findByIdAndUpdate(id: string, learner: Partial<Business>, allowPassword: false): Promise<Business | null> {
+    async findByIdAndUpdate(id: string, business: Partial<Business>, allowPassword: false): Promise<Business | null> {
 
-        const doc = await BusinessModel.findByIdAndUpdate(id, { $set: learner }, { new: true }).lean();
+        const doc = await BusinessModel.findByIdAndUpdate(id, { $set: business }, { new: true }).lean();
 
         if (!doc) {
             logger.warn("Failed to update Business")

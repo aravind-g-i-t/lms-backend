@@ -1,4 +1,5 @@
 import { CourseLevel } from "@domain/entities/Course";
+import { QuizStatus } from "@domain/entities/LearnerProgress";
 
 interface Instructor {
     id: string;
@@ -58,4 +59,5 @@ export interface GetFullCourseForLearnerOutput {
     completedChapters:string[];
     totalChapters:number;
     currentChapterId:string|null;
+    quizStatus:QuizStatus
 }

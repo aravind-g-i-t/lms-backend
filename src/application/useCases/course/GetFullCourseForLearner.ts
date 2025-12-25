@@ -1,7 +1,6 @@
 import { GetFullCourseForLearnerOutput } from "@application/dtos/course/GetFullCourseForLearner";
 import { IGetFullCourseForLearnerUseCase } from "@application/IUseCases/course/IGetFullCourseForLearner";
-import { LearnerProgress } from "@domain/entities/LearnerProgress";
-import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
+import {  ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
 import { IS3Service } from "@domain/interfaces/IS3Service";
 import { STATUS_CODES } from "shared/constants/httpStatus";
@@ -31,7 +30,7 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         if (!progress) {
             throw new AppError("Failed to get learner progress")
         }
-        const currentChapterId=progress.currentChapterId || course.modules[0].chapters[0].id;
+        const currentChapterId = progress.currentChapterId || course.modules[0].chapters[0].id;
 
         const thumbnail = course.thumbnail
             ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
@@ -40,66 +39,90 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             ? await this._fileStorageService.getDownloadUrl(course.previewVideo)
             : null;
         console.log(thumbnail, previewVideo);
-        const modules = await Promise.all(
-            course.modules.map(async (module) => {
-                const updatedChapters = await Promise.all(
-                    module.chapters.map(async (chapter) => {
-                        let videoUrl
-                        if (chapter.id===currentChapterId &&chapter.video) {
-                            videoUrl = await this._fileStorageService.getDownloadUrl(chapter.video);
-                        }
-                        chapter.video = videoUrl||null;
-                        return chapter;
-                    })
-                );
-                module.chapters = updatedChapters;
-                return module;
-            })
+        const responseModules = await Promise.all(
+            course.modules.map(async (module) => ({
+                id: module.id,
+                title: module.title,
+                description: module.description,
+                duration: module.duration,
+                chapters: await Promise.all(
+                    module.chapters.map(async (chapter) => ({
+                        id: chapter.id,
+                        title: chapter.title,
+                        description: chapter.description,
+                        duration: chapter.duration,
+                        resources: chapter.resources,
+                        video:
+                            chapter.id === currentChapterId && chapter.video
+                                ? await this._fileStorageService.getDownloadUrl(chapter.video)
+                                : null
+                    }))
+                )
+            }))
         );
-        
 
-        return this._toCourseDetails(
-            {
-                ...course,
-                thumbnail,
-                previewVideo,
-                modules
-            },
-            progress
-        )
-    }
 
-    private _toCourseDetails(input: HydratedCourse, progress: LearnerProgress): GetFullCourseForLearnerOutput {
+
         return {
-            id: input.id,
-            title: input.title,
-            description: input.description,
-            thumbnail: input.thumbnail,
-            previewVideo: input.previewVideo,
-            prerequisites: input.prerequisites,
-            category: {
-                id: input.category.id,
-                name: input.category.name,
-            },
-            enrollmentCount: input.enrollmentCount,
-            instructor: {
-                id: input.instructor.id,
-                name: input.instructor.name,
-                profilePic: input.instructor.profilePic
-            },
-            modules: input.modules,
-            whatYouWillLearn: input.whatYouWillLearn,
-            price: input.price,
-            level: input.level,
-            duration: input.duration,
-            tags: input.tags,
-            rating: input.rating,
-            totalRatings: input.totalRatings,
-            publishedAt: input.publishedAt,
-            totalChapters: input.totalChapters,
+            id: course.id,
+            title: course.title,
+            description: course.description,
+            thumbnail,
+            previewVideo,
+            prerequisites: course.prerequisites,
+            category: course.category,
+            enrollmentCount: course.enrollmentCount,
+            instructor: course.instructor,
+            modules: responseModules,
+            whatYouWillLearn: course.whatYouWillLearn,
+            price: course.price,
+            level: course.level,
+            duration: course.duration,
+            tags: course.tags,
+            rating: course.rating,
+            totalRatings: course.totalRatings,
+            publishedAt: course.publishedAt,
+            totalChapters: course.totalChapters,
             completedChapters: progress.completedChapters,
             progressPercentage: progress.progressPercentage,
-            currentChapterId: progress.currentChapterId
-        }
+            currentChapterId: progress.currentChapterId,
+            quizStatus: progress.quizAttemptStatus
+        };
+
     }
+
+    // private _toCourseDetails(input: HydratedCourse, progress: LearnerProgress): GetFullCourseForLearnerOutput {
+    //     return {
+    //         id: input.id,
+    //         title: input.title,
+    //         description: input.description,
+    //         thumbnail: input.thumbnail,
+    //         previewVideo: input.previewVideo,
+    //         prerequisites: input.prerequisites,
+    //         category: {
+    //             id: input.category.id,
+    //             name: input.category.name,
+    //         },
+    //         enrollmentCount: input.enrollmentCount,
+    //         instructor: {
+    //             id: input.instructor.id,
+    //             name: input.instructor.name,
+    //             profilePic: input.instructor.profilePic
+    //         },
+    //         modules: input.modules,
+    //         whatYouWillLearn: input.whatYouWillLearn,
+    //         price: input.price,
+    //         level: input.level,
+    //         duration: input.duration,
+    //         tags: input.tags,
+    //         rating: input.rating,
+    //         totalRatings: input.totalRatings,
+    //         publishedAt: input.publishedAt,
+    //         totalChapters: input.totalChapters,
+    //         completedChapters: progress.completedChapters,
+    //         progressPercentage: progress.progressPercentage,
+    //         currentChapterId: progress.currentChapterId,
+    //         quizStatus: progress.quizAttemptStatus
+    //     }
+    // }
 }

@@ -2,8 +2,10 @@ import { SubmitQuizAttemptInput, SubmitQuizAttemptOutput } from "@application/dt
 import { IIssueCertificateUseCase } from "@application/IUseCases/certificate/IIssueCertificate";
 import { ISubmitQuizAttemptUseCase } from "@application/IUseCases/course/ISubmitQuizAttempt";
 import { EnrollmentStatus } from "@domain/entities/Enrollment";
+import { QuizStatus } from "@domain/entities/LearnerProgress";
 import { QuizAttemptStatus } from "@domain/entities/QuizAttempt";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
+import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { IQuizAttemptRepository } from "@domain/interfaces/IQuizAttemptRepository";
 import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
@@ -17,6 +19,7 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         private _enrollmentRepository: IEnrollmentRepository,
         private _issueCertificateUseCase: IIssueCertificateUseCase,
         private _learnerRepository: ILearnerRepository,
+        private _learnerProgressRepository:ILearnerProgressRepository
     ) {}
 
     async execute(input: SubmitQuizAttemptInput): Promise<SubmitQuizAttemptOutput> {
@@ -77,7 +80,16 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         });
         
         if(!quizAttempt){
-            throw new AppError("Failed to initiate quiz attempt",STATUS_CODES.BAD_REQUEST,false)
+            throw new AppError("Failed to initiate quiz attempt",STATUS_CODES.BAD_REQUEST,false);
+        }
+
+        const progressUpdated= await this._learnerProgressRepository.findByLearnerAndCourseAndUpdate(learnerId,courseId,{
+            quizAttemptId:quizAttempt.id,
+            quizAttemptStatus:passed?QuizStatus.Passed:QuizStatus.Failed
+        });
+
+        if(!progressUpdated){
+            throw new AppError("Failed to update progress.",STATUS_CODES.BAD_REQUEST,false);
         }
 
 

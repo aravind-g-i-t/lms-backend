@@ -31,7 +31,7 @@ export const deleteQuizUseCase = new DeleteQuizUseCase(quizRepository,courseRepo
 
 export const getQuizForLearnerUseCase= new GetQuizForLearnerUseCase(learnerProgressRepository,quizRepository)
 
-export const submitQuizAttemptUseCase = new SubmitQuizAttemptUseCase(quizRepository,quizAttemptRepository,enrollmentRepository,issueCertificateUseCase,learnerRepository)
+export const submitQuizAttemptUseCase = new SubmitQuizAttemptUseCase(quizRepository,quizAttemptRepository,enrollmentRepository,issueCertificateUseCase,learnerRepository,learnerProgressRepository)
 
 export const getCertificatsUseCAse=new GetCertificatesForLearnerUseCase(certificateRepository,s3Service)
 

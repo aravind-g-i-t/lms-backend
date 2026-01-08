@@ -16,7 +16,7 @@ export class CreateQuizUseCase implements ICreateQuizUseCase{
         if(!quiz){
             throw new AppError("Failed to create quiz",STATUS_CODES.BAD_REQUEST)
         }
-        const courseUpdated= await this._courseRepository.update({id:input.courseId,updates:{quizId:quiz.id}});
+        const courseUpdated= await this._courseRepository.updateById(input.courseId,{quizId:quiz.id});
         if(!courseUpdated){
             throw new AppError("Failed to update course",STATUS_CODES.BAD_REQUEST)
         }

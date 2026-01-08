@@ -3,7 +3,7 @@ import { GetCoursesForLearnerOutput } from "@application/dtos/course/GetCourseFo
 import { IGetFavouritesUseCase } from "@application/IUseCases/favourite/IGetFavourites";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 
 
@@ -11,7 +11,7 @@ import { IS3Service } from "@domain/interfaces/IS3Service";
 export class GetFavouritesUseCase implements IGetFavouritesUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
         private _favouriteRepository: IFavouriteRepository
     ) { }
 
@@ -21,6 +21,17 @@ export class GetFavouritesUseCase implements IGetFavouritesUseCase {
 
         const { page, limit, search, learnerId } = input;
         const favourites = await this._favouriteRepository.getFavouriteCourseIdsByLearner(learnerId);
+
+        if(!favourites.length){
+            return {
+                courses:[],
+                pagination:{
+                    totalCount:0,
+                    totalPages:0
+                }
+            }
+        }
+        
 
         const result = await this._courseRepository.findAllCourses({
             pagination: {
@@ -32,6 +43,9 @@ export class GetFavouritesUseCase implements IGetFavouritesUseCase {
                 courseIds: favourites
             }
         });
+
+        console.log("result",result);
+        
 
 
         const courses = await Promise.all(

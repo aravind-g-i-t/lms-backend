@@ -2,12 +2,12 @@ import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { Favourite } from "@domain/entities/Favourite";
 import { FavouriteModel } from "../models/FavouriteModel";
 import { FavouriteMapper } from "../mappers/FavouriteMapper";
+import { BaseRepository } from "./BaseRepository";
 
-export class FavouriteRepositoryImpl implements IFavouriteRepository {
+export class FavouriteRepositoryImpl extends BaseRepository<Favourite> implements IFavouriteRepository {
 
-    async add({learnerId,courseId}:{learnerId: string, courseId: string}): Promise<Favourite|null> {
-        const favourite = await FavouriteModel.create({ learnerId, courseId });
-        return favourite? FavouriteMapper.toDomain(favourite):null;
+    constructor(){
+        super(FavouriteModel,FavouriteMapper)
     }
 
     async remove({learnerId,courseId}:{learnerId: string, courseId: string}): Promise<void> {

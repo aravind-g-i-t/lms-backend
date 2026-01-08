@@ -24,12 +24,17 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
 
     async execute(input: SubmitQuizAttemptInput): Promise<SubmitQuizAttemptOutput> {
         const { quizId, courseId, learnerId, answers } = input;
-
+        console.log(input);
+        
         // Fetch quiz
         const quiz = await this._quizRepository.findById(quizId);
+        console.log("quiz:",quiz);
+        
         if (!quiz) throw new AppError("Quiz not found", STATUS_CODES.NOT_FOUND);
 
         const questionMap = new Map(quiz.questions.map(q => [q.id, q]));
+        console.log("questionMap:",questionMap);
+        
 
         let score = 0;
         let correctCount = 0;
@@ -54,15 +59,18 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
                 pointsEarned
             };
         });
+        console.log("builtAnswers:",builtAnswers);
+        
 
         const percentage = Math.round((score / quiz.totalPoints) * 100);
         const passed = quiz.passingScore == null ? true : percentage >= quiz.passingScore;
 
 
-        const exists = await this._quizAttemptRepository.findActiveAttempt(quizId, learnerId);
+        const exists = await this._quizAttemptRepository.findOne({quizId, learnerId});
+        console.log("exists",exists);
+        
         if (exists) throw new AppError("You can only attend the quiz once.", STATUS_CODES.FORBIDDEN);
 
-        console.log("exists",exists);
         
         const quizAttempt= await this._quizAttemptRepository.create({
             quizId:quiz.id,
@@ -78,6 +86,8 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
             totalQuestions:quiz.totalQuestions,
             answers:builtAnswers
         });
+
+        console.log("quizAttempt",quizAttempt);
         
         if(!quizAttempt){
             throw new AppError("Failed to initiate quiz attempt",STATUS_CODES.BAD_REQUEST,false);
@@ -87,6 +97,7 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
             quizAttemptId:quizAttempt.id,
             quizAttemptStatus:passed?QuizStatus.Passed:QuizStatus.Failed
         });
+        console.log("progressUpdated",progressUpdated);
 
         if(!progressUpdated){
             throw new AppError("Failed to update progress.",STATUS_CODES.BAD_REQUEST,false);
@@ -99,10 +110,12 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
             learnerId,
             status: EnrollmentStatus.Active
         });
-
+        
+        console.log("enrollment",enrollment);
         if (!enrollment) throw new AppError("Enrollment not found", STATUS_CODES.NOT_FOUND);
 
         const learner = await this._learnerRepository.findById(learnerId);
+        console.log("learner",learner);
         if (!learner) throw new AppError("Learner not found", STATUS_CODES.NOT_FOUND);
 
         let certificateId: string | null = null;
@@ -119,9 +132,10 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
                 enrollmentId: enrollment.id
             });
         }
+        console.log("certificateId",certificateId);
 
-        await this._enrollmentRepository.update(enrollment.id, { certificate: certificateId ,completedAt:new Date()});
-
+        const enrollmentUpdated= await this._enrollmentRepository.updateById(enrollment.id, { certificate: certificateId ,completedAt:new Date()});
+        console.log("enrollmentUpdated",enrollmentUpdated);
         return { quizAttempt: quizAttempt };
     }
 }

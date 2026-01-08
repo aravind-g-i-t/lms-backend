@@ -3,7 +3,7 @@ import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/share
 import { ILearnerSigninUseCase } from "@application/IUseCases/learner/ILearnerSigninUseCase";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
@@ -14,7 +14,7 @@ export class LearnerSigninUseCase implements ILearnerSigninUseCase {
     constructor(
         private _learnerRepository: ILearnerRepository,
         private _tokenService: ITokenService,
-        private _fileStorageService: IS3Service 
+        private _fileStorageService: IFileStorageService 
     ) {}
 
     async execute(input: UserSigninInputDTO): Promise<UserSigninOutputDTO> {

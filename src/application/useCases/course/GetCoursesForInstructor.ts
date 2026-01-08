@@ -2,7 +2,7 @@ import { CourseForInstructorListing } from "@application/dtos/course/CourseDTO";
 import { GetCoursesForInstructorsInput, GetCoursesForInstructorsOutput } from "@application/dtos/course/GetCourseForInstructors";
 import { IGetCoursesForInstructorUseCase } from "@application/IUseCases/course/IGetCoursesForInstructor";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
 type CourseQuery = {
@@ -15,7 +15,7 @@ type CourseQuery = {
 export class GetCoursesForInstructorUseCase implements IGetCoursesForInstructorUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) { }
     async execute(input: GetCoursesForInstructorsInput): Promise<GetCoursesForInstructorsOutput> {
         const { page, search, limit, instructorId, status } = input;

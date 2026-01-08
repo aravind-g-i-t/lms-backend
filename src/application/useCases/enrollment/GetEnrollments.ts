@@ -7,14 +7,14 @@ import { IGetEnrollmentsUseCase } from "@application/IUseCases/enrollment/IGetEn
 import { EnrollmentStatus } from "@domain/entities/Enrollment";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 export class GetEnrollmentsUseCase implements IGetEnrollmentsUseCase {
 
     constructor(
         private _enrollmentRepository: IEnrollmentRepository,
         private _learnerProgressRepository: ILearnerProgressRepository,
-        private _storageService: IS3Service
+        private _storageService: IFileStorageService
     ) { }
 
     async execute(input: {

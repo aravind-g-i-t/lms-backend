@@ -3,14 +3,14 @@ import { CourseForCheckout } from "@application/dtos/course/CourseDTO";
 import { IGetValidCouponsUseCase } from "@application/IUseCases/coupon/IGetValidCoupons";
 import { IGetCourseDetailsForCheckoutUseCase } from "@application/IUseCases/course/IGetCourseForCheckout";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
 export class GetCourseDetailsForCheckoutUseCase implements IGetCourseDetailsForCheckoutUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
         private _getValidCouponsUseCase:IGetValidCouponsUseCase
     ) { }
     async execute(id: string): Promise<{course:CourseForCheckout, coupons:GetValidCouponsOutput}> {

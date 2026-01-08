@@ -1,12 +1,13 @@
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { CourseModel, IChapter, IModule, VerificationStatus } from "../models/CourseModel";
 import { logger } from "@infrastructure/logging/Logger";
-import { CategoryEntity } from "./CategoryRepository";
 import { InstructorEntity } from "./InstructorRepository";
 import { CourseMapper } from "../mappers/CourseMapper";
 import { CategoryDoc } from "../models/CategoryModel";
 import { InstructorDoc } from "../models/InstructorModel";
-import { Resource } from "@domain/entities/Course";
+import { Course, Resource } from "@domain/entities/Course";
+import { Category } from "@domain/entities/Category";
+import { BaseRepository } from "./BaseRepository";
 
 enum CourseLevel {
     Beginner = "beginner",
@@ -20,38 +21,7 @@ enum CourseStatus {
     Archived = "archived",
 }
 
-export interface CourseEntity {
-    id: string;
-    title: string;
-    description: string;
-    thumbnail: string | null;
-    previewVideo: string | null;
-    prerequisites: string[];
-    categoryId: string;
-    enrollmentCount: number;
-    instructorId: string;
-    modules: IModule[];
-    price: number;
-    level: CourseLevel;
-    duration: number;
-    totalChapters: number;
-    totalModules: number;
-    tags: string[];
-    whatYouWillLearn: string[];
-    rating: number | null;
-    totalRatings: number;
-    quizId:string|null;
-    status: CourseStatus;
-    verification: {
-        status: VerificationStatus;
-        reviewedAt: Date | null;
-        submittedAt: Date | null;
-        remarks: string | null;
-    };
-    publishedAt: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-}
+
 
 
 
@@ -63,7 +33,7 @@ export interface HydratedCourseEntity {
     thumbnail: string | null;
     previewVideo: string | null;
     prerequisites: string[];
-    category: CategoryEntity;
+    category: Category;
     enrollmentCount: number;
     instructor: InstructorEntity;
     modules: IModule[];
@@ -95,7 +65,7 @@ export interface FindAllCoursesInput {
         limit?: number;
     };
     search?: string;
-    sort?: Record<keyof CourseEntity, "asc" | "desc">;
+    sort?: Record<keyof Course, "asc" | "desc">;
 
     filter?: {
         instructorIds?: string[];
@@ -112,7 +82,7 @@ export interface FindAllCoursesInput {
 interface FindAllInput {
     pageOptions: { page: number; limit: number };
     filter?: object;
-    sort?: Record<keyof CourseEntity, 1 | -1>;
+    sort?: Record<keyof Course, 1 | -1>;
 }
 
 interface FindAllOutput {
@@ -120,19 +90,14 @@ interface FindAllOutput {
     courses: HydratedCourseEntity[];
 }
 
-export class CourseRepository implements ICourseRepository {
-    async create(courseData: Partial<CourseEntity>): Promise<CourseEntity | null> {
-        const course = new CourseModel(courseData);
-        await course.save();
-        return course ? CourseMapper.toDomain(course) : null;
+export class CourseRepository extends BaseRepository<Course> implements ICourseRepository {
+    constructor(){
+        super(CourseModel,CourseMapper)
     }
 
-    async findById(id: string): Promise<CourseEntity | null> {
-        const course = await CourseModel.findById(id).lean().exec();
-        return course ? CourseMapper.toDomain(course) : null;
-    }
 
-    async findByInstructor(instructorId: string): Promise<CourseEntity[]> {
+
+    async findByInstructor(instructorId: string): Promise<Course[]> {
         const courses = await CourseModel.find({ instructorId }).lean().exec();
         return courses.map(course => CourseMapper.toDomain(course));
     }
@@ -145,7 +110,7 @@ export class CourseRepository implements ICourseRepository {
         return course ? CourseMapper.toHydrated(course) : null;
     }
 
-    async findByCategory(categoryId: string): Promise<CourseEntity[]> {
+    async findByCategory(categoryId: string): Promise<Course[]> {
         const courses = await CourseModel.find({ categoryId }).lean().exec();
         return courses.map(course => CourseMapper.toDomain(course));
     }
@@ -264,15 +229,6 @@ export class CourseRepository implements ICourseRepository {
         };
     }
 
-    async update({ id, updates }: { id: string; updates: Partial<CourseEntity> }): Promise<CourseEntity | null> {
-        const updated = await CourseModel.findByIdAndUpdate(id, updates, { new: true }).exec();
-        return updated ? CourseMapper.toDomain(updated) : null;
-    }
-
-    async delete(id: string): Promise<boolean> {
-        const result = await CourseModel.findByIdAndDelete(id).exec();
-        return result !== null;
-    }
 
 
 
@@ -285,7 +241,7 @@ export class CourseRepository implements ICourseRepository {
     }: {
         courseId: string;
         module: IModule;
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -310,7 +266,7 @@ export class CourseRepository implements ICourseRepository {
     }: {
         courseId: string;
         moduleId: string;
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -341,7 +297,7 @@ export class CourseRepository implements ICourseRepository {
         courseId: string;
         moduleId: string;
         updates: { title: string; description: string };
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -364,7 +320,7 @@ export class CourseRepository implements ICourseRepository {
         courseId: string;
         moduleId: string;
         chapter: IChapter;
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -392,7 +348,7 @@ export class CourseRepository implements ICourseRepository {
         courseId: string;
         moduleId: string;
         chapterId: string;
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -427,7 +383,7 @@ export class CourseRepository implements ICourseRepository {
         moduleId: string;
         chapterId: string;
         updates: { title: string; description: string };
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -455,7 +411,7 @@ export class CourseRepository implements ICourseRepository {
         chapterId: string;
         video: string;
         duration: number;
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -497,7 +453,7 @@ export class CourseRepository implements ICourseRepository {
 
 
 
-    async incrementEnrollment(id: string): Promise<CourseEntity | null> {
+    async incrementEnrollment(id: string): Promise<Course | null> {
         const updated = await CourseModel.findByIdAndUpdate(
             id,
             { $inc: { enrollmentCount: 1 } },
@@ -509,7 +465,7 @@ export class CourseRepository implements ICourseRepository {
         return CourseMapper.toDomain(updated);
     }
 
-    async addResource({ courseId, moduleId, chapterId, resource }: { courseId: string; moduleId: string; chapterId: string; resource: Resource }): Promise<CourseEntity | null> {
+    async addResource({ courseId, moduleId, chapterId, resource }: { courseId: string; moduleId: string; chapterId: string; resource: Resource }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 
@@ -534,7 +490,7 @@ export class CourseRepository implements ICourseRepository {
         moduleId: string;
         chapterId: string;
         resourceId:string;
-    }): Promise<CourseEntity | null> {
+    }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
 

@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import http from "http";
 import { UserRole } from "@domain/entities/Message";
-import { markMessagesReadUseCase, sendMessageUseCase } from "./container/message";
+import { getUnreadMessagesCountUseCase, markMessagesReadUseCase, sendMessageUseCase } from "./container/message";
 import { MessageForListing } from "@application/dtos/message/GetConversations";
 import { presenceService } from "./container/presence";
 
@@ -11,7 +11,10 @@ import { presenceService } from "./container/presence";
 //     userType: 'learner' | 'instructor';
 // }
 
+// type CallType= "audio"|"video";
+
 export interface Attachment {
+    id: string | null
     fileName: string;
     fileUrl: string;
     fileType: string;
@@ -38,7 +41,7 @@ export function initializeSockets(server: http.Server) {
         pingInterval: 25000
     });
 
-    // Track multiple sockets per user: userId -> Set of socket IDs
+
     const userSockets = new Map<string, Set<string>>();
     // Track socket metadata: socketId -> user info
     const socketMetadata = new Map<string, { userId: string, userType: 'learner' | 'instructor' }>();
@@ -51,14 +54,14 @@ export function initializeSockets(server: http.Server) {
     io.on("connection", (socket: AuthenticatedSocket) => {
         console.log("User connected", socket.id);
 
-        socket.on("register", ({ userId, userType }: { userId: string, userType: 'learner' | 'instructor' }) => {
+        socket.on("register", async ({ userId, userType }: { userId: string, userType: 'learner' | 'instructor' }) => {
             if (!userId || !userType) {
                 socket.emit("error", { message: "userId and userType are required" });
                 return;
             }
 
             // Check if user was previously offline
-            const wasOffline = !presenceService.isOnline(userId);
+            // const wasOffline = !presenceService.isOnline(userId);
 
             // Store user info on socket
             socket.userId = userId;
@@ -81,30 +84,41 @@ export function initializeSockets(server: http.Server) {
 
             console.log(`${userType} ${userId} is now online (${userSockets.get(userId)!.size} connection(s))`);
 
-            // Only emit status change if user wasn't online before
-            if (wasOffline) {
-                const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
-                const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
 
-                io.emit(eventName, {
-                    [userIdKey]: userId,
-                    isOnline: true,
-                    timestamp: new Date()
-                });
-            }
+            const unreadCount = await getUnreadMessagesCountUseCase.execute({
+                role: userType,
+                id: userId
+            })
+
+            console.log(userType," unread messages:",unreadCount);
+            
+
+            io.to(userId).emit("unread_count", unreadCount)
+
+            // Only emit status change if user wasn't online before
+            // if (wasOffline) {
+            //     const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
+            //     const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
+
+            //     io.emit(eventName, {
+            //         [userIdKey]: userId,
+            //         isOnline: true,
+            //         timestamp: new Date()
+            //     });
+            // }
 
             // Send current online users to the newly connected user
-            const onlineUserIds = Array.from(userSockets.keys());
-            const onlineUsersList = onlineUserIds.map(uid => {
-                const socketIds = userSockets.get(uid)!;
-                const firstSocketId = Array.from(socketIds)[0];
-                const metadata = socketMetadata.get(firstSocketId);
-                return {
-                    userId: uid,
-                    userType: metadata?.userType
-                };
-            });
-            socket.emit("onlineUsers", onlineUsersList);
+            // const onlineUserIds = Array.from(userSockets.keys());
+            // const onlineUsersList = onlineUserIds.map(uid => {
+            //     const socketIds = userSockets.get(uid)!;
+            //     const firstSocketId = Array.from(socketIds)[0];
+            //     const metadata = socketMetadata.get(firstSocketId);
+            //     return {
+            //         userId: uid,
+            //         userType: metadata?.userType
+            //     };
+            // });
+            // socket.emit("onlineUsers", onlineUsersList);
         });
 
         socket.on("joinChat", (conversationId: string) => {
@@ -161,7 +175,10 @@ export function initializeSockets(server: http.Server) {
                         io.to([data.receiverId, socket.userId]).emit("conversationUpdated", {
                             conversation: result.conversation
                         });
+                        io.to(data.receiverId).emit("new_message")
                     }
+
+                    
 
                     if (result.conversation.id) {
                         socket.to(`chat:${result.conversation.id}`).emit("receiveMessage", {
@@ -170,6 +187,9 @@ export function initializeSockets(server: http.Server) {
                             conversationId: data.conversationId,
                             timestamp: new Date()
                         });
+                    
+                    
+                        
                     } else {
                         socket.emit("error", { message: "Either receiverId or conversationId is required" });
                     }
@@ -203,6 +223,13 @@ export function initializeSockets(server: http.Server) {
 
                     console.log("read status updated in db");
 
+                    const unreadCount = await getUnreadMessagesCountUseCase.execute({
+                        role: socket.userType,
+                        id: socket.userId
+                    })
+
+                    io.to(socket.userId).emit("unread_count", unreadCount)
+
                     io.to(`chat:${data.conversationId}`).emit("messagesRead", {
                         conversationId,
                         readerId: socket.userId,
@@ -218,13 +245,8 @@ export function initializeSockets(server: http.Server) {
             }
         );
 
-        socket.on("typing", (data: { receiverId?: string, conversationId?: string, isTyping: boolean }) => {
-            if (data.receiverId) {
-                io.to(data.receiverId).emit("userTyping", {
-                    userId: socket.userId,
-                    isTyping: data.isTyping
-                });
-            } else if (data.conversationId) {
+        socket.on("typing", (data: { conversationId?: string, isTyping: boolean }) => {
+            if (data.conversationId) {
                 socket.to(`chat:${data.conversationId}`).emit("userTyping", {
                     userId: socket.userId,
                     isTyping: data.isTyping
@@ -276,40 +298,53 @@ export function initializeSockets(server: http.Server) {
         });
 
 
-        socket.on("startVideoCall", ({ receiverId, conversationId }) => {
-            console.log("Video call initiated.",conversationId,receiverId,socket.userId);
-            
+        socket.on("startCall", ({ receiverId, conversationId, type }) => {
+            console.log("Call initiated.", conversationId, receiverId, socket.userId);
+
             if (!socket.userId) return;
             if (!presenceService.isOnline(receiverId)) {
                 console.log("User offline.");
-                io.to(socket.userId).emit("videoCallRejected", { reason: "User offline" })
+                io.to(socket.userId).emit("callRejected", { reason: "User offline" })
                 return
             }
 
 
-            io.to(receiverId).emit("incomingVideoCall", {
+            io.to(receiverId).emit("incomingCall", {
                 conversationId,
                 callerId: socket.userId,
                 callerRole: socket.userType,
+                type: type
             });
         });
 
-        socket.on("acceptVideoCall", ({ conversationId, callerId }) => {
-            console.log("Acceptiong video call.");
-            io.to(callerId).emit("videoCallAccepted", {
+        socket.on("acceptCall", ({ conversationId, callerId, type }) => {
+            console.log("Acceptiong call.", socket.userId, callerId);
+            io.to(callerId).emit("callAccepted", {
                 conversationId,
+                participantId: socket.userId,
+                type
+
             });
 
-            io.to(socket.userId!).emit("videoCallAccepted", {
+            io.to(socket.userId!).emit("callAccepted", {
                 conversationId,
+                participantId: callerId,
+                type
             });
         });
 
 
-        socket.on("rejectVideoCall", ({ callerId }) => {
-            console.log("Rejecting video call.");
-            io.to(callerId).emit("videoCallRejected");
+        socket.on("rejectCall", ({ callerId }) => {
+            console.log("Rejecting call.");
+            io.to(callerId).emit("callRejected");
         });
+
+        socket.on("endCall", ({ participantId }) => {
+            console.log("Ending Call", participantId, socket.userId);
+
+            io.to(participantId).emit("callEnded");
+        });
+
 
 
         socket.on("error", (error) => {

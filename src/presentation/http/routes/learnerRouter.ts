@@ -42,6 +42,8 @@ learnerRouter.get("/course/checkout",learnerAuthMiddleware,(req:Request,res:Resp
 
 learnerRouter.patch("/progress/chapter/complete",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.markChapterAsCompleted(req,res,next));
 
+learnerRouter.patch("/progress/chapter/current",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.updateCurrentChapter(req,res,next));
+
 learnerRouter.post("/favourites",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.addToFavourites(req,res,next));
 
 learnerRouter.delete("/favourites/:courseId",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.removeFromFavourites(req,res,next));
@@ -59,6 +61,14 @@ learnerRouter.post("/quiz",learnerAuthMiddleware,(req:Request,res:Response,next:
 
 learnerRouter.get("/certificates",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getCertificates(req,res,next));
 
-learnerRouter.get("/video",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getVideo(req,res,next))
+learnerRouter.get("/video",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getVideo(req,res,next));
+
+learnerRouter.get("/courses/:courseId/modules/:moduleId/chapters/:chapterId/stream",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.streamVideo(req,res,next));
+
+learnerRouter.get("/ping",learnerAuthMiddleware,(req:Request,res:Response)=>res.json({success:true,message:"Pinged learner route successfully"}));
+
+
+learnerRouter.post("/messages/delete",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
+
 
 export default learnerRouter;

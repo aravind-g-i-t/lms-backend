@@ -2,7 +2,7 @@ import { IAddResourceUseCase } from "@application/IUseCases/course/IAddResource"
 import { Resource } from "@domain/entities/Course";
 
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 import { IdGenerator } from "shared/utils/IdGenerator";
@@ -10,7 +10,7 @@ import { IdGenerator } from "shared/utils/IdGenerator";
 export class AddResourceUseCase implements IAddResourceUseCase  {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
     ) { }
 
     async execute(input:{courseId: string, moduleId: string, chapterId:string, resource: { name: string; size: number; file: string; }}): Promise<Resource> {

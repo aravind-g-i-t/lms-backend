@@ -14,8 +14,8 @@ export interface IEnrollmentRepository {
             status?: EnrollmentStatus[]
     }}
   ): Promise<{ data: Enrollment[]; total: number }>
-  update(id: string, updates: Partial<Enrollment>): Promise<Enrollment | null>;
-  delete(id: string): Promise<void>;
+  updateById(id: string, updates: Partial<Enrollment>): Promise<Enrollment | null>;
+  deleteById(id: string): Promise<boolean>;
   updateProgress(id: string, progress: number, completedChapters: string[]): Promise<Enrollment | null>;
 }
 

@@ -13,6 +13,9 @@ import { GetMessagesUseCase } from "@application/useCases/message/GetMessages";
 import { GetInstructorConversationUseCase } from "@application/useCases/message/GetInstructorConversations";
 import { presenceService } from "./presence";
 import { getVideoCallTokenUseCase } from "./videoCall";
+import { DeleteMessagesForMeUseCase } from "@application/useCases/message/DeleteForMe";
+import { DeleteMessagesForEveryoneUseCase } from "@application/useCases/message/DeleteForEveryone";
+import { GetUnreadMessagesCountUseCase } from "@application/useCases/message/GetUnreadCount";
 
 export const messageRepository= new MessageRepositoryImpl();
 export const conversationRepository = new ConversationRepositoryImpl()
@@ -25,14 +28,21 @@ export const markMessagesReadUseCase= new MarkMessagesReadUseCase(messageReposit
 
 const getConversationsUseCase= new GetLearnerConversationsUseCase(conversationRepository,messageRepository,courseRepository,instructorRepository,learnerRepository,s3Service,presenceService);
 
-const getMessagesUseCase= new GetMessagesUseCase(messageRepository);
+const getMessagesUseCase= new GetMessagesUseCase(messageRepository,s3Service);
 
 const getInstructorConversations= new GetInstructorConversationUseCase(conversationRepository,messageRepository,courseRepository,instructorRepository,learnerRepository,s3Service,presenceService);
 
+const deleteForMeUseCase= new DeleteMessagesForMeUseCase(messageRepository);
+
+const deleteForEveryoneUseCase= new DeleteMessagesForEveryoneUseCase(messageRepository,s3Service)
+
+export const getUnreadMessagesCountUseCase= new GetUnreadMessagesCountUseCase(conversationRepository)
 
 export const messageController= new MessageController(
     getConversationsUseCase,
     getMessagesUseCase,
     getInstructorConversations,
-    getVideoCallTokenUseCase
+    getVideoCallTokenUseCase,
+    deleteForMeUseCase,
+    deleteForEveryoneUseCase
 )

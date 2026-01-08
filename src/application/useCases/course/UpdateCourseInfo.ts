@@ -11,10 +11,10 @@ export class UpdateCourseUseCase implements IUpdateCourseUseCase {
 
     async execute(id: string, updates: Partial<Course>): Promise<void> {
 
-        const updated = await this._courseRepository.update({
+        const updated = await this._courseRepository.updateById(
             id,
             updates
-        });
+        );
         if (!updated) {
             throw new AppError("Failed to update course.", STATUS_CODES.BAD_REQUEST)
         }

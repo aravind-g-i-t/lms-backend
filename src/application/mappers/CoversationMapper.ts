@@ -23,7 +23,8 @@ export class ConversationDTOMapper {
                 name: input.learnerId.name,
                 id: input.learnerId.id,
                 profilePic: input.learnerId.profilePic,
-            }
+            },
+            isOnline:false
         }
     }
 }

@@ -3,6 +3,8 @@ import {  CategoryModel } from "../models/CategoryModel";
 import { logger } from "@infrastructure/logging/Logger";
 import { AppError } from "shared/errors/AppError";
 import { CategoryMapper } from "../mappers/CategoryMapper";
+import { BaseRepository } from "./BaseRepository";
+import { Category } from "@domain/entities/Category";
 
 type AllCategoryQuery = {
     isActive?: boolean;
@@ -10,41 +12,19 @@ type AllCategoryQuery = {
 };
 
 type FindAllCategoriesOutput={
-    categories:CategoryEntity[],
+    categories:Category[],
     totalPages:number,
     totalCount:number
 }
 
-export interface CategoryEntity {
-    id: string;
-    name: string;
-    description: string;
-    isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}
 
 
 
-export class CategoryRepositoryImpl implements ICategoryRepository {
-    async createCategory(category: Partial<CategoryEntity>): Promise<CategoryEntity> {
-        
-        const created = await CategoryModel.create({
-            name: category.name,
-            description: category.description,
-            isActive: category.isActive ?? true,
-        });
-        return CategoryMapper.toDomain(created);
-    }
 
-    async findById(id: string): Promise<CategoryEntity | null> {
-        const category = await CategoryModel.findById(id);
-        return category ? CategoryMapper.toDomain(category) : null;
-    }
+export class CategoryRepositoryImpl extends BaseRepository<Category> implements ICategoryRepository {
 
-    async findByName(name: string): Promise<CategoryEntity | null> {
-        const category = await CategoryModel.findOne({ name });
-        return category ? CategoryMapper.toDomain(category) : null;
+    constructor(){
+        super(CategoryModel,CategoryMapper)
     }
 
     async findAll(query: AllCategoryQuery,
@@ -71,7 +51,7 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
         };
     }
 
-    async findActiveCategories():Promise<CategoryEntity[]>{
+    async findActiveCategories():Promise<Category[]>{
         const docs=await CategoryModel.find({isActive:true}).lean();
         if (docs) {
             logger.info("Categories fetched successfully.");
@@ -82,12 +62,7 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
 
     
 
-    async updateCategory(id: string, data: Partial<CategoryEntity>): Promise<CategoryEntity | null> {
-        const updated = await CategoryModel.findByIdAndUpdate(id, data, { new: true });
-        return updated ? CategoryMapper.toDomain(updated) : null;
-    }
-
-    async updateCategoryStatus(id: string): Promise<CategoryEntity | null> {
+    async updateCategoryStatus(id: string): Promise<Category | null> {
         const category = await CategoryModel.findById(id);
         if(!category){
             throw new AppError("Category not found")
@@ -99,8 +74,5 @@ export class CategoryRepositoryImpl implements ICategoryRepository {
                 }
                 logger.info("Category status updated successfully.")
         return CategoryMapper.toDomain(category);
-        
     }
-
-
 }

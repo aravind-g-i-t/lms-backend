@@ -3,7 +3,7 @@ import { IIssueCertificateUseCase } from "@application/IUseCases/certificate/IIs
 import { ICertificateRepository } from "@domain/interfaces/ICertificateRepository";
 import { ICertificateTemplateService } from "@domain/interfaces/ICertificateService";
 import { IPdfGeneratorService } from "@domain/interfaces/IPdfGeneratorService";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
@@ -14,19 +14,25 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
         private _certificateRepository: ICertificateRepository,
         private _templateService: ICertificateTemplateService,
         private _pdfService: IPdfGeneratorService,
-        private _storageService: IS3Service
+        private _storageService: IFileStorageService
     ) {}
 
     async execute(input: IssueCertificateInput): Promise<string> {
         const { learnerId, learnerName, courseId, courseTitle, grade ,enrollmentId,quizAttemptId,instructorName} = input;
 
-        const serialNumber = `CERT-${courseId}-${Date.now()}`;
+        console.log("input:",input);
+        
 
+        const serialNumber = `CERT-${courseId}-${Date.now()}`;
+        console.log("serialNumber",serialNumber);
+        
         const issueDate = new Date().toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric"
         });
+        console.log("issueDate",issueDate);
+        
 
         const html = this._templateService.generateHtml({
             learnerName,
@@ -35,12 +41,16 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
             issueDate,
             grade: grade ?? null
         });
+        console.log("html",html);
+        
 
         const pdfBuffer = await this._pdfService.generateFromHtml(html);
 
+        console.log("pdfBuffer",pdfBuffer);
         
         const fileKey = `certificates/${courseId}/${learnerId}/${serialNumber}.pdf`;
-
+        console.log("fileKey",fileKey);
+        
         await this._storageService.uploadBuffer(fileKey, pdfBuffer, {
             contentType: "application/pdf"
         });
@@ -58,6 +68,8 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
             learnerName,
             instructorName
         });
+        console.log(certificate,certificate);
+        
 
         if(!certificate){
             throw new AppError("Failed to generate certificate",STATUS_CODES.BAD_REQUEST);

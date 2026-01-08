@@ -31,6 +31,7 @@ export interface MessageForListing {
   attachments: Attachment[];
   createdAt: Date;
   isRead: boolean;
+  isDeletedForEveryone: boolean;
   readAt: Date|null;
 }
 

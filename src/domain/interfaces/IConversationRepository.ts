@@ -20,17 +20,13 @@ export interface HydratedConversation{
 
 
 export interface IConversationRepository {
-    create(conversation: Partial<Conversation>): Promise<Conversation>;
+    create(conversation: Partial<Conversation>): Promise<Conversation|null>;
 
     findById(id: string): Promise<Conversation | null>;
 
     findHydratedById(id: string): Promise<HydratedConversation | null>;
 
-    findByCourseAndLearner(
-        {courseId,learnerId}:
-        {courseId: string,
-        learnerId: string}
-    ): Promise<Conversation | null>
+    findOne(input:Partial<Conversation>): Promise<Conversation | null>
 
     findAllByLearner(learnerId: string): Promise<HydratedConversation[]>;
 
@@ -52,7 +48,7 @@ export interface IConversationRepository {
         totalPages: number;
     }>
 
-    findByIdAndUpdate(id:string,updates: Partial<Conversation>):Promise<Conversation>;
+    updateById(id:string,updates: Partial<Conversation>):Promise<Conversation|null>;
 
     updateLastMessage(
         conversationId: string,
@@ -74,4 +70,8 @@ export interface IConversationRepository {
         conversationId: string,
         status: ConversationStatus
     ): Promise<void>;
+
+    getLearnerUnreadCount(learnerId: string): Promise<number>;
+
+    getInstructorUnreadCount(instructorId: string): Promise<number> 
 }

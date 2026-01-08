@@ -14,13 +14,13 @@ export class UpdateCategoryUseCase implements IUpdateCategoryUseCase{
       throw new AppError("Category not found",STATUS_CODES.NOT_FOUND);
     }
 
-    const existingCategory = await this._categoryRepository.findByName(data.name);
+    const existingCategory = await this._categoryRepository.findOne({name:data.name});
     if (existingCategory && existingCategory.id !== id) {
       throw new AppError("Another category with this name already exists", STATUS_CODES.CONFLICT);
     }
 
 
-    const updated = await this._categoryRepository.updateCategory(id, data);
+    const updated = await this._categoryRepository.updateById(id, data);
     if (!updated) {
       throw new AppError("Failed to update category",STATUS_CODES.NOT_MODIFIED);
     }

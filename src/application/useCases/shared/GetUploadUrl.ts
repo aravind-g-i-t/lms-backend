@@ -1,9 +1,9 @@
 import { IGetUploadUrlUseCase } from "@application/IUseCases/shared/IGetUploadUrl";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 export class GetUploadUrlUseCase implements IGetUploadUrlUseCase {
     constructor(
-        private readonly s3Service: IS3Service
+        private readonly s3Service: IFileStorageService
     ) { }
 
     async execute(params: {

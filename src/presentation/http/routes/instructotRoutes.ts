@@ -109,5 +109,7 @@ instructorRouter.get("/conversations",instructorAuthMiddleware,(req:Request,res:
 
 instructorRouter.get("/messages",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getMessages(req,res,next));
 
+instructorRouter.post("/messages/delete",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
+
 
 export default instructorRouter

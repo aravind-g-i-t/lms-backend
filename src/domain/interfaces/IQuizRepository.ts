@@ -3,9 +3,9 @@ import { Quiz } from "@domain/entities/Quiz";
 export interface IQuizRepository {
     create(data: Partial<Quiz>): Promise<Quiz | null>;
     findById(id: string): Promise<Quiz | null>;
-    findByCourse(courseId: string): Promise<Quiz | null>;
-    update(id: string, data: Partial<Quiz>): Promise<Quiz | null>;
-    delete(id: string): Promise<void>;
+    findOne(input:Partial<Quiz>): Promise<Quiz | null>;
+    updateById(id: string, data: Partial<Quiz>): Promise<Quiz | null>;
+    deleteById(id: string): Promise<boolean>;
     addQuestion(
         quizId: string,
         questionData: {

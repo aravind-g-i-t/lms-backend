@@ -2,18 +2,14 @@ import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository"
 import { EnrollmentModel } from "../models/EnrollmentModel";
 import { EnrollmentMapper } from "../mappers/EnrollmentMapper";
 import { Enrollment, EnrollmentStatus } from "@domain/entities/Enrollment";
+import { BaseRepository } from "./BaseRepository";
 
 
 
-export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
-    async create(data: Partial<Enrollment>): Promise<Enrollment | null> {
-        const created = await EnrollmentModel.create(data);
-        return created ? EnrollmentMapper.toDomain(created) : null;
-    }
+export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> implements IEnrollmentRepository {
 
-    async findOne(filter: Partial<Enrollment>): Promise<Enrollment | null> {
-        const result = await EnrollmentModel.findOne(filter).exec();
-        return result ? EnrollmentMapper.toDomain(result) : null;
+    constructor(){
+        super(EnrollmentModel,EnrollmentMapper)
     }
 
     async findMany(filter: Partial<Enrollment>): Promise<Enrollment[]> {
@@ -56,8 +52,6 @@ export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
             query.status = { $in: filter.status };
         }
 
-
-        // Run both queries in parallel
         const [rows, total] = await Promise.all([
             EnrollmentModel.find(query)
                 .skip(skip)
@@ -74,17 +68,6 @@ export class EnrollmentRepositoryImpl implements IEnrollmentRepository {
     }
 
 
-
-
-
-    async update(id: string, updates: Partial<Enrollment>): Promise<Enrollment | null> {
-        const updated = await EnrollmentModel.findByIdAndUpdate(id, updates, { new: true }).exec();
-        return updated ? EnrollmentMapper.toDomain(updated) : null;
-    }
-
-    async delete(id: string): Promise<void> {
-        await EnrollmentModel.findByIdAndDelete(id).exec();
-    }
 
     async updateProgress(
         id: string,

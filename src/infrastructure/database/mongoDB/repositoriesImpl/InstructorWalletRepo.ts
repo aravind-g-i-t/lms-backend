@@ -2,22 +2,16 @@ import { IInstructorWalletRepository } from "@domain/interfaces/IInstructorWalle
 import { InstructorWalletModel } from "../models/InstructorWalletModel";
 import { InstructorWalletMapper } from "../mappers/InstructorWalletMapper";
 import { InstructorWallet } from "@domain/entities/InstructorWallet";
+import { BaseRepository } from "./BaseRepository";
 
 
 
-export class InstructorWalletRepositoryImpl
-  implements IInstructorWalletRepository
+export class InstructorWalletRepositoryImpl extends BaseRepository<InstructorWallet> implements IInstructorWalletRepository
 {
-  async create(instructorId: string): Promise<InstructorWallet | null> {
-    const doc = await InstructorWalletModel.create({
-      instructorId,
-      pendingBalance: 0,
-      availableBalance: 0,
-      totalEarned: 0,
-    });
-
-    return doc ? InstructorWalletMapper.toDomain(doc) : null;
+  constructor(){
+    super(InstructorWalletModel,InstructorWalletMapper)
   }
+  
 
   async findByInstructorId(
     instructorId: string

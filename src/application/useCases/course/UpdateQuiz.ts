@@ -10,7 +10,7 @@ export class UpdateQuizUseCase implements IUpdateQuizUseCase{
 
     async execute(input: {quizId:string, passingScore: number; timeLimitMinutes: number|null; }): Promise<void> {
         const {passingScore,timeLimitMinutes,quizId}= input;
-        const updated= await this._quizRepo.update(quizId,{passingScore,timeLimitMinutes});
+        const updated= await this._quizRepo.updateById(quizId,{passingScore,timeLimitMinutes});
         if(!updated){
             throw new AppError("Failed to update quiz settings.",STATUS_CODES.BAD_REQUEST);
         }

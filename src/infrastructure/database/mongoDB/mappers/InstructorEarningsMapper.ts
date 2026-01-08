@@ -1,10 +1,10 @@
+import { InstructorEarnings } from "@domain/entities/InstructorEarning";
 import { InstructorEarningsDoc } from "../models/InstructorEarningsModel";
-import { InstructorEarningsEntity } from "../repositoriesImpl/InstructorEarningsRepo";
 
 
 
 export class InstructorEarningsMapper {
-    static toDomain(doc: InstructorEarningsDoc): InstructorEarningsEntity {
+    static toDomain(doc: InstructorEarningsDoc): InstructorEarnings {
 
         return {
             id: doc._id.toString(),

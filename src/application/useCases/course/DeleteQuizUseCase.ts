@@ -11,17 +11,17 @@ export class DeleteQuizUseCase implements IDeleteQuizUseCase{
     ){}
 
     async execute(input: { quizId: string,courseId:string }): Promise<void> {
-        await this._quizRepository.delete(input.quizId);
+        await this._quizRepository.deleteById(input.quizId);
 
         const quiz= await this._quizRepository.findById(input.quizId);
         if(quiz){
             throw new AppError("Failed to delete quiz.",STATUS_CODES.BAD_REQUEST)
         }
-        await this._courseRepository.update({
-            id:input.courseId,
-            updates:{
+        await this._courseRepository.updateById(
+            input.courseId,
+            {
                 quizId:null
             }
-        });
+        );
     }
 }

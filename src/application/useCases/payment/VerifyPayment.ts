@@ -61,7 +61,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         if (session.payment_status === "paid") {
 
             // Update Payment
-            const payment = await this.paymentRepo.update(paymentId, {
+            const payment = await this.paymentRepo.updateById(paymentId, {
                 status: PaymentStatus.Success,
                 paidAt: new Date(),
                 transactionId: session.payment_intent,
@@ -72,7 +72,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 throw new AppError("Failed to activate payment", STATUS_CODES.BAD_REQUEST)
             }
 
-            const enrollment = await this.enrollmentRepo.update(enrollmentId, {
+            const enrollment = await this.enrollmentRepo.updateById(enrollmentId, {
                 status: EnrollmentStatus.Active,
                 enrolledAt: new Date(),
             });
@@ -143,13 +143,13 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         if (session.payment_status === "unpaid" || session.status === "expired") {
 
-            await this.paymentRepo.update(paymentId, {
+            await this.paymentRepo.updateById(paymentId, {
                 status: PaymentStatus.Failed,
                 transactionId: null,
                 enrollmentId
             });
 
-            await this.enrollmentRepo.update(enrollmentId, {
+            await this.enrollmentRepo.updateById(enrollmentId, {
                 status: EnrollmentStatus.Failed,
             });
 

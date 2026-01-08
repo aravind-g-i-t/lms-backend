@@ -1,5 +1,12 @@
-import { Attachment, UserRole } from "@domain/entities/Message";
+import {  UserRole } from "@domain/entities/Message";
 
+interface AttachmentInput{
+    id: string|null;
+    fileName: string;
+    fileUrl: string;
+    fileType: string;
+    fileSize: number;
+}
 
 export interface SendMessageInput {
 
@@ -11,5 +18,5 @@ export interface SendMessageInput {
 
     senderRole: UserRole;
     content: string;
-    attachments: Omit<Attachment,"id">[];
+    attachments: AttachmentInput[];
 }

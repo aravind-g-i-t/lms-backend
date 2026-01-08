@@ -5,14 +5,14 @@ import { EnrollmentStatus } from "@domain/entities/Enrollment";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
 export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLearnerUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
         private _enrollmentRepository: IEnrollmentRepository,
         private _favouriteRepository: IFavouriteRepository
     ) { }

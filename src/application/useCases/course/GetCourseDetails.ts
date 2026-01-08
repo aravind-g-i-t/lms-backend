@@ -3,14 +3,14 @@ import { IGetCourseDetailsUseCase } from "@application/IUseCases/course/IGetCour
 import { Quiz } from "@domain/entities/Quiz";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
 export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
         private _quizRepository:IQuizRepository
     ) { }
     async execute(id: string): Promise<GetCourseDetailsOutput> {

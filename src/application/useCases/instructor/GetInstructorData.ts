@@ -2,7 +2,7 @@ import { GetInstructorDataOutputDTO } from "@application/dtos/instructor/GetInst
 import { IGetInstructorDataUseCase } from "@application/IUseCases/instructor/IGetInstructorData";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
@@ -10,7 +10,7 @@ import { AppError } from "shared/errors/AppError";
 export class GetInstructorDataUseCase implements IGetInstructorDataUseCase {
     constructor(
         private _instructorRepository: IInstructorRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) {}
 
     async execute(id: string): Promise<GetInstructorDataOutputDTO> {

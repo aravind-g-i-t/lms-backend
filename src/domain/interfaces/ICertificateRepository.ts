@@ -5,8 +5,8 @@ export interface ICertificateRepository {
     findById(id: string): Promise<Certificate | null>;
     findByCertificateNumber(certNumber: string): Promise<Certificate | null>;
     findByLearnerAndCourse(learnerId: string, courseId: string): Promise<Certificate | null>;
-    update(id: string, data: Partial<Certificate>): Promise<Certificate | null>;
-    delete(id: string): Promise<void>;
+    updateById(id: string, data: Partial<Certificate>): Promise<Certificate | null>;
+    deleteById(id: string): Promise<boolean>;
     findAllByLearner(input: { page: number; limit: number; learnerId: string }): Promise<{
         certificates: Certificate[],
         totalPages: number,

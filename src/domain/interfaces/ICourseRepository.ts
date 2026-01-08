@@ -87,11 +87,11 @@ export interface ICourseRepository {
     findByCategory(categoryId: string): Promise<Course[]>;
 
     findAll(input:FindAllInput):Promise<FindAllOutput>
-    update(input:{id: string, updates: Partial<Course>}): Promise<Course | null>;
+    updateById(id: string, updates: Partial<Course>): Promise<Course | null>;
 
     findAllCourses(input:FindAllCoursesInput):Promise<FindAllOutput>
 
-    delete(id: string): Promise<boolean>;
+    deleteById(id: string): Promise<boolean>;
 
     incrementEnrollment(id:string): Promise<Course | null>;
 

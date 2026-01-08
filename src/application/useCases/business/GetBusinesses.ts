@@ -3,7 +3,7 @@ import {   IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBus
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { GetBusinessesInput, GetBusinessesOutput } from "@application/dtos/business/GetBusinesses";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 type BusinessQuery = {
     isActive?: boolean;
@@ -14,7 +14,7 @@ type BusinessQuery = {
 export class GetBusinessesUseCase implements IGetBusinessesUseCase {
     constructor(
         private _businessRepository: IBusinessRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) {}
 
     async execute(input: GetBusinessesInput): Promise<GetBusinessesOutput> {

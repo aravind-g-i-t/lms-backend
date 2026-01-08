@@ -26,12 +26,12 @@ export class UpdateCourseVerificationUseCase implements IUpdateCourseVerificatio
         };
 
         // Update course verification
-        const updatedCourse = await this._courseRepository.update({
-            id: courseId,
-            updates: {
+        const updatedCourse = await this._courseRepository.updateById(
+            courseId,
+            {
                 verification: updatedVerification
             }
-        });
+        );
 
         if (!updatedCourse) {
             throw new AppError("Failed to update verification status", STATUS_CODES.BAD_REQUEST);

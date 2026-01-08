@@ -11,7 +11,7 @@ export class UpdateCouponUseCase implements IUpdateCouponUseCase{
     async execute(data: UpdateCouponInputDTO): Promise<void> {
 
         const {id, description, code, discountType, discountValue, maxDiscount, minCost, expiresAt, isActive, usageLimit } = data;
-        const existing = await this.couponRepo.findByCode(data.code);
+        const existing = await this.couponRepo.findOne({code:data.code});
         if (existing && existing.id !== id) {
             throw new Error("Coupon code already exists");
         }
@@ -20,7 +20,7 @@ export class UpdateCouponUseCase implements IUpdateCouponUseCase{
             throw new Error("Expiry date must be a future date");
         }
 
-        const updated = await this.couponRepo.update(id,{
+        const updated = await this.couponRepo.updateById(id,{
             description,
             code,
             discountType: discountType as DiscountType,

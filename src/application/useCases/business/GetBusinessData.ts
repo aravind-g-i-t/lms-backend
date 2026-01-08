@@ -2,7 +2,7 @@ import { GetBusinessDataOutputDTO } from "@application/dtos/business/GetBusiness
 import { IGetBusinessDataUseCase } from "@application/IUseCases/business/IGetBusinessData";
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
@@ -10,7 +10,7 @@ import { AppError } from "shared/errors/AppError";
 export class GetBusinessDataUseCase implements IGetBusinessDataUseCase {
     constructor(
         private _businessRepository: IBusinessRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) {}
 
     async execute(id: string): Promise<GetBusinessDataOutputDTO> {

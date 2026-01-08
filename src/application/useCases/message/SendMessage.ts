@@ -9,7 +9,9 @@ import { IdGenerator } from "shared/utils/IdGenerator";
 import { ConversationForListing, MessageForListing } from "@application/dtos/message/GetConversations";
 import { ConversationDTOMapper } from "@application/mappers/CoversationMapper";
 import { MessageDTOMapper } from "@application/mappers/MessageDTOMapper";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
+import { AppError } from "shared/errors/AppError";
+import { STATUS_CODES } from "shared/constants/httpStatus";
 
 
 
@@ -17,7 +19,7 @@ export class SendMessageUseCase implements ISendMessageUseCase {
     constructor(
         private conversationRepo: IConversationRepository,
         private messageRepo: IMessageRepository,
-        private _cloundStorageService:IS3Service
+        private _fileStorageService:IFileStorageService
     ) { }
 
     async execute(input: SendMessageInput): Promise<{message:MessageForListing,conversation:ConversationForListing}> {
@@ -32,7 +34,7 @@ export class SendMessageUseCase implements ISendMessageUseCase {
 
 
         if (!conversation) {
-            conversation = await this.conversationRepo.findByCourseAndLearner(
+            conversation = await this.conversationRepo.findOne(
                 {courseId:courseId as string,
                 learnerId:senderRole === UserRole.Learner ? senderId as string : receiverId as string
                 }
@@ -50,6 +52,9 @@ export class SendMessageUseCase implements ISendMessageUseCase {
                 learnerUnreadCount: 0,
                 status: ConversationStatus.Active,
             });
+            if(!conversation){
+                throw new AppError("Failed to create conversation",STATUS_CODES.BAD_REQUEST)
+            }
         }
         const attachmentswithId = attachments.map(attachment => {
             return {
@@ -69,7 +74,21 @@ export class SendMessageUseCase implements ISendMessageUseCase {
             readAt: null,
         });
 
-        await this.conversationRepo.findByIdAndUpdate(
+        const mappedAttachments=await Promise.all(
+            savedMessage.attachments.map(async (attachment) => {
+                        const fileUrl =
+                            await this._fileStorageService.getDownloadUrl(
+                                attachment.fileUrl
+                            );
+
+                        return {
+                            ...attachment,
+                            fileUrl
+                        };
+                    })
+        )
+
+        await this.conversationRepo.updateById(
             conversation.id,
             {
                 lastMessageContent:savedMessage.content,
@@ -89,14 +108,18 @@ export class SendMessageUseCase implements ISendMessageUseCase {
 
         const hyderatedConversation= await this.conversationRepo.findHydratedById(conversation.id);
         
-        const instructorProfilePic=hyderatedConversation?.instructorId.profilePic? await this._cloundStorageService.getDownloadUrl(hyderatedConversation.instructorId.profilePic):null
+        const instructorProfilePic=hyderatedConversation?.instructorId.profilePic? await this._fileStorageService.getDownloadUrl(hyderatedConversation.instructorId.profilePic):null
 
-        const learnerProfilePic=hyderatedConversation?.learnerId.profilePic? await this._cloundStorageService.getDownloadUrl(hyderatedConversation.learnerId.profilePic):null
+        const learnerProfilePic=hyderatedConversation?.learnerId.profilePic? await this._fileStorageService.getDownloadUrl(hyderatedConversation.learnerId.profilePic):null
         const outputConversation=ConversationDTOMapper.toListing(hyderatedConversation as HydratedConversation)
+        console.log("savedMessage",savedMessage);
+        console.log("attachments", mappedAttachments);
+        
+        
 
         return {
             conversation:{...outputConversation,instructor:{...outputConversation.instructor,profilePic:instructorProfilePic}, learner:{...outputConversation.learner,profilePic:learnerProfilePic}},
-            message:MessageDTOMapper.toListing(savedMessage)
+            message:MessageDTOMapper.toListing({...savedMessage,attachments:mappedAttachments})
         };
     }
 }

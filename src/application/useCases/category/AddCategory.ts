@@ -14,16 +14,19 @@ export class AddCategoryUseCase implements IAddCategoryUseCase {
         const category = {
             name: data.name,
             description: data.description,
-            isActive: data.isActive
+            isActive: data.isActive??false
         };
 
-        const existingCategory = await this._categoryRepository.findByName(data.name);
+        const existingCategory = await this._categoryRepository.findOne({name:category.name});
         if (existingCategory) {
             throw new AppError("Another category with this name already exists", STATUS_CODES.CONFLICT);
         }
 
 
-        const newCategory = await this._categoryRepository.createCategory(category);
+        const newCategory = await this._categoryRepository.create(category);
+        if(!newCategory){
+            throw new AppError("Failed to create new category.",STATUS_CODES.BAD_REQUEST)
+        }
         return CategoryDTOMapper.toCategoryForListing(newCategory)
     }
 }

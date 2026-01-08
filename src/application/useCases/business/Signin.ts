@@ -3,7 +3,7 @@ import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/share
 import {  IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
 import { BusinessDTOMapper } from "@application/mappers/BusinessMapper";
 import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 
@@ -15,7 +15,7 @@ export class BusinessSigninUseCase implements IBusinessSigninUseCase {
     constructor(
         private _businessRepository: IBusinessRepository,
         private _tokenService: ITokenService,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) {}
 
     async execute(input: UserSigninInputDTO): Promise<UserSigninOutputDTO> {

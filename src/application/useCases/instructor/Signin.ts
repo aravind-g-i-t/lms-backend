@@ -5,7 +5,7 @@ import { UserSigninInputDTO, UserSigninOutputDTO } from "@application/dtos/share
 import { IInstructorSigninUseCase } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { ITokenService } from "@domain/interfaces/ITokenService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
@@ -16,7 +16,7 @@ export class InstructorSigninUseCase implements IInstructorSigninUseCase {
     constructor(
         private _instructorRepository: IInstructorRepository,
         private _tokenService: ITokenService,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) {}
 
     async execute(input: UserSigninInputDTO): Promise<UserSigninOutputDTO> {

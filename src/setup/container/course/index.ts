@@ -78,7 +78,7 @@ const deleteResourceUseCase= new DeleteResourceUseCase(courseRepository);
 
 const getFavouritesUseCase = new GetFavouritesUseCase(courseRepository,s3Service,favouriteRepository)
 
-export const getVideoUseCase= new GetVideoUseCase(enrollmentRepository,courseRepository,s3Service)
+export const getVideoUseCase= new GetVideoUseCase(enrollmentRepository,courseRepository)
 
 
 export const courseController=new CourseController(
@@ -104,5 +104,6 @@ export const courseController=new CourseController(
     addResourceUseCase,
     deleteResourceUseCase,
     getFavouritesUseCase,
-    getVideoUseCase
+    getVideoUseCase,
+    s3Service
 );

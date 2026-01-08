@@ -6,7 +6,7 @@ import { STATUS_CODES } from 'shared/constants/httpStatus';
 import { logger } from '@infrastructure/logging/Logger';
 
 
-const accessTokenMaxAge = (process.env.ACCESS_TOKEN_MAX_AGE || "1m") as SignOptions["expiresIn"];
+const accessTokenMaxAge = (process.env.ACCESS_TOKEN_MAX_AGE || "15m") as SignOptions["expiresIn"];
 const refreshTokenMaxAge = (process.env.REFRESH_TOKEN_MAX_AGE || "7d") as SignOptions["expiresIn"];
 
 

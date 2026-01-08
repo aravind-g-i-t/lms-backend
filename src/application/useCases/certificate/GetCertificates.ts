@@ -1,12 +1,12 @@
 import { IGetCertificatesForLearnerUseCase } from "@application/IUseCases/certificate/IGetCertificates";
 import { Certificate } from "@domain/entities/Certificate";
 import { ICertificateRepository } from "@domain/interfaces/ICertificateRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 export class GetCertificatesForLearnerUseCase implements IGetCertificatesForLearnerUseCase {
     constructor(
         private _certificateRepository: ICertificateRepository,
-        private _cloudService: IS3Service
+        private _cloudService: IFileStorageService
     ) { }
 
     async execute(input: { page: number, limit: number, learnerId: string }): Promise<{

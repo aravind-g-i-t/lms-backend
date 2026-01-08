@@ -25,11 +25,15 @@ type Role= "admin"|"learner"|"instructor"|"business"
 export const createAuthMiddleware = (tokenService: ITokenService, authorizationService: IAuthorizationService,roles?:Role[]) => {
   return async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
 
-    const authHeader = req.headers["authorization"];
-    if (!authHeader?.startsWith("Bearer ")) {
+    // const authHeader = req.headers["authorization"];
+    // if (!authHeader?.startsWith("Bearer ")) {
+    //   return res.status(401).json({ message: "No token provided" });
+    // }
+    // const token = authHeader.split(" ")[1];
+    const token = req.cookies?.accessToken;
+    if(!token){
       return res.status(401).json({ message: "No token provided" });
     }
-    const token = authHeader.split(" ")[1];
     let decoded: DecodedToken
 
     try {

@@ -1,8 +1,8 @@
+import { Category } from "@domain/entities/Category";
 import { CategoryDoc } from "../models/CategoryModel";
-import { CategoryEntity } from "../repositoriesImpl/CategoryRepository";
 
 export class CategoryMapper{
-    static toDomain(doc:CategoryDoc):CategoryEntity{
+    static toDomain(doc:CategoryDoc):Category{
         return {
             id: doc._id.toString(),
             name: doc.name,

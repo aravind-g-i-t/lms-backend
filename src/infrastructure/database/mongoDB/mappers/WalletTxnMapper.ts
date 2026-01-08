@@ -1,10 +1,10 @@
+import { WalletTransaction } from "@domain/entities/WalletTransaction";
 import { WalletTransactionDoc } from "../models/WalletTxnModel";
-import { WalletTransactionEntity } from "../repositoriesImpl/WalletTxnRepository";
 
 
 
 export class WalletTxnMapper {
-    static toDomain(doc: WalletTransactionDoc): WalletTransactionEntity {
+    static toDomain(doc: WalletTransactionDoc): WalletTransaction {
 
         return {
             id: doc._id.toString(),

@@ -9,7 +9,7 @@ import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository"
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { IMessageRepository } from "@domain/interfaces/IMessageRepository";
 import { IPresenceService } from "@domain/interfaces/IPresenceService";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { AppError } from "shared/errors/AppError";
 
 export class GetLearnerConversationsUseCase implements IGetLearnerConversationsUseCase {
@@ -19,16 +19,14 @@ export class GetLearnerConversationsUseCase implements IGetLearnerConversationsU
         private _courseRepo: ICourseRepository,
         private _instructorRepo: IInstructorRepository,
         private _learnerRepo: ILearnerRepository,
-        private _cloudStorageService: IS3Service,
+        private _cloudStorageService: IFileStorageService,
         private _presenceService: IPresenceService
     ) { }
 
     async execute(input: { courseId?: string; learnerId: string; }): Promise<GetConversationsOutput> {
         const { courseId, learnerId } = input;
-        console.log("input", input);
 
         const data = await this._conversationRepo.findAllByLearner(learnerId);
-        console.log("conversations", data);
 
         let conversations = data.map(conv => ConversationDTOMapper.toListing(conv))
         let selectedMessages: Message[] = []
@@ -36,11 +34,10 @@ export class GetLearnerConversationsUseCase implements IGetLearnerConversationsU
             const selectedConversation = conversations.find(
                 con => con.course.id === courseId
             ) || null;
-            console.log("selectedConversation", selectedConversation);
 
 
             if (selectedConversation) {
-                const result = await this._messageRepo.listByConversation(selectedConversation.id as string, { limit: 20, offset: 0 });
+                const result = await this._messageRepo.listByConversation(learnerId,selectedConversation.id as string, { limit: 20, offset: 0 });
                 selectedMessages = result.messages
             } else {
                 const courseInfo = await this._courseRepo.findById(courseId);
@@ -79,11 +76,9 @@ export class GetLearnerConversationsUseCase implements IGetLearnerConversationsU
                     instructorUnreadCount: 0,
                     isOnline: false
                 };
-                console.log("tempConversation", tempConversation);
 
 
                 conversations.unshift(tempConversation);
-                console.log("conversations", conversations);
             }
 
         }

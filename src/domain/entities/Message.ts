@@ -22,7 +22,10 @@ export interface Message {
     attachments: Attachment[];
 
     isRead: boolean;
-    readAt: Date|null;
+    readAt: Date | null;
+
+    deletedFor: string[];
+    isDeletedForEveryone: boolean;
 
     createdAt: Date;
 }

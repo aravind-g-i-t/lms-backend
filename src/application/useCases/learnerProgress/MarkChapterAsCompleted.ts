@@ -31,7 +31,7 @@ export class MarkChapterAsCompletedUseCase implements IMarkChapterAsCompletedUse
         );
 
 
-        const updatedPercentage = await this.progressRepo.findByIdAndUpdate(updated.id, { progressPercentage: percentage });
+        const updatedPercentage = await this.progressRepo.updateById(updated.id, { progressPercentage: percentage });
 
         if (!updatedPercentage) {
             throw new Error("Failed to update learner progress.");

@@ -48,7 +48,11 @@ export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUse
         if(!instructorCreated){
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED,STATUS_CODES.BAD_REQUEST);
         }
-        const instructorWalletCreated=this._instructorWalletRepository.create(instructorCreated.id);
+        const instructorWalletCreated=this._instructorWalletRepository.create({
+            instructorId:instructorCreated.id,
+            pendingBalance: 0,
+            availableBalance: 0,
+        });
         if(!instructorWalletCreated){
             throw new AppError("Failed to create instructor wallet.",STATUS_CODES.BAD_REQUEST);
         }

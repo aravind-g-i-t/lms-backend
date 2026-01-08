@@ -24,7 +24,7 @@ interface Instructor {
     id:string;
     title: string;
     description: string;
-    video: string|null;
+    // video: string|null;
     duration: number;
     resources: Resource[];
 }

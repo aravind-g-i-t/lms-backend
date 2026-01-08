@@ -1,15 +1,15 @@
 import { GetFullCourseForLearnerOutput } from "@application/dtos/course/GetFullCourseForLearner";
 import { IGetFullCourseForLearnerUseCase } from "@application/IUseCases/course/IGetFullCourseForLearner";
-import {  ICourseRepository } from "@domain/interfaces/ICourseRepository";
+import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
 export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
         private _progressRepository: ILearnerProgressRepository
     ) { }
 
@@ -39,27 +39,19 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             ? await this._fileStorageService.getDownloadUrl(course.previewVideo)
             : null;
         console.log(thumbnail, previewVideo);
-        const responseModules = await Promise.all(
-            course.modules.map(async (module) => ({
-                id: module.id,
-                title: module.title,
-                description: module.description,
-                duration: module.duration,
-                chapters: await Promise.all(
-                    module.chapters.map(async (chapter) => ({
-                        id: chapter.id,
-                        title: chapter.title,
-                        description: chapter.description,
-                        duration: chapter.duration,
-                        resources: chapter.resources,
-                        video:
-                            chapter.id === currentChapterId && chapter.video
-                                ? await this._fileStorageService.getDownloadUrl(chapter.video)
-                                : null
-                    }))
-                )
+        const responseModules = course.modules.map((module) => ({
+            id: module.id,
+            title: module.title,
+            description: module.description,
+            duration: module.duration,
+            chapters: module.chapters.map((chapter) => ({
+                id: chapter.id,
+                title: chapter.title,
+                description: chapter.description,
+                duration: chapter.duration,
+                resources: chapter.resources,
             }))
-        );
+        }))
 
 
 
@@ -70,9 +62,16 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             thumbnail,
             previewVideo,
             prerequisites: course.prerequisites,
-            category: course.category,
+            category: {
+                id: course.category.id,
+                name: course.category.name,
+            },
             enrollmentCount: course.enrollmentCount,
-            instructor: course.instructor,
+            instructor: {
+                id: course.instructor.id,
+                name: course.instructor.name,
+                profilePic: course.instructor.profilePic
+            },
             modules: responseModules,
             whatYouWillLearn: course.whatYouWillLearn,
             price: course.price,
@@ -85,7 +84,7 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             totalChapters: course.totalChapters,
             completedChapters: progress.completedChapters,
             progressPercentage: progress.progressPercentage,
-            currentChapterId: progress.currentChapterId,
+            currentChapterId: currentChapterId,
             quizStatus: progress.quizAttemptStatus
         };
 

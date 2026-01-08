@@ -51,9 +51,9 @@ export class SubmitCourseForReviewUseCase implements ISubmitCourseForReviewUseCa
         }
 
         // Update verification status
-        const statusUpdated = await this._courseRepository.update({
+        const statusUpdated = await this._courseRepository.updateById(
             id,
-            updates: {
+            {
                 verification: {
                     submittedAt: new Date(),
                     reviewedAt: null,
@@ -61,7 +61,7 @@ export class SubmitCourseForReviewUseCase implements ISubmitCourseForReviewUseCa
                     remarks: null
                 }
             }
-        });
+        );
 
         if (!statusUpdated) {
             throw new AppError("Failed to submit the course for review.", STATUS_CODES.BAD_REQUEST);

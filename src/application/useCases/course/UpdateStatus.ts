@@ -16,10 +16,7 @@ export class UpdateCourseStatusUseCase implements IUpdateCourseStatusUseCase {
         if (status === "published") {
             updates.publishedAt = new Date()
         }
-        const updated = await this._courseRepositoty.update({
-            id: courseId,
-            updates
-        });
+        const updated = await this._courseRepositoty.updateById(courseId,updates);
 
         if (!updated) {
             throw new AppError("Failed to update course status.", STATUS_CODES.BAD_REQUEST)

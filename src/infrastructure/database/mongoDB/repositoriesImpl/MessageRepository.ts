@@ -4,8 +4,13 @@ import { Message, UserRole } from "@domain/entities/Message";
 import { MessageModel } from "../models/MessageModel";
 import { Types } from "mongoose";
 import { MessageMapper } from "../mappers/MessageMapper";
+import { BaseRepository } from "./BaseRepository";
 
-export class MessageRepositoryImpl implements IMessageRepository {
+export class MessageRepositoryImpl extends BaseRepository<Message> implements IMessageRepository {
+
+    constructor() {
+        super(MessageModel, MessageMapper)
+    }
 
     async create(message: Partial<Message>): Promise<Message> {
         const senderModel = message.senderRole === UserRole.Learner
@@ -13,7 +18,6 @@ export class MessageRepositoryImpl implements IMessageRepository {
             : "Instructor";
 
         const created = await MessageModel.create({
-            _id: new Types.ObjectId(message.id),
             conversationId: new Types.ObjectId(message.conversationId),
             senderId: new Types.ObjectId(message.senderId),
             senderRole: message.senderRole,
@@ -25,15 +29,12 @@ export class MessageRepositoryImpl implements IMessageRepository {
             createdAt: message.createdAt ?? new Date()
         });
 
-        return MessageMapper.toDomain(created);
+        return MessageMapper.toDomain(created.toObject());
     }
 
-    async findById(id: string): Promise<Message | null> {
-        const doc = await MessageModel.findById(id);
-        return doc ? MessageMapper.toDomain(doc) : null;
-    }
 
     async listByConversation(
+        userId: string,
         conversationId: string,
         options: { limit: number; offset: number }
     ): Promise<{ messages: Message[]; totalCount: number }> {
@@ -41,13 +42,17 @@ export class MessageRepositoryImpl implements IMessageRepository {
 
 
         const docs = await MessageModel
-            .find({ conversationId })
+            .find({
+                conversationId,
+                deletedFor: { $ne: userId }
+            })
             .sort({ createdAt: -1 })
             .skip(options.offset)
             .limit(options.limit)
+            .lean()
             .exec();
 
-        const totalCount = await MessageModel.countDocuments({ conversationId })
+        const totalCount = await MessageModel.countDocuments({ conversationId, deletedFor: { $ne: userId } })
 
 
         return {
@@ -79,4 +84,36 @@ export class MessageRepositoryImpl implements IMessageRepository {
             }
         );
     }
+
+    async deleteForUser(
+        messageIds: string[],
+        userId: string
+    ): Promise<void> {
+        await MessageModel.updateMany(
+            {
+                _id: { $in: messageIds },
+            },
+            {
+                $addToSet: { deletedFor: userId }
+            }
+        );
+    }
+
+
+    async deleteForEveryone(
+        messageIds: string[],
+    ): Promise<void> {
+        await MessageModel.updateMany(
+            {
+                _id: { $in: messageIds },
+            },
+            {
+                $set: {
+                    isDeletedForEveryone: true,
+                }
+            }
+        );
+    }
+
+
 }

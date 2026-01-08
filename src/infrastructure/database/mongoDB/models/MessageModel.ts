@@ -14,6 +14,9 @@ export interface MessageDoc {
     isRead: boolean;
     readAt: Date | null;
 
+    deletedFor: string[];
+    isDeletedForEveryone: boolean;
+
     createdAt: Date;
 }
 
@@ -50,6 +53,11 @@ const MessageSchema = new Schema<MessageDoc>({
 
     isRead: { type: Boolean, default: false },
     readAt: { type: Date, default: null },
+    deletedFor:{
+        type:[String],
+        default:[]
+    },
+    isDeletedForEveryone:{type:Boolean,default:false}
 }, { timestamps: true }
 );
 

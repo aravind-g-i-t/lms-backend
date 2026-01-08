@@ -4,7 +4,7 @@ import { IGetLearnersUseCase } from "@application/IUseCases/learner/IGetLearners
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 import { GetLearnersInput, GetLearnersOutput } from "@application/dtos/learner/GetLearners";
 import { LearnerDTOMapper } from "@application/mappers/LearnerMapper";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 type LearnerQuery = {
   isActive?: boolean;
@@ -14,7 +14,7 @@ type LearnerQuery = {
 export class GetLearnersUseCase implements IGetLearnersUseCase {
     constructor(
         private _learnerRepository: ILearnerRepository,
-        private _fileStorageService: IS3Service 
+        private _fileStorageService: IFileStorageService 
     ) {}
 
     async execute(input: GetLearnersInput): Promise<GetLearnersOutput> {

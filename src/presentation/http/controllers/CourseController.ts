@@ -21,6 +21,7 @@ import { IUpdateModuleInfoUseCase } from "@application/IUseCases/course/IUpdateM
 import { IUpdateCourseStatusUseCase } from "@application/IUseCases/course/IUpdateStatus";
 import { IUpdateCourseVerificationUseCase } from "@application/IUseCases/course/IUpdateVerification";
 import { IGetFavouritesUseCase } from "@application/IUseCases/favourite/IGetFavourites";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { GetCourseDeatailsForLearnerRequestSchema } from "@presentation/dtos/course/GetCourseDetailsForLearner";
 import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
 import { GetCoursesForInstructorRequestSchema } from "@presentation/dtos/course/GetCoursesForInstructor";
@@ -53,11 +54,12 @@ export class CourseController {
         private _getCoursesForLearnerUseCase: IGetCoursesForLearnerUseCase,
         private _getCoureDetailsForLearnerUseCase: IGetCourseDetailsForLearnerUseCase,
         private _getFullCourseForLearnerUseCase: IGetFullCourseForLearnerUseCase,
-        private _getCourseDetailsForCheckoutUseCase:IGetCourseDetailsForCheckoutUseCase,
+        private _getCourseDetailsForCheckoutUseCase: IGetCourseDetailsForCheckoutUseCase,
         private _addResourceUseCase: IAddResourceUseCase,
         private _deleteResourceUseCase: IDeleteResourceUseCase,
         private _getFavouritesUseCase: IGetFavouritesUseCase,
-        private _getVideoUseCase:IGetVideoUseCase
+        private _getVideoUseCase: IGetVideoUseCase,
+        private _fileStorageService: IFileStorageService,
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -471,15 +473,14 @@ export class CourseController {
 
     async getFullCourseForLearner(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            
+
             const { courseId } = req.query;
             const learnerId = req.user?.id
             if (!learnerId) {
                 throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
             }
-            console.log(learnerId,courseId)
             const response = await this._getFullCourseForLearnerUseCase.execute({
-                courseId:courseId as string,
+                courseId: courseId as string,
                 learnerId
             });
 
@@ -516,7 +517,7 @@ export class CourseController {
 
     async getCourseDetailsForCheckout(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const courseId= req.query.courseId as string;
+            const courseId = req.query.courseId as string;
 
             const response = await this._getCourseDetailsForCheckoutUseCase.execute(courseId);
 
@@ -540,7 +541,7 @@ export class CourseController {
                 courseId,
                 moduleId,
                 chapterId,
-                resource:{
+                resource: {
                     name,
                     file,
                     size
@@ -586,7 +587,7 @@ export class CourseController {
                 page,
                 limit,
                 search,
-            } = query 
+            } = query
 
             const learnerId = req.user?.id
             if (!learnerId) {
@@ -614,31 +615,27 @@ export class CourseController {
 
     async getVideo(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-
-
             const {
                 courseId,
                 moduleId,
                 chapterId,
-            } = req.query 
+            } = req.query
 
             const learnerId = req.user?.id
             if (!learnerId) {
                 throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
             }
-            console.log("controller",learnerId,courseId,chapterId,moduleId);
 
-            
-            
+
+
             const response = await this._getVideoUseCase.execute({
-                courseId:courseId as string,
-                moduleId:moduleId as string,
-                chapterId:chapterId as string,
+                courseId: courseId as string,
+                moduleId: moduleId as string,
+                chapterId: chapterId as string,
                 learnerId
             });
 
-            console.log("response",response);
-            
+
             res.status(201).json({
                 success: true,
                 message: "Video fetched successfully",
@@ -650,6 +647,33 @@ export class CourseController {
         }
     }
 
+    async streamVideo(req: AuthenticatedRequest, res: Response, next: NextFunction) {
 
+        try {
+            
+            const range = req.headers.range;
+            if (!range) {
+                return res.status(416).send("Range header required");
+            }
+
+            const { courseId, moduleId, chapterId } = req.params;
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+
+            const videoKey = await this._getVideoUseCase.execute({
+                learnerId,
+                courseId,
+                moduleId,
+                chapterId
+            });
+
+            await this._fileStorageService.streamVideo(videoKey, range, res);
+
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 

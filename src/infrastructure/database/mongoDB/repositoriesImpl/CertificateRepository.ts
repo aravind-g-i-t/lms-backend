@@ -3,16 +3,12 @@ import { Certificate } from "@domain/entities/Certificate";
 import { CertificateMapper } from "../mappers/CertificateMapper";
 import { CertificateModel } from "../models/CertificateModel";
 import { logger } from "@infrastructure/logging/Logger";
+import { BaseRepository } from "./BaseRepository";
 
-export class CertificateRepository implements ICertificateRepository {
-    async create(data: Certificate): Promise<Certificate|null> {
-        const doc = await CertificateModel.create(data);
-        return doc?CertificateMapper.toDomain(doc):null
-    }
+export class CertificateRepository extends BaseRepository<Certificate> implements ICertificateRepository {
 
-    async findById(id: string): Promise<Certificate | null> {
-        const doc= await CertificateModel.findById(id).lean();
-        return doc?CertificateMapper.toDomain(doc):null
+    constructor (){
+        super(CertificateModel,CertificateMapper)
     }
 
     async findByCertificateNumber(certNumber: string): Promise<Certificate | null> {
@@ -25,14 +21,7 @@ export class CertificateRepository implements ICertificateRepository {
         return doc?CertificateMapper.toDomain(doc):null
     }
 
-    async update(id: string, data: Partial<Certificate>): Promise<Certificate | null> {
-        const doc= await CertificateModel.findByIdAndUpdate(id, data, { new: true }).lean();
-        return doc?CertificateMapper.toDomain(doc):null
-    }
 
-    async delete(id: string): Promise<void> {
-        await CertificateModel.findByIdAndDelete(id);
-    }
 
     async findAllByLearner(input: { page: number; limit: number; learnerId:string}): Promise<{
             certificates: Certificate[],

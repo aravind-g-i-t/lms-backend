@@ -7,13 +7,25 @@ export interface IMessageRepository {
   findById(id: string): Promise<Message | null>;
 
   listByConversation(
-        conversationId: string,
-        options: { limit: number; offset: number }
-    ): Promise<{messages:Message[];totalCount:number}>
+    userId: string,
+    conversationId: string,
+    options: { limit: number; offset: number }
+  ): Promise<{ messages: Message[]; totalCount: number }>
 
   markAsReadForRole(
     conversationId: string,
     readerRole: UserRole,
     readAt: Date
   ): Promise<void>;
+
+  deleteForEveryone(
+    messageIds: string[],
+  ): Promise<void>;
+
+  deleteForUser(
+    messageIds: string[],
+    userId: string
+  ): Promise<void>
+
+  findByIds(ids: string[]): Promise<Message[]>
 }

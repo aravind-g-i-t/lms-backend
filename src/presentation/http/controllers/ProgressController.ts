@@ -4,10 +4,12 @@ import { logger } from "@infrastructure/logging/Logger";
 import { IMarkChapterAsCompletedUseCase } from "@application/IUseCases/learnerProgress/IMarkChapterAsCompleted";
 import { AppError } from "shared/errors/AppError";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { IUpdateCurrentChapterUseCase } from "@application/IUseCases/course/IUpdateCurrentChapter";
 
 export class ProgressController {
     constructor(
-        private _markChapterAsCompletedUseCase: IMarkChapterAsCompletedUseCase
+        private _markChapterAsCompletedUseCase: IMarkChapterAsCompletedUseCase,
+        private _updateCurrentChapterUseCase:IUpdateCurrentChapterUseCase
     ) { }
 
     async markChapterAsCompleted(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -27,11 +29,38 @@ export class ProgressController {
 
             res.status(201).json({
                 success: true,
-                message: "Payment status fetched successfully",
+                message: "Progress updated successfully",
             });
         } catch (err) {
-            logger.warn("Failed to fetch payment status.")
+            logger.warn("Failed to update progress.")
             next(err)
         }
     }
+
+    async updateCurrentChapter(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { courseId, chapterId } = req.body;
+
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+
+            await this._updateCurrentChapterUseCase.execute({
+                courseId,
+                chapterId,
+                learnerId
+            })
+
+            res.status(201).json({
+                success: true,
+                message: "Progress updated successfully",
+            });
+        } catch (err) {
+            logger.warn("Failed to update progress.")
+            next(err)
+        }
+    }
+
+    
 }

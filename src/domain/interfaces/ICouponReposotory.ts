@@ -1,15 +1,15 @@
 import { Coupon } from "@domain/entities/Coupon";
 
 export interface ICouponRepository {
-    create(data: Partial<Coupon>): Promise<Coupon>;
+    create(data: Partial<Coupon>): Promise<Coupon|null>;
 
     findById(id: string): Promise<Coupon | null>;
 
-    findByCode(code: string): Promise<Coupon | null>;
+    findOne(input:Partial<Coupon>): Promise<Coupon | null>;
 
     findActive(): Promise<Coupon[]>;
 
-    update(id: string, data: Partial<Coupon>): Promise<Coupon | null>;
+    updateById(id: string, data: Partial<Coupon>): Promise<Coupon | null>;
 
     incrementUsage(id: string): Promise<Coupon | null>;
 

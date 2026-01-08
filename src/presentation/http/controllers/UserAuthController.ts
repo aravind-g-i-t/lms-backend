@@ -158,10 +158,15 @@ export class UserAuthController {
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
-
+            res.cookie("accessToken", result.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 15 * 60 * 1000
+            });
 
 
             const response: UserSigninResponseDTO = {
@@ -197,6 +202,11 @@ export class UserAuthController {
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
             });
+            res.clearCookie("accessToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+            });
 
             res.status(STATUS_CODES.OK).json({
                 success: true,
@@ -228,11 +238,22 @@ export class UserAuthController {
                 message: MESSAGES.REFRESH_TOKEN_SUCCESS,
                 accessToken
             }
+            res.cookie("accessToken", accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 15 * 60 * 1000
+            });
             logger.info("Access token refreshed successfully");
             res.status(STATUS_CODES.OK).json(response);
         } catch (error) {
             logger.warn("Failed to refresh access token.");
             res.clearCookie("refreshToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+            });
+            res.clearCookie("accessToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
@@ -285,6 +306,13 @@ export class UserAuthController {
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
+
+            res.cookie("accessToken", result.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 15 * 60 * 1000,
             });
 
             const response = {

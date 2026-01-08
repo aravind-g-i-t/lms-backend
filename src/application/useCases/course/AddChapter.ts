@@ -1,7 +1,7 @@
 import { AddChapterOutput } from "@application/dtos/course/AddChapter";
 import { IAddChapterUseCase } from "@application/IUseCases/course/IAddChapter";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 import { IdGenerator } from "shared/utils/IdGenerator";
@@ -9,7 +9,7 @@ import { IdGenerator } from "shared/utils/IdGenerator";
 export class AddChapterUseCase implements IAddChapterUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
     ) { }
 
     async execute(courseId: string, moduleId: string, chapter: { title: string; description: string; video: string; duration: number; }): Promise<AddChapterOutput> {

@@ -2,7 +2,7 @@ import { CourseForAdminListing } from "@application/dtos/course/CourseDTO";
 import { GetCoursesForAdminInput, GetCoursesForAdminOutput } from "@application/dtos/course/GetCoursesForAdmin";
 import { IGetCoursesForAdminUseCase } from "@application/IUseCases/course/IGetCoursesForAdmin";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
 type CourseQuery = {
@@ -14,7 +14,7 @@ type CourseQuery = {
 export class GetCoursesForAdminUseCase implements IGetCoursesForAdminUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) { }
 
     async execute(input: GetCoursesForAdminInput): Promise<GetCoursesForAdminOutput> {

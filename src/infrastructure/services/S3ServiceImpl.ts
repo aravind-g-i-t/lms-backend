@@ -1,8 +1,11 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, HeadObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { IS3Service } from "../../domain/interfaces/IS3Service";
+import { IFileStorageService } from "../../domain/interfaces/IFileStorageService";
+import { Response } from "express";
+import { Readable } from "stream";
 
-export class S3ServiceImpl implements IS3Service {
+
+export class S3ServiceImpl implements IFileStorageService {
     private s3: S3Client;
     private bucketName: string;
     private uploadUrlExpiry: number;
@@ -55,6 +58,48 @@ export class S3ServiceImpl implements IS3Service {
             Key: key,
             Body: file,
             ContentType: options?.contentType || "application/octet-stream"
+        });
+
+        await this.s3.send(command);
+    }
+
+    async streamVideo(key: string, range: string, res: Response) {
+        const head = await this.s3.send(
+            new HeadObjectCommand({
+                Bucket: this.bucketName,
+                Key: key
+            })
+        );
+
+        const videoSize = Number(head.ContentLength);
+        const CHUNK_SIZE = 10 ** 6; // 1MB
+
+        const start = Number(range.replace(/\D/g, ""));
+        const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+        const command = new GetObjectCommand({
+            Bucket: this.bucketName,
+            Key: key,
+            Range: `bytes=${start}-${end}`
+        });
+
+        const s3Response = await this.s3.send(command);
+
+        res.writeHead(206, {
+            "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+            "Accept-Ranges": "bytes",
+            "Content-Length": end - start + 1,
+            "Content-Type": head.ContentType || "video/mp4"
+        });
+
+        const stream = s3Response.Body as Readable;
+        stream.pipe(res);
+    }
+
+    async deleteFile(key: string): Promise<void> {
+        const command = new DeleteObjectCommand({
+            Bucket: this.bucketName,
+            Key: key,
         });
 
         await this.s3.send(command);

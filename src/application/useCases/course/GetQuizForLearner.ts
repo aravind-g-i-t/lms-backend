@@ -13,7 +13,7 @@ export class GetQuizForLearnerUseCase implements IGetQuizForLearnerUseCase{
 
     async execute(input: { courseId: string; learnerId: string; }): Promise<Quiz> {
         const {courseId,learnerId}= input;
-        const progress= await this._learnerProgressRepository.findByLearnerAndCourse(learnerId,courseId);
+        const progress= await this._learnerProgressRepository.findOne({learnerId,courseId});
         if(!progress){
             throw new AppError("Failed to access progress details.",STATUS_CODES.NOT_FOUND,false);
         }
@@ -21,7 +21,7 @@ export class GetQuizForLearnerUseCase implements IGetQuizForLearnerUseCase{
             throw new AppError("Finish all chapters to access the final quiz ",STATUS_CODES.NOT_FOUND);
         }
         
-        const quiz= await this._quizRepository.findByCourse(courseId);
+        const quiz= await this._quizRepository.findOne({courseId});
         if(!quiz){
             throw new AppError("Failed to access quiz.",STATUS_CODES.NOT_FOUND,false);
         }

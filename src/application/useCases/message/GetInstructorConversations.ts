@@ -9,7 +9,7 @@ import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository"
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { IMessageRepository } from "@domain/interfaces/IMessageRepository";
 import { IPresenceService } from "@domain/interfaces/IPresenceService";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
@@ -21,13 +21,12 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
         private _courseRepository: ICourseRepository,
         private _instructorRepository: IInstructorRepository,
         private _learnerRepository: ILearnerRepository,
-        private _cloudStorageService: IS3Service,
+        private _cloudStorageService: IFileStorageService,
         private _presenceService:IPresenceService
     ) { }
 
     async execute(input: { instructorId: string; courseId?: string; learnerId?: string; page: number; limit: number; search?: string; selectedCourse?: string; }): Promise<{ conversations: ConversationForListing[]; messages: MessageForListing[]; courses:{id:string; title:string}[],totalPages: number; totalCount: number; }> {
         const { instructorId, courseId, learnerId, page, limit, search, selectedCourse } = input;
-        console.log("input",input);
         
         const result = await this._conversationRepository.findAllByInstructor({
             instructorId,
@@ -39,7 +38,6 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
         if(!result){
             throw new AppError("Failed to fetch conversation",STATUS_CODES.BAD_REQUEST)
         }
-        console.log("result",result);
         let conversations = result.conversations.map(c => ConversationDTOMapper.toListing(c))
         let messages: Message[] = []
         if (courseId && learnerId) {
@@ -47,7 +45,7 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
 
 
             if (selectedConversation) {
-                const result = await this._messageRepository.listByConversation(selectedConversation.id as string,{limit:20,offset:0})
+                const result = await this._messageRepository.listByConversation(instructorId,selectedConversation.id as string,{limit:20,offset:0})
                 messages=result.messages
             } else {
                 const courseInfo = await this._courseRepository.findById(courseId);
@@ -87,7 +85,6 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
                     isOnline:false
                 };
 
-                console.log("tempConversation", tempConversation);
                 conversations.unshift(tempConversation);
 
             }
@@ -118,7 +115,6 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
                 };
             })
         );
-        console.log("conversations",conversations);
         
 
         const courses= await this._courseRepository.findByInstructor(instructorId);
@@ -133,7 +129,6 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
                 return {id:c.id,title:c.title}
             })
         }
-        console.log("output",output);
         
         return output
     }

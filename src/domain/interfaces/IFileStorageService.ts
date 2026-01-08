@@ -1,4 +1,6 @@
-export interface IS3Service {
+import { Response } from "express";
+
+export interface IFileStorageService {
     getUploadUrl(
         key: string,
         contentType: string
@@ -10,5 +12,14 @@ export interface IS3Service {
         key: string,
         file: Buffer,
         options?: { contentType?: string }
-    ): Promise<void> 
+    ): Promise<void>
+
+    streamVideo(
+        key: string,
+        range: string,
+        res: Response
+    ): Promise<void>;
+
+    deleteFile(key: string): Promise<void>
+
 }

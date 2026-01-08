@@ -1,7 +1,7 @@
 import { InstructorWallet } from "@domain/entities/InstructorWallet";
 
 export interface IInstructorWalletRepository {
-  create(instructorId: string): Promise<InstructorWallet|null>;
+  create(input:Partial<InstructorWallet>): Promise<InstructorWallet|null>;
   findByInstructorId(instructorId: string): Promise<InstructorWallet | null>;
   updateBalance(input: {
       instructorId: string;

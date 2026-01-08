@@ -3,7 +3,7 @@ import { GetInstructorsInput, GetInstructorsOutput } from "@application/dtos/ins
 import {  IGetInstructorsUseCase } from "@application/IUseCases/instructor/IGetInstructors";
 import { InstructorDTOMapper } from "@application/mappers/InstructorMapper";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 
 type InstructorQuery = {
@@ -16,7 +16,7 @@ type InstructorQuery = {
 export class GetInstructorsUseCase implements IGetInstructorsUseCase {
     constructor(
         private _instructorRepository: IInstructorRepository,
-        private _fileStorageService: IS3Service
+        private _fileStorageService: IFileStorageService
     ) {}
 
     async execute(input: GetInstructorsInput): Promise<GetInstructorsOutput> {

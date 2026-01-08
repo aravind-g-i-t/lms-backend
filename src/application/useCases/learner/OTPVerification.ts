@@ -48,7 +48,10 @@ export class LearnerOTPVerificationUseCase implements IUserOTPVerificationUseCas
         if(!learnerCreated){
             throw new AppError(MESSAGES.LEARNER_NOT_CREATED,STATUS_CODES.BAD_REQUEST);
         }
-        const walletCreated=this._walletRepository.create(learnerCreated.id);
+        const walletCreated=this._walletRepository.create({
+            learnerId:learnerCreated.id,
+            balance:0
+        });
         if(!walletCreated){
             throw new AppError("Failed to create wallet.",STATUS_CODES.BAD_REQUEST);
         }

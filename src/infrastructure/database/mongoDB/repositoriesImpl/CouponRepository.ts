@@ -5,22 +5,13 @@ import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 import { logger } from "@infrastructure/logging/Logger";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 import { AppError } from "shared/errors/AppError";
+import { BaseRepository } from "./BaseRepository";
 
-export class CouponRepository implements ICouponRepository {
+export class CouponRepository extends BaseRepository<Coupon> implements ICouponRepository {
 
-    async create(data: Partial<Coupon>): Promise<Coupon> {
-        const created = await CouponModel.create(data);
-        return CouponMapper.toDomain(created);
-    }
 
-    async findById(id: string): Promise<Coupon | null> {
-        const doc = await CouponModel.findById(id);
-        return doc ? CouponMapper.toDomain(doc) : null;
-    }
-
-    async findByCode(code: string): Promise<Coupon | null> {
-        const doc = await CouponModel.findOne({ code });
-        return doc ? CouponMapper.toDomain(doc) : null;
+    constructor(){
+        super(CouponModel,CouponMapper)
     }
 
     async findActive(): Promise<Coupon[]> {
@@ -70,14 +61,7 @@ export class CouponRepository implements ICouponRepository {
         };
     }
 
-    async update(id: string, data: Partial<Coupon>): Promise<Coupon | null> {
-        const updated = await CouponModel.findByIdAndUpdate(
-            id,
-            { $set: data },
-            { new: true }
-        );
-        return updated ? CouponMapper.toDomain(updated) : null;
-    }
+
 
     async incrementUsage(id: string): Promise<Coupon | null> {
         const updated = await CouponModel.findByIdAndUpdate(

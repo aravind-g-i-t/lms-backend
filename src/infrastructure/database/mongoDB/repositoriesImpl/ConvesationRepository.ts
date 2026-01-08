@@ -6,20 +6,17 @@ import { ConversationMapper, HydratedConversationDoc } from "../mappers/Conversa
 import { CourseDoc } from "../models/CourseModel";
 import { InstructorDoc } from "../models/InstructorModel";
 import { LearnerDoc } from "../models/LearnerModel";
-import {  PipelineStage, Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
+import { BaseRepository } from "./BaseRepository";
 
 
-export class ConversationRepositoryImpl implements IConversationRepository {
+export class ConversationRepositoryImpl extends BaseRepository<Conversation> implements IConversationRepository {
 
-    async create(input: Partial<Conversation>): Promise<Conversation> {
-        const created = await ConversationModel.create(input);
-        return ConversationMapper.toDomain(created);
+    constructor() {
+        super(ConversationModel, ConversationMapper)
     }
 
-    async findById(id: string): Promise<Conversation | null> {
-        const doc = await ConversationModel.findById(id);
-        return doc ? ConversationMapper.toDomain(doc) : null;
-    }
+
 
     async findHydratedById(id: string): Promise<HydratedConversation | null> {
         const doc = await ConversationModel
@@ -29,21 +26,6 @@ export class ConversationRepositoryImpl implements IConversationRepository {
             .populate<{ learnerId: LearnerDoc }>("learnerId");
 
         return doc ? ConversationMapper.toPopulatedDomain(doc) : null
-    }
-
-    async findByCourseAndLearner(
-        { courseId, learnerId }:
-            {
-                courseId: string,
-                learnerId: string
-            }
-    ): Promise<Conversation | null> {
-        const doc = await ConversationModel.findOne({
-            courseId,
-            learnerId,
-        });
-
-        return doc ? ConversationMapper.toDomain(doc) : null;
     }
 
     async findAllByLearner(learnerId: string): Promise<HydratedConversation[]> {
@@ -75,17 +57,17 @@ export class ConversationRepositoryImpl implements IConversationRepository {
         totalPages: number;
     }> {
 
-    
-        
+
+
         const skip = (page - 1) * limit;
-        
+
         const matchStage: {
             instructorId: Types.ObjectId;
             courseId?: Types.ObjectId;
         } = {
-            instructorId:new Types.ObjectId(instructorId),
+            instructorId: new Types.ObjectId(instructorId),
         };
-        
+
 
         if (courseId) {
             matchStage.courseId = new Types.ObjectId(courseId);
@@ -94,8 +76,8 @@ export class ConversationRepositoryImpl implements IConversationRepository {
         const pipeline: PipelineStage[] = [];
 
         pipeline.push({ $match: matchStage });
-        
-        
+
+
 
         // populate learner
         pipeline.push({
@@ -107,10 +89,10 @@ export class ConversationRepositoryImpl implements IConversationRepository {
             },
         });
 
-        
+
         pipeline.push({ $unwind: "$learnerId" });
 
-        
+
 
         // search by learner name
         if (search) {
@@ -120,13 +102,13 @@ export class ConversationRepositoryImpl implements IConversationRepository {
                 },
             });
         }
-        
+
 
 
         // sort latest conversation first
         pipeline.push({ $sort: { updatedAt: -1 } });
 
-        
+
         // pagination + total count
         pipeline.push({
             $facet: {
@@ -158,15 +140,15 @@ export class ConversationRepositoryImpl implements IConversationRepository {
             },
         });
 
-        
+
         const result = await ConversationModel.aggregate(pipeline);
-        
+
         const conversations = result[0].data.map((doc: HydratedConversationDoc) =>
             ConversationMapper.toPopulatedDomain(doc)
         );
         console.log(conversations);
-        
-        
+
+
 
         const totalCount = result[0].totalCount[0]?.count || 0;
 
@@ -179,14 +161,7 @@ export class ConversationRepositoryImpl implements IConversationRepository {
 
 
 
-    async findByIdAndUpdate(id: string, updates: Partial<Conversation>): Promise<Conversation> {
-        const updated = await ConversationModel.findByIdAndUpdate(
-            id,
-            updates,
-            { new: true }
-        );
-        return ConversationMapper.toDomain(updated!);
-    }
+
 
     async updateLastMessage(conversationId: string, content: string, at: Date): Promise<void> {
         await ConversationModel.updateOne(
@@ -220,4 +195,44 @@ export class ConversationRepositoryImpl implements IConversationRepository {
     async updateStatus(conversationId: string, status: ConversationStatus): Promise<void> {
         await ConversationModel.updateOne({ _id: conversationId }, { status });
     }
+
+    async getInstructorUnreadCount(instructorId: string): Promise<number> {
+        const result = await ConversationModel.aggregate([
+            {
+                $match: {
+                    instructorId: new Types.ObjectId(instructorId),
+                    status: ConversationStatus.Active,
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalUnread: { $sum: "$instructorUnreadCount" },
+                },
+            },
+        ]);
+
+        return result[0]?.totalUnread || 0;
+    }
+
+
+    async getLearnerUnreadCount(learnerId: string): Promise<number> {
+        const result = await ConversationModel.aggregate([
+            {
+                $match: {
+                    learnerId: new Types.ObjectId(learnerId),
+                    status: ConversationStatus.Active,
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalUnread: { $sum: "$learnerUnreadCount" },
+                },
+            },
+        ]);
+
+        return result[0]?.totalUnread || 0;
+    }
+
 }

@@ -1,39 +1,21 @@
 import { IInstructorEarningsRepository } from "@domain/interfaces/IInstructorEarningsRepo";
 import { InstructorEarningsModel } from "../models/InstructorEarningsModel";
 import { InstructorEarningsMapper } from "../mappers/InstructorEarningsMapper";
-
-export enum EarningStatus {
-    Pending = "pending",
-    Released = "released",
-    Cancelled = "cancelled"
-}
-
-export interface InstructorEarningsEntity {
-    id: string;
-    instructorId: string;
-    courseId: string;
-    enrollmentId: string;
-    amount: number;
-    createdAt: Date;
-    releaseAt: Date;
-    cancelledAt: Date | null;
-    status: EarningStatus;
-}
+import { EarningStatus, InstructorEarnings } from "@domain/entities/InstructorEarning";
+import { BaseRepository } from "./BaseRepository";
 
 
 
-export class InstructorEarningsRepositoryImpl implements IInstructorEarningsRepository {
-    async create(data: InstructorEarningsEntity): Promise<InstructorEarningsEntity | null> {
-        const created = await InstructorEarningsModel.create(data);
-        return created ? InstructorEarningsMapper.toDomain(created) : null;
+
+
+export class InstructorEarningsRepositoryImpl extends BaseRepository<InstructorEarnings> implements IInstructorEarningsRepository {
+    
+    constructor(){
+        super(InstructorEarningsModel,InstructorEarningsMapper)
     }
+   
 
-    async findById(id: string): Promise<InstructorEarningsEntity | null> {
-        const doc = await InstructorEarningsModel.findById(id).exec();
-        return doc ? InstructorEarningsMapper.toDomain(doc) : null;
-    }
-
-    async findByInstructor(instructorId: string): Promise<InstructorEarningsEntity[]> {
+    async findByInstructor(instructorId: string): Promise<InstructorEarnings[]> {
         const docs = await InstructorEarningsModel
             .find({ instructorId })
             .sort({ createdAt: -1 })
@@ -41,7 +23,7 @@ export class InstructorEarningsRepositoryImpl implements IInstructorEarningsRepo
         return docs.map(d => InstructorEarningsMapper.toDomain(d));
     }
 
-    async findPending(beforeDate: Date): Promise<InstructorEarningsEntity[]> {
+    async findPending(beforeDate: Date): Promise<InstructorEarnings[]> {
         const docs = await InstructorEarningsModel.find({
             status: EarningStatus.Pending,
             createdAt: { $lte: beforeDate }
@@ -55,13 +37,13 @@ export class InstructorEarningsRepositoryImpl implements IInstructorEarningsRepo
         status: EarningStatus,
         releaseAt?: Date | null,
         cancelledAt?: Date | null
-    ): Promise<InstructorEarningsEntity | null> {
+    ): Promise<InstructorEarnings | null> {
         const doc = await InstructorEarningsModel.findByIdAndUpdate(
             id,
             {
                 status,
-                releaseAt: releaseAt ?? undefined,
-                cancelledAt: cancelledAt ?? undefined
+                releaseAt: releaseAt ?? null,
+                cancelledAt: cancelledAt ?? null
             },
             { new: true }
         ).exec();

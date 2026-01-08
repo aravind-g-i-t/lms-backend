@@ -186,7 +186,7 @@ export class LearnerController {
             logger.info("Course added to favourites successfully");
             res.status(STATUS_CODES.OK).json({ success: true, message: "Course added to favourites successfully" })
         } catch (error) {
-            logger.warn("Failed to update learner password.")
+            logger.warn("Failed to add course to favourites.")
             next(error)
         }
     }

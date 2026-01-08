@@ -4,7 +4,7 @@ import { IGetCoursesForLearnerUseCase } from "@application/IUseCases/course/IGet
 import { Course, CourseLevel } from "@domain/entities/Course";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
-import { IS3Service } from "@domain/interfaces/IS3Service";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 const sortMapper = {
     latest: { createdAt: "desc" },
@@ -19,7 +19,7 @@ type Sort = "latest" | "rating" | "popularity" | "price_low" | "price_high"
 export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _fileStorageService: IS3Service,
+        private _fileStorageService: IFileStorageService,
         private _favouriteRepository: IFavouriteRepository
     ) { }
 

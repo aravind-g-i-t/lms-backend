@@ -1,29 +1,53 @@
 import { MessageForListing } from "@application/dtos/message/GetConversations";
 import { IGetMessagesUseCase } from "@application/IUseCases/message/IGetMessages";
 import { MessageDTOMapper } from "@application/mappers/MessageDTOMapper";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { IMessageRepository } from "@domain/interfaces/IMessageRepository";
 
 
-export class GetMessagesUseCase implements IGetMessagesUseCase{
+export class GetMessagesUseCase implements IGetMessagesUseCase {
     constructor(
-        private _messageRepo: IMessageRepository
+        private _messageRepo: IMessageRepository,
+        private _fileStorageService: IFileStorageService
     ) { }
 
-    async execute(input: { conversationId: string, limit?: number, offset?: number }): Promise<{messages:MessageForListing[],hasMore:boolean}> {
-        console.log("input",input);
-        
-        const { conversationId } = input;
+    async execute(input: { userId:string; conversationId: string, limit?: number, offset?: number }): Promise<{ messages: MessageForListing[], hasMore: boolean }> {
 
-        const limit= input.limit || 20
-        const offset= input.offset || 0
+        const { conversationId ,userId} = input;
 
-        const {messages,totalCount} = await this._messageRepo.listByConversation(conversationId, { offset, limit });
-        console.log(messages);
+        const limit = input.limit || 20
+        const offset = input.offset || 0
 
-        const hasMore=messages.length+offset<totalCount;
-        
+        const { messages, totalCount } = await this._messageRepo.listByConversation(userId,conversationId, { offset, limit });
+
+        const mappedMessages = await Promise.all(
+            messages.map(async (message) => {
+                const attachments = await Promise.all(
+                    message.attachments.map(async (attachment) => {
+                        const fileUrl =
+                            await this._fileStorageService.getDownloadUrl(
+                                attachment.fileUrl
+                            );
+
+                        return {
+                            ...attachment,
+                            fileUrl
+                        };
+                    })
+                );
+
+                return {
+                    ...message,
+                    attachments
+                };
+            })
+        );
+
+
+        const hasMore = messages.length + offset < totalCount;
+
         return {
-            messages:messages.map(m => MessageDTOMapper.toListing(m)).reverse(),
+            messages: mappedMessages.map(m => MessageDTOMapper.toListing(m)).reverse(),
             hasMore
         }
     }

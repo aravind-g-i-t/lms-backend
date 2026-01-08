@@ -12,7 +12,9 @@ export class MessageMapper {
             attachments: doc.attachments,
             isRead: doc.isRead,
             readAt: doc.readAt,
-            createdAt: doc.createdAt
+            createdAt: doc.createdAt,
+            deletedFor:doc.deletedFor,
+            isDeletedForEveryone:doc.isDeletedForEveryone
         };
     }
 }

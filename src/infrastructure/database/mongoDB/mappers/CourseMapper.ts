@@ -1,10 +1,11 @@
+import { Course } from "@domain/entities/Course";
 import { CourseDoc, HydratedCourseDoc } from "../models/CourseModel";
-import { CourseEntity, HydratedCourseEntity } from "../repositoriesImpl/CourseRepository";
+import {  HydratedCourseEntity } from "../repositoriesImpl/CourseRepository";
 import { CategoryMapper } from "./CategoryMapper";
 import { InstructorMapper } from "./InstructorMapper";
 
 export class CourseMapper {
-    static toDomain(doc: CourseDoc): CourseEntity {
+    static toDomain(doc: CourseDoc): Course {
         return {
             id: doc._id.toString(),
             title: doc.title,

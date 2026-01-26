@@ -31,7 +31,7 @@ export class AddChapterUseCase implements IAddChapterUseCase {
         if (!updated) {
             throw new AppError("Failed to add module.", STATUS_CODES.BAD_REQUEST)
         }
-        const videoUrl = await this._fileStorageService.getDownloadUrl(chapter.video);
+        const videoUrl = await this._fileStorageService.getViewURL(chapter.video);
         return { ...newChapter, video: videoUrl };
 
     }

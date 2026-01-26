@@ -91,8 +91,8 @@ export class GetLearnerConversationsUseCase implements IGetLearnerConversationsU
 
         conversations = await Promise.all(
             conversations.map(async (conversation) => {
-                const instructorProfilePic = conversation.instructor.profilePic ? await this._cloudStorageService.getDownloadUrl(conversation.instructor.profilePic) : null;
-                const learnerProfilePic = conversation.learner.profilePic ? await this._cloudStorageService.getDownloadUrl(conversation.learner.profilePic) : null;
+                const instructorProfilePic = conversation.instructor.profilePic ? await this._cloudStorageService.getViewURL(conversation.instructor.profilePic) : null;
+                const learnerProfilePic = conversation.learner.profilePic ? await this._cloudStorageService.getViewURL(conversation.learner.profilePic) : null;
 
                 
 

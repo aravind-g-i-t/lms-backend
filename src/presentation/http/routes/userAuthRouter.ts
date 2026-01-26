@@ -7,7 +7,7 @@ import { UserSignupRequestSchema } from "@presentation/dtos/shared/Signup";
 import { VerifyEmailRequestSchema } from "@presentation/dtos/shared/VerifyEmail";
 import { VerifyOTPForResetRequestSchema } from "@presentation/dtos/shared/VerifyOTPForPasswordReset";
 import { validateRequest } from "@presentation/http/middlewares/validateRequest";
-import { userAuthController } from "@setup/container/shared/userAuthController";
+import { userAuthController } from "@setup/container/shared/controllers";
 import express, { Request, Response ,NextFunction} from "express";
 import { ROUTES } from "shared/constants/routes";
 const userAuthRouter=express.Router();
@@ -30,7 +30,7 @@ userAuthRouter.post(ROUTES.SIGNIN,validateRequest(UserSigninRequestSchema),(req:
 
 // user logout
 
-userAuthRouter.post(ROUTES.LOGOUT,(req:Request,res:Response,next:NextFunction)=>userAuthController.logout(req,res,next))
+userAuthRouter.post(ROUTES.LOGOUT,(req:Request,res:Response)=>userAuthController.logout(req,res))
 
 // token refresh
 

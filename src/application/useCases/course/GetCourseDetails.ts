@@ -27,10 +27,10 @@ export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
             }
         }
         const thumbnail = course.thumbnail
-            ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+            ? await this._fileStorageService.getViewURL(course.thumbnail)
             : null;
         const previewVideo = course.previewVideo
-            ? await this._fileStorageService.getDownloadUrl(course.previewVideo)
+            ? await this._fileStorageService.getViewURL(course.previewVideo)
             : null;
 
         const modules = await Promise.all(
@@ -38,7 +38,7 @@ export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
                 const updatedChapters = await Promise.all(
                     module.chapters.map(async (chapter) => {
                         if (chapter.video) {
-                            const videoUrl = await this._fileStorageService.getDownloadUrl(chapter.video);
+                            const videoUrl = await this._fileStorageService.getViewURL(chapter.video);
                             chapter.video = videoUrl;
                         }
                         return chapter;

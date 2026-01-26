@@ -42,7 +42,7 @@ export class GetInstructorsUseCase implements IGetInstructorsUseCase {
         const instructors = await Promise.all(
             result.instructors.map(async (instructor) => {
                 const profilePicUrl = instructor.profilePic
-                    ? await this._fileStorageService.getDownloadUrl(instructor.profilePic)
+                    ? await this._fileStorageService.getViewURL(instructor.profilePic)
                     : null;
 
 

@@ -1,10 +1,11 @@
 import { CreateCouponInputDTO } from "@application/dtos/coupon/CreateCoupon";
+import { ICreateCouponUseCase } from "@application/IUseCases/coupon/ICreateCoupon";
 import { Coupon, DiscountType } from "@domain/entities/Coupon";
 import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
-export class CreateCouponUseCase {
+export class CreateCouponUseCase implements ICreateCouponUseCase{
     constructor(private couponRepo: ICouponRepository) { }
 
     async execute(data: CreateCouponInputDTO): Promise<Coupon> {

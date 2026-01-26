@@ -38,7 +38,7 @@ export class GetEnrollmentsUseCase implements IGetEnrollmentsUseCase {
             page,
             limit,
             filter: {
-                status: [EnrollmentStatus.Active, EnrollmentStatus.Completed]
+                status: [EnrollmentStatus.Active]
             }
         });
 
@@ -61,7 +61,7 @@ export class GetEnrollmentsUseCase implements IGetEnrollmentsUseCase {
                 const progress = progressMap.get(enrollment.courseId);
 
                 const thumbnailUrl = enrollment.thumbnail
-                    ? await this._storageService.getDownloadUrl(enrollment.thumbnail)
+                    ? await this._storageService.getViewURL(enrollment.thumbnail)
                     : null;
 
                 return {

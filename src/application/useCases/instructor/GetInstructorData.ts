@@ -20,15 +20,15 @@ export class GetInstructorDataUseCase implements IGetInstructorDataUseCase {
         }
 
         const profilePicUrl = user.profilePic
-            ? await this._fileStorageService.getDownloadUrl(user.profilePic)
+            ? await this._fileStorageService.getViewURL(user.profilePic)
             : null;
 
         const idProofUrl = user.identityProof
-            ? await this._fileStorageService.getDownloadUrl(user.identityProof)
+            ? await this._fileStorageService.getViewURL(user.identityProof)
             : null;
 
         const resumeUrl = user.resume
-            ? await this._fileStorageService.getDownloadUrl(user.resume)
+            ? await this._fileStorageService.getViewURL(user.resume)
             : null;
 
         const dto = InstructorDTOMapper.toGetInstructorProfile({

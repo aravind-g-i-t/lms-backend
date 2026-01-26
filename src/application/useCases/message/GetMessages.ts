@@ -25,7 +25,7 @@ export class GetMessagesUseCase implements IGetMessagesUseCase {
                 const attachments = await Promise.all(
                     message.attachments.map(async (attachment) => {
                         const fileUrl =
-                            await this._fileStorageService.getDownloadUrl(
+                            await this._fileStorageService.getViewURL(
                                 attachment.fileUrl
                             );
 

@@ -20,10 +20,10 @@ export class GetBusinessDataUseCase implements IGetBusinessDataUseCase {
         }
 
         const profilePicUrl = user.profilePic
-            ? await this._fileStorageService.getDownloadUrl(user.profilePic)
+            ? await this._fileStorageService.getViewURL(user.profilePic)
             : null;
         const licenseUrl = user.license
-            ? await this._fileStorageService.getDownloadUrl(user.license)
+            ? await this._fileStorageService.getViewURL(user.license)
             : null;
 
         const dto = BusinessDTOMapper.toGetBusinessProfileDTO({

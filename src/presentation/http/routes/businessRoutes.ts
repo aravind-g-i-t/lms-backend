@@ -2,7 +2,7 @@ import { UpdateBusinessProfileRequestSchema } from "@presentation/dtos/business/
 import { UpdatePasswordSchema } from "@presentation/dtos/shared/UpdatePassword";
 import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/UpdateProfileImage";
 import { validateRequest } from "@presentation/http/middlewares/validateRequest";
-import { businessController } from "@setup/container/business/businessController";
+import { businessController } from "@setup/container/business/controllers";
 import { businessAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import express, { Request, Response ,NextFunction} from "express";
 import { ROUTES } from "shared/constants/routes";

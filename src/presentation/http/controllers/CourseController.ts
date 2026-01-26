@@ -8,10 +8,12 @@ import { IDeleteResourceUseCase } from "@application/IUseCases/course/IDeleteRes
 import { IGetCourseDetailsUseCase } from "@application/IUseCases/course/IGetCourseDetails";
 import { IGetCourseDetailsForLearnerUseCase } from "@application/IUseCases/course/IGetCourseDetailsForLearner";
 import { IGetCourseDetailsForCheckoutUseCase } from "@application/IUseCases/course/IGetCourseForCheckout";
+import { IGetCourseOptionsUseCase } from "@application/IUseCases/course/IGetCourseOptions";
 import { IGetCoursesForAdminUseCase } from "@application/IUseCases/course/IGetCoursesForAdmin";
 import { IGetCoursesForInstructorUseCase } from "@application/IUseCases/course/IGetCoursesForInstructor";
 import { IGetCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetCoursesForLearner";
 import { IGetFullCourseForLearnerUseCase } from "@application/IUseCases/course/IGetFullCourseForLearner";
+import { IGetRecommendedCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetRecommended";
 import { IGetVideoUseCase } from "@application/IUseCases/course/IGetVideo";
 import { ISubmitCourseForReviewUseCase } from "@application/IUseCases/course/ISubmitForReview";
 import { IUpdateChapterInfoUseCase } from "@application/IUseCases/course/IUpdateChapterInfo";
@@ -32,6 +34,7 @@ import { NextFunction, Response } from "express";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
+import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 
 
 export class CourseController {
@@ -60,6 +63,8 @@ export class CourseController {
         private _getFavouritesUseCase: IGetFavouritesUseCase,
         private _getVideoUseCase: IGetVideoUseCase,
         private _fileStorageService: IFileStorageService,
+        private _getCourseOptionsUseCase:IGetCourseOptionsUseCase,
+        private _getRecommendationUseCase:IGetRecommendedCoursesForLearnerUseCase
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -80,11 +85,11 @@ export class CourseController {
                 tags,
                 whatYouWillLearn
             });
-            res.status(201).json({
-                success: true,
-                message: "Category created successfully",
-                data: { courseId }
-            });
+            
+            res.status(201).json(ResponseBuilder.success("Category created successfully",{
+                courseId 
+            }));
+            
 
         } catch (error) {
             next(error)
@@ -108,11 +113,8 @@ export class CourseController {
                 status,
                 instructorId
             });
-            res.status(201).json({
-                success: true,
-                message: "Courses fetched successfully",
-                data: response
-            });
+            
+            res.status(200).json(ResponseBuilder.success("Courses fetched successfully",response));
 
         } catch (error) {
             next(error)
@@ -124,11 +126,10 @@ export class CourseController {
 
             const { id } = req.query;
             const response = await this._getCourseDetailsUseCase.execute(id as string);
-            res.status(201).json({
-                success: true,
-                message: "Course details fetched successfully",
-                data: response
-            });
+            
+
+            res.status(200).json(ResponseBuilder.success("Course details fetched successfully",response));
+            
 
         } catch (error) {
             next(error)
@@ -140,10 +141,9 @@ export class CourseController {
 
             const { id, title, description, categoryId, level, price } = req.body;
             await this._updateCourseUseCase.execute(id, { title, description, categoryId, level, price });
-            res.status(201).json({
-                success: true,
-                message: "Course details updated successfully",
-            });
+           
+            res.status(200).json(ResponseBuilder.success("Course details updated successfully"));
+            
 
         } catch (error) {
             next(error)
@@ -155,10 +155,8 @@ export class CourseController {
 
             const { id, thumbnail } = req.body;
             await this._updateCourseUseCase.execute(id, { thumbnail });
-            res.status(201).json({
-                success: true,
-                message: "Course thumbnail updated successfully",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course thumbnail updated successfully"));
 
         } catch (error) {
             next(error)
@@ -170,10 +168,8 @@ export class CourseController {
 
             const { id, previewVideo } = req.body;
             await this._updateCourseUseCase.execute(id, { previewVideo });
-            res.status(201).json({
-                success: true,
-                message: "Course preview video updated successfully",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course preview video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -185,10 +181,8 @@ export class CourseController {
 
             const { id, whatYouWillLearn } = req.body;
             await this._updateCourseUseCase.execute(id, { whatYouWillLearn });
-            res.status(201).json({
-                success: true,
-                message: "Course preview video updated successfully",
-            });
+            
+            res.status(200).json(ResponseBuilder.success("Course preview video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -200,10 +194,8 @@ export class CourseController {
 
             const { id, prerequisites } = req.body;
             await this._updateCourseUseCase.execute(id, { prerequisites });
-            res.status(201).json({
-                success: true,
-                message: "Course preview video updated successfully",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course preview video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -215,10 +207,8 @@ export class CourseController {
 
             const { id, tags } = req.body;
             await this._updateCourseUseCase.execute(id, { tags });
-            res.status(201).json({
-                success: true,
-                message: "Course tags updated successfully",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course tags updated successfully"));
 
         } catch (error) {
             next(error)
@@ -230,11 +220,10 @@ export class CourseController {
 
             const { id, title, description } = req.body;
             const result = await this._addModuleUseCase.execute(id, { title, description });
-            res.status(201).json({
-                success: true,
-                message: "Module added successfully",
-                module: result
-            });
+            
+            res.status(200).json(ResponseBuilder.success("Course details fetched successfully",{
+                module:result 
+            }));
 
         } catch (error) {
             next(error)
@@ -249,11 +238,10 @@ export class CourseController {
                 title, description, video, duration
             }
             const result = await this._addChapterUseCase.execute(courseId, moduleId, chapter);
-            res.status(201).json({
-                success: true,
-                message: "Chapter added successfully",
-                chapter: result
-            });
+
+            res.status(200).json(ResponseBuilder.success("Chapter added successfully",{
+                chapter:result 
+            }));
 
         } catch (error) {
             next(error)
@@ -266,10 +254,8 @@ export class CourseController {
             const { courseId, moduleId, title, description, chapterId }: { courseId: string; moduleId: string; title: string; description: string; chapterId: string } = req.body;
 
             await this._updateChapterUseCase.execute({ courseId, chapterId, moduleId, title, description });
-            res.status(201).json({
-                success: true,
-                message: "Chapter updated successfully",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Chapter updated successfully"));
 
         } catch (error) {
             next(error)
@@ -284,10 +270,8 @@ export class CourseController {
             await this._updateVideoUseCase.execute({
                 courseId, moduleId, chapterId, video, duration
             });
-            res.status(201).json({
-                success: true,
-                message: "Video updated successfully."
-            });
+
+            res.status(200).json(ResponseBuilder.success("Video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -301,10 +285,8 @@ export class CourseController {
             await this._updateModuleUseCase.execute({
                 courseId, moduleId, title, description
             });
-            res.status(201).json({
-                success: true,
-                message: "Module updated successfully.",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Module updated successfully"));
 
         } catch (error) {
             next(error)
@@ -318,10 +300,7 @@ export class CourseController {
             await this._deleteChapterUseCase.execute({
                 courseId, moduleId, chapterId
             });
-            res.status(201).json({
-                success: true,
-                message: "Chapter deleted successfully.",
-            });
+            res.status(200).json(ResponseBuilder.success("Chapter deleted successfully"));
 
         } catch (error) {
             next(error)
@@ -337,10 +316,8 @@ export class CourseController {
                 courseId,
                 moduleId
             });
-            res.status(201).json({
-                success: true,
-                message: "Module deleted successfully.",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Module deleted successfully"));
 
         } catch (error) {
             next(error)
@@ -353,10 +330,8 @@ export class CourseController {
             const { courseId } = req.body;
 
             await this._submitCourseForReviewUseCase.execute(courseId);
-            res.status(201).json({
-                success: true,
-                message: "Course submitted for review successfully.",
-            });
+            
+            res.status(200).json(ResponseBuilder.success("Course submitted for review successfully"));
 
         } catch (error) {
             next(error)
@@ -369,11 +344,10 @@ export class CourseController {
             const { courseId, status, remarks } = req.body;
 
             const verification = await this._updateVerificationUseCase.execute({ courseId, status, remarks });
-            res.status(201).json({
-                success: true,
-                message: "Course verification updated successfully.",
-                verification
-            });
+            
+            res.status(200).json(ResponseBuilder.success("Course verification updated successfully",{
+                verification 
+            }));
 
         } catch (error) {
             next(error)
@@ -394,12 +368,11 @@ export class CourseController {
                 status,
                 verificationStatus
             });
-            res.status(201).json({
-                success: true,
-                message: "Courses fetched successfully",
-                pagination: response.pagination,
-                courses: response.courses
-            });
+
+            res.status(200).json(ResponseBuilder.success("Courses fetched successfully",{
+                pagination:response.pagination,
+                courses:response.courses 
+            }));
 
         } catch (error) {
             next(error)
@@ -412,11 +385,10 @@ export class CourseController {
             const { courseId, status } = req.body;
 
             const verification = await this._updateCourseStatusUseCase.execute({ courseId, status });
-            res.status(201).json({
-                success: true,
-                message: "Course status updated successfully.",
-                verification
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course status updated successfully",{
+                verification 
+            }));
 
         } catch (error) {
             next(error)
@@ -459,12 +431,11 @@ export class CourseController {
                 learnerId
             });
 
-            res.status(201).json({
-                success: true,
-                message: "Courses fetched successfully",
-                pagination: response.pagination,
-                courses: response.courses
-            });
+            
+            res.status(200).json(ResponseBuilder.success("Courses fetched successfully",{
+                pagination:response.pagination,
+                courses:response.courses 
+            }));
 
         } catch (error) {
             next(error);
@@ -484,11 +455,7 @@ export class CourseController {
                 learnerId
             });
 
-            res.status(201).json({
-                success: true,
-                message: "Course fetched successfully",
-                data: response
-            });
+            res.status(200).json(ResponseBuilder.success("Course fetched successfully",response));
 
         } catch (error) {
             next(error)
@@ -504,11 +471,8 @@ export class CourseController {
                 learnerId
             });
 
-            res.status(201).json({
-                success: true,
-                message: "Course details fetched successfully",
-                data: response
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course details fetched successfully",response));
 
         } catch (error) {
             next(error)
@@ -521,11 +485,8 @@ export class CourseController {
 
             const response = await this._getCourseDetailsForCheckoutUseCase.execute(courseId);
 
-            res.status(201).json({
-                success: true,
-                message: "Course details fetched successfully",
-                data: response
-            });
+
+            res.status(200).json(ResponseBuilder.success("Course details fetched successfully",response));
 
         } catch (error) {
             next(error)
@@ -547,11 +508,10 @@ export class CourseController {
                     size
                 }
             });
-            res.status(201).json({
-                success: true,
-                message: "Chapter added successfully",
-                resource: result
-            });
+
+            res.status(200).json(ResponseBuilder.success("Chapter added successfully",{
+                resource: result 
+            }));
 
         } catch (error) {
             next(error)
@@ -569,10 +529,8 @@ export class CourseController {
                 chapterId,
                 resourceId
             });
-            res.status(201).json({
-                success: true,
-                message: "Chapter deleted successfully",
-            });
+
+            res.status(200).json(ResponseBuilder.success("Chapter deleted successfully"));
 
         } catch (error) {
             next(error)
@@ -601,12 +559,11 @@ export class CourseController {
                 learnerId
             });
 
-            res.status(201).json({
-                success: true,
-                message: "Courses fetched successfully",
+
+            res.status(200).json(ResponseBuilder.success("Courses fetched successfully",{
                 pagination: response.pagination,
-                courses: response.courses
-            });
+                courses: response.courses 
+            }));
 
         } catch (error) {
             next(error);
@@ -636,11 +593,9 @@ export class CourseController {
             });
 
 
-            res.status(201).json({
-                success: true,
-                message: "Video fetched successfully",
-                video: response
-            });
+            res.status(200).json(ResponseBuilder.success("Video fetched successfully",{
+                video: response 
+            }));
 
         } catch (error) {
             next(error);
@@ -670,6 +625,56 @@ export class CourseController {
             });
 
             await this._fileStorageService.streamVideo(videoKey, range, res);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getCourseOptions(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+
+            const instructorId = req.user?.id
+            if (!instructorId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+
+
+
+            const response = await this._getCourseOptionsUseCase.execute({
+                instructorId
+            });
+
+
+            res.status(200).json(ResponseBuilder.success("Course options fetched successfully",{
+                courses: response 
+            }));
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getRecommendations(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+
+            const instructorId = req.user?.id
+            if (!instructorId) {
+                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
+            }
+
+
+
+            const response = await this._getCourseOptionsUseCase.execute({
+                instructorId
+            });
+
+
+            res.status(200).json(ResponseBuilder.success("Course options fetched successfully",{
+                courses: response 
+            }));
 
         } catch (error) {
             next(error);

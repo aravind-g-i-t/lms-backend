@@ -4,14 +4,12 @@ import { UpdateInstructorProfileRequestSchema } from "@presentation/dtos/instruc
 import { UpdatePasswordSchema } from "@presentation/dtos/shared/UpdatePassword";
 import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/UpdateProfileImage";
 import { validateRequest } from "@presentation/http/middlewares/validateRequest";
-import { instructorController } from "@setup/container/instructor/instructorController";
-import { quizController } from "@setup/container/quiz";
-import { categoryController } from "@setup/container/shared/categoryController";
-import { courseController } from "@setup/container/course";
+import { categoryController } from "@setup/container/admin/controllers";
+import { instructorController, liveSessionController, quizController } from "@setup/container/instructor/controllers";
+import { courseController, messageController } from "@setup/container/shared/controllers";
 import { instructorAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import express, { Request, Response ,NextFunction} from "express";
 import { ROUTES } from "shared/constants/routes";
-import { messageController } from "@setup/container/message";
 const instructorRouter=express.Router();
 
 // Instructor profile
@@ -111,5 +109,14 @@ instructorRouter.get("/messages",instructorAuthMiddleware,(req:Request,res:Respo
 
 instructorRouter.post("/messages/delete",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
 
+instructorRouter.get("/course/options",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseOptions(req,res,next));
+
+instructorRouter.post("/session",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.createLiveSession(req,res,next));
+
+instructorRouter.get("/sessions",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.getSessionsForInstructor(req,res,next));
+
+instructorRouter.post("/session/start",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.startLiveSession(req,res,next));
+
+instructorRouter.post("/session/end",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.endLiveSession(req,res,next));
 
 export default instructorRouter

@@ -31,7 +31,7 @@ export class AddResourceUseCase implements IAddResourceUseCase  {
         if (!updated) {
             throw new AppError("Failed to add module.", STATUS_CODES.BAD_REQUEST)
         }
-        const file = await this._fileStorageService.getDownloadUrl(input.resource.file);
+        const file = await this._fileStorageService.getViewURL(input.resource.file);
         return { ...newResource, file };
 
     }

@@ -7,6 +7,11 @@ import { AuthenticatedRequest } from "@presentation/http/middlewares/createAuthM
 import { NextFunction, Response } from "express";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
+import { ResponseBuilder } from "shared/utils/ResponseBuilder";
+import { AppError } from "shared/errors/AppError";
+
+const accessTokenCookieMaxAge= parseInt(process.env.ACCESS_TOKEN_COOKIE_MAX_AGE!)
+const refreshTokenCookieMaxAge= parseInt(process.env.REFRESH_TOKEN_COOKIE_MAX_AGE!)
 
 export class AdminController {
     constructor(
@@ -21,21 +26,34 @@ export class AdminController {
 
             const result: AdminSigninResponseDTO = await this._adminSigninUseCase.execute({ email, password });
 
-
+            
+            
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                sameSite: "lax",
+                maxAge: refreshTokenCookieMaxAge
             });
+
+            res.cookie("accessToken", result.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: accessTokenCookieMaxAge
+            });
+
+
             logger.info("Admin signed in successfully.")
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: MESSAGES.LOGIN_SUCCESS,
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success(MESSAGES.LOGIN_SUCCESS,{
                 id: result.id,
                 accessToken: result.accessToken,
                 email: result.email
-            });
+            }))
+            // res.status(STATUS_CODES.OK).json({
+            //     success: true,
+            //     message: MESSAGES.LOGIN_SUCCESS,
+                
+            // });
         } catch (error) {
             logger.warn("Failed to signin as Admin")
             next(error)
@@ -47,11 +65,8 @@ export class AdminController {
             logger.info("Admin logout request recieved.")
             if (!req.cookies?.refreshToken) {
                 logger.warn("Failed to get refresh token")
-                res.status(STATUS_CODES.BAD_REQUEST).json({
-                    success: false,
-                    message: MESSAGES.NO_SESSION,
-                });
-                return;
+
+                throw new AppError(MESSAGES.NO_SESSION,STATUS_CODES.BAD_REQUEST)
             }
 
             res.clearCookie("refreshToken", {
@@ -60,10 +75,7 @@ export class AdminController {
                 sameSite: "strict",
             });
             logger.info("Admin logged out successfully.")
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: MESSAGES.LOGOUT_SUCCESS,
-            });
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success(MESSAGES.LOGOUT_SUCCESS));
         } catch (error) {
             next(error)
         }

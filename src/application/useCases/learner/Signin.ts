@@ -35,7 +35,7 @@ export class LearnerSigninUseCase implements ILearnerSigninUseCase {
         }
 
         if (learnerEntity.profilePic) {
-            learnerEntity.profilePic = await this._fileStorageService.getDownloadUrl(learnerEntity.profilePic);
+            learnerEntity.profilePic = await this._fileStorageService.getViewURL(learnerEntity.profilePic);
         }
 
         const accessToken = await this._tokenService.generateAccessToken({ id: learnerEntity.id, role });

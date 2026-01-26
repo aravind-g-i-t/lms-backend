@@ -20,4 +20,5 @@ export interface ICategoryRepository {
   updateById(id: string, data: Partial<Category>): Promise<Category|null>;
   updateCategoryStatus(id: string): Promise<Category|null>;
   findActiveCategories():Promise<Category[]>
+  findMany(filter: Partial<Category>):Promise<Category[]>
 }

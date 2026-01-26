@@ -23,12 +23,12 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
             throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
         }
         const thumbnail = course.thumbnail
-            ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+            ? await this._fileStorageService.getViewURL(course.thumbnail)
             : null;
         const previewVideo = course.previewVideo
-            ? await this._fileStorageService.getDownloadUrl(course.previewVideo)
+            ? await this._fileStorageService.getViewURL(course.previewVideo)
             : null;
-            const profilePic = course.instructor?.profilePic ? await this._fileStorageService.getDownloadUrl(course.instructor.profilePic) : null;
+            const profilePic = course.instructor?.profilePic ? await this._fileStorageService.getViewURL(course.instructor.profilePic) : null;
             let enrollment;
             let favourite;
         if (learnerId) {
@@ -88,7 +88,8 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
             publishedAt: input.publishedAt,
             isEnrolled:status.isEnrolled,
             enrolledAt:status.enrolledAt,
-            isFavourite:status.isFavourite
+            isFavourite:status.isFavourite,
+            ratingDistribution:input.ratingDistribution
         }
     }
 

@@ -21,7 +21,7 @@ export class GetLearnerDataUseCase implements IGetLearnerDataUseCase {
         const profileDTO = LearnerDTOMapper.toProfileDTO(user);
 
         if (user.profilePic) {
-            profileDTO.profilePic = await this._fileStorageService.getDownloadUrl(user.profilePic);
+            profileDTO.profilePic = await this._fileStorageService.getViewURL(user.profilePic);
         }
 
         return profileDTO;

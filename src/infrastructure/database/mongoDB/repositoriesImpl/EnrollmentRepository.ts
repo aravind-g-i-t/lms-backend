@@ -54,6 +54,7 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
 
         const [rows, total] = await Promise.all([
             EnrollmentModel.find(query)
+                .sort({createdAt:-1})
                 .skip(skip)
                 .limit(limit)
                 .exec(),
@@ -81,4 +82,19 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
         ).exec();
         return updated ? EnrollmentMapper.toDomain(updated) : null;
     }
+
+    async getEnrolledCourseIdsByLearnerId(learnerId: string): Promise<string[]> {
+    const enrollments = await EnrollmentModel
+        .find(
+            {
+                learnerId,
+                status: EnrollmentStatus.Active
+            },
+            { courseId: 1 } 
+        )
+        .lean()
+        .exec();
+
+    return enrollments.map(e => e.courseId.toString());
+}
 }

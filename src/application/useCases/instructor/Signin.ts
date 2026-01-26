@@ -40,7 +40,7 @@ export class InstructorSigninUseCase implements IInstructorSigninUseCase {
 
         // Generate profilePic URL
         const profilePicUrl = instructorEntity.profilePic
-            ? await this._fileStorageService.getDownloadUrl(instructorEntity.profilePic)
+            ? await this._fileStorageService.getViewURL(instructorEntity.profilePic)
             : null;
 
         const accessToken = await this._tokenService.generateAccessToken({ id: instructorEntity.id, role });

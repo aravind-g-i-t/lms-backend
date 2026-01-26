@@ -1,9 +1,9 @@
 import { createAuthMiddleware } from "@presentation/http/middlewares/createAuthMiddleware";
-import { tokenService } from "./tokenService";
 import { AuthorizationService } from "@infrastructure/services/AuthorizationService";
-import { learnerRepository } from "../learner/learnerRepository";
-import { instructorRepository } from "../instructor/instructorRepository";
-import { businessRepository } from "../business/businessRepository";
+import { instructorRepository } from "../instructor/repositories";
+import { learnerRepository } from "../learner/repostitories";
+import { businessRepository } from "../business/repositories";
+import { tokenService } from "./services";
 
 const authorizationService=new AuthorizationService(learnerRepository,instructorRepository,businessRepository)
 

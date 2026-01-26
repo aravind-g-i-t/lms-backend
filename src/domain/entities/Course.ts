@@ -43,6 +43,9 @@ export interface Module {
 }
 
 
+
+
+
 export interface Course {
     id: string;
     title: string;
@@ -59,6 +62,13 @@ export interface Course {
     tags: string[];
     whatYouWillLearn: string[];
     totalRatings: number;
+    ratingDistribution:{
+        5:number;
+        4:number;
+        3:number;
+        2:number;
+        1:number;
+    };
     status: CourseStatus;
     createdAt: Date;
     updatedAt: Date;

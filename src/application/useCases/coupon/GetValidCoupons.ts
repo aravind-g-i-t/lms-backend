@@ -1,8 +1,9 @@
 import { GetValidCouponsOutput } from "@application/dtos/coupon/GetValidCoupons";
+import { IGetValidCouponsUseCase } from "@application/IUseCases/coupon/IGetValidCoupons";
 import { Coupon } from "@domain/entities/Coupon";
 import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 
-export class GetValidCouponsUseCase {
+export class GetValidCouponsUseCase implements IGetValidCouponsUseCase{
     constructor(
         private couponRepo: ICouponRepository
     ) { }

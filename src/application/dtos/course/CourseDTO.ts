@@ -53,6 +53,9 @@ export interface CourseForLearnerListing {
     description: string;
     thumbnail: string | null;
     totalRatings: number;
+    totalModules: number;
+    totalChapters: number;
+    enrollmentCount: number;
     isFavourite?: boolean
 }
 

@@ -38,7 +38,7 @@ export class S3ServiceImpl implements IFileStorageService {
         return { url, key };
     }
 
-    async getDownloadUrl(key: string): Promise<string> {
+    async getViewURL(key: string): Promise<string> {
         const command = new GetObjectCommand({
             Bucket: this.bucketName,
             Key: key,
@@ -47,6 +47,18 @@ export class S3ServiceImpl implements IFileStorageService {
         const url = await getSignedUrl(this.s3, command, { expiresIn: this.downloadUrlExpiry });
         return url;
     }
+
+    // Forced download (certificates)
+    async getDownloadURL(key: string, filename: string): Promise<string> {
+        const command = new GetObjectCommand({
+            Bucket: this.bucketName,
+            Key: key,
+            ResponseContentDisposition: `attachment; filename="${filename}"`,
+        });
+
+        return getSignedUrl(this.s3, command, { expiresIn: this.downloadUrlExpiry });
+    }
+
 
     async uploadBuffer(
         key: string,

@@ -33,10 +33,10 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         const currentChapterId = progress.currentChapterId || course.modules[0].chapters[0].id;
 
         const thumbnail = course.thumbnail
-            ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+            ? await this._fileStorageService.getViewURL(course.thumbnail)
             : null;
         const previewVideo = course.previewVideo
-            ? await this._fileStorageService.getDownloadUrl(course.previewVideo)
+            ? await this._fileStorageService.getViewURL(course.previewVideo)
             : null;
         console.log(thumbnail, previewVideo);
         const responseModules = course.modules.map((module) => ({

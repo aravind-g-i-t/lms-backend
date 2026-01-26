@@ -40,7 +40,7 @@ export class BusinessSigninUseCase implements IBusinessSigninUseCase {
 
         // Generate profilePic URL
         const profilePicUrl = businessEntity.profilePic
-            ? await this._fileStorageService.getDownloadUrl(businessEntity.profilePic)
+            ? await this._fileStorageService.getViewURL(businessEntity.profilePic)
             : null;
 
         const accessToken = await this._tokenService.generateAccessToken({ id: businessEntity.id, role });

@@ -1,4 +1,4 @@
-import { messageController } from "@setup/container/message";
+import { messageController } from "@setup/container/shared/controllers";
 import { learnerInstructorAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import express, { Request, Response ,NextFunction} from "express";
 const videoRoutes=express.Router();

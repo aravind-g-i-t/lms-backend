@@ -40,7 +40,7 @@ export class GetBusinessesUseCase implements IGetBusinessesUseCase {
         const businesses = await Promise.all(
             result.businesses.map(async (business) => {
                 const profilePicUrl = business.profilePic
-                    ? await this._fileStorageService.getDownloadUrl(business.profilePic)
+                    ? await this._fileStorageService.getViewURL(business.profilePic)
                     : null;
 
 

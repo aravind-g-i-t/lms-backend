@@ -69,6 +69,13 @@ export interface CourseDoc extends Document {
     whatYouWillLearn: string[];
     rating: number | null;
     totalRatings: number;
+    ratingDistribution: {
+        5: number;
+        4: number;
+        3: number;
+        2: number;
+        1: number;
+    };
     quizId:Types.ObjectId|null;
     status: CourseStatus;
     verification: {
@@ -140,6 +147,13 @@ const CourseSchema = new Schema<CourseDoc>(
         whatYouWillLearn: { type: [String], default: [] },
         rating: { type: Number, default: null },
         totalRatings: { type: Number, default: 0 },
+        ratingDistribution: {
+            5: { type: Number, default: 0 },
+            4: { type: Number, default: 0 },
+            3: { type: Number, default: 0 },
+            2: { type: Number, default: 0 },
+            1: { type: Number, default: 0 },
+        },
         quizId:{type: Schema.Types.ObjectId, default: null},
         status: {
             type: String,

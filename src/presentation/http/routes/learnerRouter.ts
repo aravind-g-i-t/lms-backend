@@ -2,15 +2,13 @@ import { UpdateLearnerProfileRequestSchema } from "@presentation/dtos/learner/Up
 import { UpdatePasswordSchema } from "@presentation/dtos/shared/UpdatePassword";
 import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/UpdateProfileImage";
 import { validateRequest } from "@presentation/http/middlewares/validateRequest";
-import { enrollmentController } from "@setup/container/enrollment";
-import { learnerController } from "@setup/container/learner/learnerController";
-import { messageController } from "@setup/container/message";
-import { progressController } from "@setup/container/progress";
-import { courseController } from "@setup/container/course";
+
 import express, { Request, Response ,NextFunction} from "express";
 import { ROUTES } from "shared/constants/routes";
-import { quizController } from "@setup/container/quiz";
 import { learnerAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
+import { enrollmentController, learnerController, progressController, reviewController } from "@setup/container/learner/controllers";
+import { courseController, messageController } from "@setup/container/shared/controllers";
+import { liveSessionController, quizController } from "@setup/container/instructor/controllers";
 const learnerRouter=express.Router();
 
 // Learner profile
@@ -70,5 +68,12 @@ learnerRouter.get("/ping",learnerAuthMiddleware,(req:Request,res:Response)=>res.
 
 learnerRouter.post("/messages/delete",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
 
+learnerRouter.post("/session/join",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.joinLiveSession(req,res,next));
+
+learnerRouter.get("/sessions",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.getSessionsForLearner(req,res,next));
+
+learnerRouter.post("/course/review",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.addReview(req,res,next));
+
+learnerRouter.get("/course/reviews",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.getReviewsForLearner(req,res,next));
 
 export default learnerRouter;

@@ -1,9 +1,10 @@
 
+import { IDeleteResourceUseCase } from "@application/IUseCases/course/IDeleteResource";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
-export class DeleteResourceUseCase  {
+export class DeleteResourceUseCase implements IDeleteResourceUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
     ) { }

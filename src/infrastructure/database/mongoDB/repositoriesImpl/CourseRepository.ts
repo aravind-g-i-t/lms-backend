@@ -1,5 +1,5 @@
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
-import { CourseModel, IChapter, IModule, VerificationStatus } from "../models/CourseModel";
+import { CourseDoc, CourseModel, IChapter, IModule, VerificationStatus } from "../models/CourseModel";
 import { logger } from "@infrastructure/logging/Logger";
 import { InstructorEntity } from "./InstructorRepository";
 import { CourseMapper } from "../mappers/CourseMapper";
@@ -8,6 +8,7 @@ import { InstructorDoc } from "../models/InstructorModel";
 import { Course, Resource } from "@domain/entities/Course";
 import { Category } from "@domain/entities/Category";
 import { BaseRepository } from "./BaseRepository";
+import { FilterQuery } from "mongoose";
 
 enum CourseLevel {
     Beginner = "beginner",
@@ -46,7 +47,14 @@ export interface HydratedCourseEntity {
     whatYouWillLearn: string[];
     rating: number | null;
     totalRatings: number;
-    quizId:string|null;
+    ratingDistribution: {
+        5: number;
+        4: number;
+        3: number;
+        2: number;
+        1: number;
+    };
+    quizId: string | null;
     status: CourseStatus;
     verification: {
         status: VerificationStatus;
@@ -74,7 +82,7 @@ export interface FindAllCoursesInput {
         durationRange?: [number, number];
         priceRange?: [number, number];
         minRating?: number;
-        courseIds?:string[];
+        courseIds?: string[];
     };
 }
 
@@ -91,8 +99,8 @@ interface FindAllOutput {
 }
 
 export class CourseRepository extends BaseRepository<Course> implements ICourseRepository {
-    constructor(){
-        super(CourseModel,CourseMapper)
+    constructor() {
+        super(CourseModel, CourseMapper)
     }
 
 
@@ -228,6 +236,8 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
             courses: hydratedCourses,
         };
     }
+
+
 
 
 
@@ -489,7 +499,7 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
         courseId: string;
         moduleId: string;
         chapterId: string;
-        resourceId:string;
+        resourceId: string;
     }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;
@@ -500,10 +510,94 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
         const chapter = module.chapters.find(c => c.id === chapterId);
         if (!chapter) return null;
 
-        chapter.resources= chapter.resources.filter(r => r.id !== resourceId);
+        chapter.resources = chapter.resources.filter(r => r.id !== resourceId);
 
         await course.save();
         return CourseMapper.toDomain(course);
     }
+
+    async getInterestSignals(courseIds: string[]): Promise<{
+        tags: string[];
+        categoryIds: string[];
+    }> {
+        const courses = await CourseModel.find(
+            { _id: { $in: courseIds } },
+            { tags: 1, categoryId: 1 }
+        )
+            .lean()
+            .exec();
+
+        const tagsSet = new Set<string>();
+        const categorySet = new Set<string>();
+
+        for (const course of courses) {
+            course.tags?.forEach(tag => tagsSet.add(tag));
+            if (course.categoryId) {
+                categorySet.add(course.categoryId.toString());
+            }
+        }
+
+        return {
+            tags: Array.from(tagsSet),
+            categoryIds: Array.from(categorySet),
+        };
+    }
+
+
+    async getRecommendedCourses({
+        tags,
+        categoryIds,
+        excludeCourseIds,
+        limit,
+    }: {
+        tags: string[];
+        categoryIds: string[];
+        excludeCourseIds: string[];
+        limit: number;
+    }): Promise<HydratedCourseEntity[]> {
+
+        const query: FilterQuery<CourseDoc> = {
+            _id: { $nin: excludeCourseIds },
+            status: CourseStatus.Published,
+            "verification.status": VerificationStatus.Verified,
+            $or: [
+                { tags: { $in: tags } },
+                { categoryId: { $in: categoryIds } }
+            ]
+        };
+
+        const courses = await CourseModel.find(query)
+            .populate<{ categoryId: CategoryDoc }>("categoryId")
+            .populate<{ instructorId: InstructorDoc }>("instructorId")
+            .sort({
+                rating: -1,
+                enrollmentCount: -1,
+                publishedAt: -1,
+            })
+            .limit(limit)
+            .exec();
+
+        return courses.map(course => CourseMapper.toHydrated(course));
+    }
+
+    async countCoursesByCategory(): Promise<
+        { categoryId: string; count: number }[]
+    > {
+        return CourseModel.aggregate([
+            {
+                $match: {
+                    status: CourseStatus.Published,
+                    "verification.status": VerificationStatus.Verified
+                }
+            },
+            {
+                $group: {
+                    _id: "$categoryId",
+                    count: { $sum: 1 }
+                }
+            }
+        ]).exec();
+    }
+
 }
 

@@ -22,7 +22,7 @@ export abstract class BaseRepository<T> {
   async create(data: Partial<T>): Promise<T | null> {
     const doc = await this.model.create(data);
     const leanDoc = await this.model.findById(doc._id).lean();
-  return leanDoc ? this.mapper.toDomain(leanDoc) : null;
+    return leanDoc ? this.mapper.toDomain(leanDoc) : null;
 
   }
 
@@ -42,7 +42,7 @@ export abstract class BaseRepository<T> {
   }
 
   async findByIds(ids: string[]): Promise<T[]> {
-    const docs= await this.model.
+    const docs = await this.model.
       find({
         _id: { $in: ids }
       })
@@ -51,6 +51,14 @@ export abstract class BaseRepository<T> {
 
     return docs.map((doc: any) => this.mapper.toDomain(doc));
 
+  }
+
+  async findMany(filter: Partial<T>):Promise<T[]> {
+    const docs = await this.model
+      .find(filter)
+      .lean()
+      .exec();;
+    return docs.map((doc: any) => this.mapper.toDomain(doc));
   }
 
 }

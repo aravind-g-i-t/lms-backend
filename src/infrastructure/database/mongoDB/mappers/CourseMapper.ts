@@ -31,7 +31,8 @@ export class CourseMapper {
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
             verification:doc.verification,
-            quizId:doc.quizId?doc.quizId.toString():null
+            quizId:doc.quizId?doc.quizId.toString():null,
+            ratingDistribution:doc.ratingDistribution
         }
     }
 
@@ -61,7 +62,8 @@ export class CourseMapper {
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
             verification:doc.verification,
-            quizId:doc.quizId?doc.quizId.toString():null
+            quizId:doc.quizId?doc.quizId.toString():null,
+            ratingDistribution:doc.ratingDistribution
         }
     }
 }

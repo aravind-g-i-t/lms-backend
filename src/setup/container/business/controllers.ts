@@ -1,0 +1,4 @@
+import { BusinessController } from "@presentation/http/controllers/BusinessController";
+import { applyForBusinessVerificaton, getBusinessesDataUseCase, getBusinessesUseCase, updateBusinessPasswordUseCase, updateBusinessStatusUseCase, updateBususinessDataUseCase, updateVerificationStatusUseCase } from "./useCases";
+
+export const businessController=new BusinessController(getBusinessesUseCase,updateBusinessStatusUseCase,getBusinessesDataUseCase,updateBususinessDataUseCase,updateBusinessPasswordUseCase,applyForBusinessVerificaton,updateVerificationStatusUseCase);

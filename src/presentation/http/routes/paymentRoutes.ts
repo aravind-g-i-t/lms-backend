@@ -1,5 +1,5 @@
-import { enrollmentController } from "@setup/container/enrollment";
-import { paymentController } from "@setup/container/payment";
+import { enrollmentController } from "@setup/container/learner/controllers";
+import { paymentController } from "@setup/container/shared/controllers";
 import { learnerAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import express, { NextFunction, Request, Response } from "express";
 

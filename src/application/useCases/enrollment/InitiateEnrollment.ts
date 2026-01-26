@@ -1,4 +1,5 @@
 import { ICreateEnrollmentUseCase } from "@application/IUseCases/enrollment/ICreateEnrollment";
+import { IInitiateEnrollmentUseCase } from "@application/IUseCases/enrollment/IInitiateEnrollment";
 import { ICreatePaymentUseCase } from "@application/IUseCases/payment/ICreatePayment";
 import { EnrollmentStatus } from "@domain/entities/Enrollment";
 import { PayerType, PaymentReason, PaymentStatus } from "@domain/entities/Payment";
@@ -9,7 +10,7 @@ import { IPaymentGatewayService } from "@domain/interfaces/IPaymentGatewayServic
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 
-export class InitiateEnrollmentUseCase {
+export class InitiateEnrollmentUseCase implements IInitiateEnrollmentUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
         private _createPaymentUseCase: ICreatePaymentUseCase,

@@ -49,7 +49,7 @@ export class GetCoursesForAdminUseCase implements IGetCoursesForAdminUseCase {
         const courses = await Promise.all(
             result.courses.map(async (course) => {
                 const thumbnailURL = course.thumbnail
-                    ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+                    ? await this._fileStorageService.getViewURL(course.thumbnail)
                     : null;
 
 

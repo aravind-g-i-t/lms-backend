@@ -77,7 +77,7 @@ export class SendMessageUseCase implements ISendMessageUseCase {
         const mappedAttachments=await Promise.all(
             savedMessage.attachments.map(async (attachment) => {
                         const fileUrl =
-                            await this._fileStorageService.getDownloadUrl(
+                            await this._fileStorageService.getViewURL(
                                 attachment.fileUrl
                             );
 
@@ -108,9 +108,9 @@ export class SendMessageUseCase implements ISendMessageUseCase {
 
         const hyderatedConversation= await this.conversationRepo.findHydratedById(conversation.id);
         
-        const instructorProfilePic=hyderatedConversation?.instructorId.profilePic? await this._fileStorageService.getDownloadUrl(hyderatedConversation.instructorId.profilePic):null
+        const instructorProfilePic=hyderatedConversation?.instructorId.profilePic? await this._fileStorageService.getViewURL(hyderatedConversation.instructorId.profilePic):null
 
-        const learnerProfilePic=hyderatedConversation?.learnerId.profilePic? await this._fileStorageService.getDownloadUrl(hyderatedConversation.learnerId.profilePic):null
+        const learnerProfilePic=hyderatedConversation?.learnerId.profilePic? await this._fileStorageService.getViewURL(hyderatedConversation.learnerId.profilePic):null
         const outputConversation=ConversationDTOMapper.toListing(hyderatedConversation as HydratedConversation)
         console.log("savedMessage",savedMessage);
         console.log("attachments", mappedAttachments);

@@ -1,7 +1,6 @@
 export enum EnrollmentStatus {
     Pending= "pending",
     Active = "active",
-    Completed = "completed",
     Cancelled = "cancelled",
     Failed="failed"
 }

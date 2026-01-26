@@ -20,9 +20,9 @@ export class GetCourseDetailsForCheckoutUseCase implements IGetCourseDetailsForC
             throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
         }
         const thumbnail = course.thumbnail
-            ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+            ? await this._fileStorageService.getViewURL(course.thumbnail)
             : null;
-        const profilePic = course.instructor?.profilePic ? await this._fileStorageService.getDownloadUrl(course.instructor.profilePic) : null;
+        const profilePic = course.instructor?.profilePic ? await this._fileStorageService.getViewURL(course.instructor.profilePic) : null;
         
         
         const mappedCourse= this._toCourseDetails({ ...course, thumbnail,instructor: { ...course.instructor, profilePic} });

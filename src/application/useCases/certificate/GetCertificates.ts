@@ -21,7 +21,7 @@ export class GetCertificatesForLearnerUseCase implements IGetCertificatesForLear
         const certificates = await Promise.all(
             result.certificates.map(async (cert) => {
                 if (cert.certificateUrl) {
-                    const certificateUrl = await this._cloudService.getDownloadUrl(cert.certificateUrl);
+                    const certificateUrl = await this._cloudService.getDownloadURL(cert.certificateUrl,`${cert.courseTitle}-certificate.pdf`);
                     cert.certificateUrl = certificateUrl;
                 }
                 return cert;

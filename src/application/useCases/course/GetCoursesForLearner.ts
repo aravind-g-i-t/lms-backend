@@ -49,7 +49,7 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
         let courses = await Promise.all(
             result.courses.map(async (course) => {
                 const thumbnailURL = course.thumbnail
-                    ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+                    ? await this._fileStorageService.getViewURL(course.thumbnail)
                     : null;
 
 
@@ -98,6 +98,9 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
             description: doc.description,
             thumbnail: doc.thumbnail,
             totalRatings: doc.totalRatings,
+            totalModules:doc.totalModules,
+            totalChapters:doc.totalChapters,
+            enrollmentCount:doc.enrollmentCount
 
         }
     }

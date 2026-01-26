@@ -10,7 +10,8 @@ import { AppError } from "shared/errors/AppError";
 export class CreateCourseUseCase implements ICreateCourseUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
-        private _instructorRepository: IInstructorRepository
+        private _instructorRepository: IInstructorRepository,
+    
     ) { }
 
     async execute(input: { instructorId: string, title: string; description: string; prerequisites: string[]; categoryId: string; price: number; level: CourseLevel; tags: string[]; whatYouWillLearn: string[]; }): Promise<string> {
@@ -22,6 +23,15 @@ export class CreateCourseUseCase implements ICreateCourseUseCase {
         }
         // if (instructor.verification.status !== "Verified") {
         //     throw new AppError("Please verify your profile before submitting course for review.")
+        // }
+        // const today= new Date().getDay();
+        // const sameCategoryCourses= await this._courseRepository.findMany({categoryId:input.categoryId});
+        // let count=0;
+        // for(let i=0;i<sameCategoryCourses.length;i++){
+        //     const createdDay= new Date(sameCategoryCourses[i].createdAt).getDay;
+        //     if(createdDay===today){
+
+        //     }
         // }
 
         const course = await this._courseRepository.create({

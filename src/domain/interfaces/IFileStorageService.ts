@@ -6,7 +6,9 @@ export interface IFileStorageService {
         contentType: string
     ): Promise<{ url: string; key: string }>;
 
-    getDownloadUrl(key: string): Promise<string>;
+    getViewURL(key: string): Promise<string>;
+
+    getDownloadURL(key: string, filename: string): Promise<string>
 
     uploadBuffer(
         key: string,

@@ -14,17 +14,15 @@ import { UpdateUserVerificationStatusRequestSchema } from "@presentation/dtos/sh
 import { validateRequest } from "@presentation/http/middlewares/validateRequest";
 
 
-import { adminController } from "@setup/container/admin/adminController";
-import { businessController } from "@setup/container/business/businessController";
-import { couponController } from "@setup/container/coupon";
-import { instructorController } from "@setup/container/instructor/instructorController";
-import { learnerController } from "@setup/container/learner/learnerController";
-import { categoryController } from "@setup/container/shared/categoryController";
-import { courseController } from "@setup/container/course";
 
 import express, { Request, Response,NextFunction } from "express";
 import { ROUTES } from "shared/constants/routes";
 import { adminAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
+import { adminController, categoryController, couponController } from "@setup/container/admin/controllers";
+import { learnerController } from "@setup/container/learner/controllers";
+import { businessController } from "@setup/container/business/controllers";
+import { instructorController } from "@setup/container/instructor/controllers";
+import { courseController } from "@setup/container/shared/controllers";
 const adminRouter=express.Router();
 
 // Admin signin

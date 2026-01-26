@@ -1,267 +1,216 @@
-
-import { RefreshTokenResponseDTO } from "@presentation/dtos/shared/RefreshToken";
-import { UserSigninResponseDTO } from "@presentation/dtos/shared/Signin";
-import { UserSignupResponseDTO } from "@presentation/dtos/shared/Signup";
-import { IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
-import { IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
-import { IInstructorGoogleSigninUseCase } from "@application/IUseCases/instructor/IGoogleSignin";
-import { IInstructorSigninUseCase } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
-import { ILearnerGoogleSigninUseCase } from "@application/IUseCases/learner/IGoogleSignin";
-import { ILearnerSigninUseCase } from "@application/IUseCases/learner/ILearnerSigninUseCase";
-import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
-import { IResendOTPUseCase } from "@application/IUseCases/shared/IResendOTPUseCase";
-import { IResetPasswordUseCase } from "@application/IUseCases/shared/IResetPassword";
-import { IUserSignupUseCase } from "@application/IUseCases/shared/ISignupUseCase";
-import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
-import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
-
-import { logger } from "@infrastructure/logging/Logger";
+import { Response, NextFunction } from "express";
+import dotenv from "dotenv";
 import { AuthenticatedRequest } from "@presentation/http/middlewares/createAuthMiddleware";
 
-import { Response, NextFunction } from "express"
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
+import { ResponseBuilder } from "shared/utils/ResponseBuilder";
+import { IUserSignupUseCase } from "@application/IUseCases/shared/ISignupUseCase";
+import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUserOTPVerification";
+import { IResendOTPUseCase } from "@application/IUseCases/shared/IResendOTPUseCase";
+import { ILearnerSigninUseCase } from "@application/IUseCases/learner/ILearnerSigninUseCase";
+import { IInstructorSigninUseCase } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
+import { IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
+import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
+import { ILearnerGoogleSigninUseCase } from "@application/IUseCases/learner/IGoogleSignin";
+import { IInstructorGoogleSigninUseCase } from "@application/IUseCases/instructor/IGoogleSignin";
+import { IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
+import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
+import { IResetPasswordUseCase } from "@application/IUseCases/shared/IResetPassword";
+import { logger } from "@infrastructure/logging/Logger";
 
+dotenv.config({ path: `.env.${process.env.NODE_ENV || "production"}` });
 
-
-
+const accessTokenCookieMaxAge = Number(process.env.ACCESS_TOKEN_COOKIE_MAX_AGE);
+const refreshTokenCookieMaxAge = Number(process.env.REFRESH_TOKEN_COOKIE_MAX_AGE);
 
 export class UserAuthController {
     constructor(
-
         private _userSignupUseCase: IUserSignupUseCase,
-
         private _learnerOTPVerificationUseCase: IUserOTPVerificationUseCase,
-
         private _instructorOTPVerificationUseCase: IUserOTPVerificationUseCase,
-
         private _businessOTPVerificationUseCase: IUserOTPVerificationUseCase,
-
         private _resendOTPUseCase: IResendOTPUseCase,
-
         private _learnerSigninUseCase: ILearnerSigninUseCase,
-
         private _instructorSigninUseCase: IInstructorSigninUseCase,
-
         private _businessSigninUseCase: IBusinessSigninUseCase,
-
         private _userRefreshTokenUseCase: IRefreshTokenUseCase,
-
         private _learnerGoogleSigninUseCase: ILearnerGoogleSigninUseCase,
-
         private _instructorGoogleSigninUseCase: IInstructorGoogleSigninUseCase,
-
         private _businessGoogleSigninUseCase: IBusinessGoogleSigninUseCase,
-
         private _verifyEmailUseCase: IVerifyEmailUseCase,
-
         private _otpVerificationUseCase: IUserOTPVerificationUseCase,
-
         private _resetPasswordUseCase: IResetPasswordUseCase
     ) { }
 
-    signup = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    signup = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            logger.info("User signup request recieved");
             const result = await this._userSignupUseCase.execute(req.body);
 
-            const response: UserSignupResponseDTO = {
-                success: true,
-                message: MESSAGES.OTP_SENT,
-                otpExpiresAt: result.otpExpiresAt,
-                email: result.email,
-                role: result.role
-            }
-            logger.info("OTP sent to learner email successfully");
-            res.status(STATUS_CODES.OK).json(response);
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success(MESSAGES.OTP_SENT, {
+                    otpExpiresAt: result.otpExpiresAt,
+                    email: result.email,
+                    role: result.role,
+                })
+            );
         } catch (error) {
-            logger.warn("User signup failed");
-            next(error)
+            next(error);
         }
-    }
+    };
 
-
-    verifyOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    verifyOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            logger.info("OTP verification request recieved for user signup");
             const { role, email, otp } = req.body;
-            let message;
-            if (role === 'learner') {
-                message = MESSAGES.LEARNER_CREATED
-                await this._learnerOTPVerificationUseCase.execute({ email, otp })
-            } else if (role === 'instructor') {
-                message = MESSAGES.INSTRUCTOR_CREATED
-                await this._instructorOTPVerificationUseCase.execute({ email, otp })
-            } else {
-                message = MESSAGES.BUSINESS_CREATED
-                await this._businessOTPVerificationUseCase.execute({ email, otp })
+
+            if (role === "learner") {
+                await this._learnerOTPVerificationUseCase.execute({ email, otp });
+                res.status(STATUS_CODES.CREATED).json(
+                    ResponseBuilder.success(MESSAGES.LEARNER_CREATED)
+                );
+                return;
             }
-            logger.info("User registration completed.");
-            res.status(STATUS_CODES.CREATED).json({ success: true, message });
 
+            if (role === "instructor") {
+                await this._instructorOTPVerificationUseCase.execute({ email, otp });
+                res.status(STATUS_CODES.CREATED).json(
+                    ResponseBuilder.success(MESSAGES.INSTRUCTOR_CREATED)
+                );
+                return;
+            }
+
+            await this._businessOTPVerificationUseCase.execute({ email, otp });
+            res.status(STATUS_CODES.CREATED).json(
+                ResponseBuilder.success(MESSAGES.BUSINESS_CREATED)
+            );
         } catch (error) {
-            logger.warn("Failed to verify OTP for user registration.");
-            next(error)
+            next(error);
         }
-    }
+    };
 
-    resendOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    resendOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            logger.info("Recieved request to resend OTP for email verification.");
-            const email = req.body.email;
-            const result = await this._resendOTPUseCase.execute(email);
-            logger.info("OTP was resent successfully,");
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: true,
-                otpExpiresAt: result
-            });
+            const otpExpiresAt = await this._resendOTPUseCase.execute(req.body.email);
 
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success(MESSAGES.OTP_SENT, { otpExpiresAt })
+            );
         } catch (error) {
-            logger.warn("Failed to resend OTP.");
-            next(error)
+            next(error);
         }
-    }
+    };
 
-    signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            logger.info("User signin request recieved");
-            const role: 'learner' | 'instructor' | 'business' = req.body.role;
-
+            const { role } = req.body;
             let result;
-            let user;
 
+            if (role === "learner") result = await this._learnerSigninUseCase.execute(req.body);
+            if (role === "instructor") result = await this._instructorSigninUseCase.execute(req.body);
+            if (role === "business") result = await this._businessSigninUseCase.execute(req.body);
 
-            switch (role) {
-                case "learner":
-                    result = await this._learnerSigninUseCase.execute(req.body);
-                    user = result.user
-                    break;
-
-                case "instructor":
-                    result = await this._instructorSigninUseCase.execute(req.body);
-                    user = result.user
-                    break;
-                case "business":
-                    result = await this._businessSigninUseCase.execute(req.body);
-                    user = result.user
-                    break;
+            if (!result) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR);
             }
 
-
-
-            if (!result || !user) {
-                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
-            }
-            logger.info("User signed in successfully");
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                maxAge: refreshTokenCookieMaxAge,
             });
+
             res.cookie("accessToken", result.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
-                maxAge: 15 * 60 * 1000
+                maxAge: accessTokenCookieMaxAge,
             });
 
-
-            const response: UserSigninResponseDTO = {
-                success: true,
-                message: MESSAGES.LOGIN_SUCCESS,
-                user,
-                accessToken: result.accessToken,
-                role: result.role
-            }
-
-            res.status(STATUS_CODES.OK).json(response);
-
-
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success(MESSAGES.LOGIN_SUCCESS, {
+                    user: result.user,
+                    accessToken: result.accessToken,
+                    role: result.role,
+                })
+            );
         } catch (error) {
-            logger.warn("User failed to sign in.");
-            next(error)
+            next(error);
         }
-    }
+    };
 
-    logout = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    logout = async (_: AuthenticatedRequest, res: Response) => {
+        res.clearCookie("refreshToken");
+        res.clearCookie("accessToken");
+
+        res.status(STATUS_CODES.OK).json(
+            ResponseBuilder.success(MESSAGES.LOGOUT_SUCCESS)
+        );
+    };
+
+    refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            logger.info("User logout request recieved");
-            if (!req.cookies?.refreshToken) {
-                res.status(STATUS_CODES.BAD_REQUEST).json({
-                    success: false,
-                    message: MESSAGES.NO_SESSION,
-                });
-                return;
-            }
-            logger.info("User logged out successfully.");
-            res.clearCookie("refreshToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-            res.clearCookie("accessToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: MESSAGES.LOGOUT_SUCCESS,
-            });
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            logger.info("Token refresh request recieved");
-            const refreshToken = req.cookies?.refreshToken
-
+            const refreshToken = req.cookies?.refreshToken;
             if (!refreshToken) {
-                res.status(STATUS_CODES.BAD_REQUEST).json({
-                    success: false,
-                    message: MESSAGES.SESSION_EXPIRED,
-                });
-                return;
+                throw new AppError(MESSAGES.SESSION_EXPIRED, STATUS_CODES.BAD_REQUEST);
             }
-
 
             const accessToken = await this._userRefreshTokenUseCase.execute(refreshToken);
 
-            const response: RefreshTokenResponseDTO = {
-                success: true,
-                message: MESSAGES.REFRESH_TOKEN_SUCCESS,
-                accessToken
-            }
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "lax",
-                maxAge: 15 * 60 * 1000
+                maxAge: accessTokenCookieMaxAge,
             });
-            logger.info("Access token refreshed successfully");
-            res.status(STATUS_CODES.OK).json(response);
-        } catch (error) {
-            logger.warn("Failed to refresh access token.");
-            res.clearCookie("refreshToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-            res.clearCookie("accessToken", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-            next(error)
-        }
-    }
 
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success(MESSAGES.REFRESH_TOKEN_SUCCESS, { accessToken })
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    verifyEmail = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const otpExpiresAt = await this._verifyEmailUseCase.execute(
+                req.body.email,
+                req.body.role
+            );
+
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success("Email verification successful", { otpExpiresAt })
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    verifyResetOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            await this._otpVerificationUseCase.execute(req.body);
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success("OTP verification success")
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    resetPassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            const { email, role, password } = req.body;
+            await this._resetPasswordUseCase.execute(role, email, password);
+
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success("Password updated successfully")
+            );
+        } catch (error) {
+            next(error);
+        }
+    };
 
     googleSignin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
@@ -305,14 +254,14 @@ export class UserAuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
-                maxAge: 7 * 24 * 60 * 60 * 1000,
+                maxAge: refreshTokenCookieMaxAge,
             });
 
             res.cookie("accessToken", result.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
-                maxAge: 15 * 60 * 1000,
+                maxAge: accessTokenCookieMaxAge,
             });
 
             const response = {
@@ -324,62 +273,16 @@ export class UserAuthController {
             };
 
             res.status(STATUS_CODES.OK).json(response);
+            res.status(STATUS_CODES.OK).json(
+                ResponseBuilder.success(MESSAGES.LOGIN_SUCCESS, {
+                    user: result.user,
+                    accessToken: result.accessToken,
+                    role
+                })
+            );
         } catch (error) {
             logger.warn("Google sign in failed.");
             next(error);
         }
     };
-
-    verifyEmail = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            logger.info("Email verification request recieved");
-            const { email, role } = req.body;
-            const result = await this._verifyEmailUseCase.execute(email, role);
-
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: 'Email verification successful.',
-                otpExpiresAt: result
-            });
-            logger.info("OTP sent to user email successfully")
-
-        } catch (error) {
-            logger.warn("Failed to sent OTP for email verification");
-            next(error)
-        }
-    }
-
-    verifyResetOTP = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            logger.info("OTP verification request recieved for password reset");
-            const { email, otp } = req.body;
-            await this._otpVerificationUseCase.execute({ otp, email })
-            logger.info("OTP verificaiton successfull")
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: 'OTP verification success',
-            });
-
-        } catch (error) {
-            logger.warn("Failed to verify OTP")
-            next(error)
-        }
-    }
-
-    resetPassword = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            logger.info("Password reset request recieved")
-            const { email, role, password } = req.body;
-            await this._resetPasswordUseCase.execute(role, email, password);
-            logger.info("Password reset successfully successfully")
-            res.status(STATUS_CODES.OK).json({
-                success: true,
-                message: "Password updated successfully",
-            });
-
-        } catch (error) {
-            logger.warn("Failed to reset user password.")
-            next(error)
-        }
-    }
 }

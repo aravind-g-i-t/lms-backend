@@ -17,5 +17,7 @@ export interface IEnrollmentRepository {
   updateById(id: string, updates: Partial<Enrollment>): Promise<Enrollment | null>;
   deleteById(id: string): Promise<boolean>;
   updateProgress(id: string, progress: number, completedChapters: string[]): Promise<Enrollment | null>;
+  getEnrolledCourseIdsByLearnerId(learnerId: string): Promise<string[]>;
+
 }
 

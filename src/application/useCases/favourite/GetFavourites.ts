@@ -51,7 +51,7 @@ export class GetFavouritesUseCase implements IGetFavouritesUseCase {
         const courses = await Promise.all(
             result.courses.map(async (course) => {
                 const thumbnailURL = course.thumbnail
-                    ? await this._fileStorageService.getDownloadUrl(course.thumbnail)
+                    ? await this._fileStorageService.getViewURL(course.thumbnail)
                     : null;
 
 
@@ -83,7 +83,10 @@ export class GetFavouritesUseCase implements IGetFavouritesUseCase {
             level: doc.level,
             description: doc.description,
             thumbnail: doc.thumbnail,
-            totalRatings: doc.totalRatings
+            totalRatings: doc.totalRatings,
+            totalChapters:doc.totalChapters,
+            totalModules:doc.totalModules,
+            enrollmentCount:doc.enrollmentCount
         }
     }
 }

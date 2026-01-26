@@ -1,9 +1,9 @@
 import { Server, Socket } from "socket.io";
 import http from "http";
 import { UserRole } from "@domain/entities/Message";
-import { getUnreadMessagesCountUseCase, markMessagesReadUseCase, sendMessageUseCase } from "./container/message";
 import { MessageForListing } from "@application/dtos/message/GetConversations";
-import { presenceService } from "./container/presence";
+import { sendMessageUseCase, getUnreadMessagesCountUseCase, markMessagesReadUseCase } from "./container/shared/useCases";
+import { presenceService } from "./container/shared/services";
 
 // interface OnlineUser {
 //     userId: string;
@@ -90,21 +90,21 @@ export function initializeSockets(server: http.Server) {
                 id: userId
             })
 
-            console.log(userType," unread messages:",unreadCount);
-            
+            console.log(userType, " unread messages:", unreadCount);
+
 
             io.to(userId).emit("unread_count", unreadCount)
 
             // Only emit status change if user wasn't online before
-            // if (wasOffline) {
-            //     const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
-            //     const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
+            // if (!presenceService.isOnline(userId)) {
+                const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
+                const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
 
-            //     io.emit(eventName, {
-            //         [userIdKey]: userId,
-            //         isOnline: true,
-            //         timestamp: new Date()
-            //     });
+                io.emit(eventName, {
+                    [userIdKey]: userId,
+                    isOnline: true,
+                    timestamp: new Date()
+                });
             // }
 
             // Send current online users to the newly connected user
@@ -134,6 +134,8 @@ export function initializeSockets(server: http.Server) {
             socket.leave(`chat:${conversationId}`);
             console.log(`User ${socket.userId} left chat ${conversationId}`);
         });
+
+        // socket.on("messageDeleted",({conversationId:string;receiver}))
 
         socket.on("sendMessage",
             async (
@@ -178,7 +180,7 @@ export function initializeSockets(server: http.Server) {
                         io.to(data.receiverId).emit("new_message")
                     }
 
-                    
+
 
                     if (result.conversation.id) {
                         socket.to(`chat:${result.conversation.id}`).emit("receiveMessage", {
@@ -187,9 +189,9 @@ export function initializeSockets(server: http.Server) {
                             conversationId: data.conversationId,
                             timestamp: new Date()
                         });
-                    
-                    
-                        
+
+
+
                     } else {
                         socket.emit("error", { message: "Either receiverId or conversationId is required" });
                     }
@@ -250,6 +252,14 @@ export function initializeSockets(server: http.Server) {
                 socket.to(`chat:${data.conversationId}`).emit("userTyping", {
                     userId: socket.userId,
                     isTyping: data.isTyping
+                });
+            }
+        });
+
+        socket.on("deleteMessage", (data: { conversationId?: string, messageIds: string[] }) => {
+            if (data.conversationId) {
+                socket.to(`chat:${data.conversationId}`).emit("messageDeleted", {
+                    messageIds:data.messageIds
                 });
             }
         });
@@ -344,6 +354,69 @@ export function initializeSockets(server: http.Server) {
 
             io.to(participantId).emit("callEnded");
         });
+
+        socket.on(
+            "startLiveSession",
+            ({ sessionId, courseId }) => {
+                if (!socket.userId || socket.userType !== "instructor") return;
+
+                // Join instructor to session socket room
+                socket.join(`live:${sessionId}`);
+
+                // Notify learners (you likely already know enrolled learners via courseId)
+                io.emit("liveSessionStarted", {
+                    sessionId,
+                    courseId,
+                    startedAt: new Date(),
+                });
+
+                console.log("Live session started:", sessionId);
+            }
+        );
+
+        socket.on(
+            "joinLiveSession",
+            ({ sessionId }) => {
+                if (!socket.userId) return;
+
+                socket.join(`live:${sessionId}`);
+
+                io.to(`live:${sessionId}`).emit("liveSessionParticipantJoined", {
+                    sessionId,
+                    userId: socket.userId,
+                    role: socket.userType,
+                    joinedAt: new Date(),
+                });
+
+                console.log(
+                    `${socket.userType} ${socket.userId} joined live session ${sessionId}`
+                );
+            }
+        );
+
+        socket.on(
+            "endLiveSession",
+            ({ sessionId }) => {
+                if (!socket.userId || socket.userType !== "instructor") return;
+
+                io.to(`live:${sessionId}`).emit("liveSessionEnded", {
+                    sessionId,
+                    endedAt: new Date(),
+                });
+
+                // Optional: remove everyone from socket room
+                const room = io.sockets.adapter.rooms.get(`live:${sessionId}`);
+                if (room) {
+                    room.forEach(socketId => {
+                        const s = io.sockets.sockets.get(socketId);
+                        s?.leave(`live:${sessionId}`);
+                    });
+                }
+
+                console.log("Live session ended:", sessionId);
+            }
+        );
+
 
 
 

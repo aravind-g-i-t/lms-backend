@@ -1,10 +1,9 @@
 import { Response, NextFunction } from "express";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
-import { GetBusinessesRequestSchema, GetBusinessesResponseDTO } from "@presentation/dtos/business/GetBusinesses";
+import { GetBusinessesRequestSchema } from "@presentation/dtos/business/GetBusinesses";
 import { IGetBusinessesUseCase } from "@application/IUseCases/business/IGetBusinesses";
 import { IUpdateUserStatusUseCase } from "@application/IUseCases/shared/IUpdateUserStatusUseCase";
-import { GetBusinessProfileResponseDTO } from "@presentation/dtos/business/GetProfile";
 import { IGetBusinessDataUseCase } from "@application/IUseCases/business/IGetBusinessData";
 import { IUpdateBusinessDataUseCase } from "@application/IUseCases/business/IUpdateBusinessData";
 import { IUpdateUserPassword } from "@application/IUseCases/shared/IUpdateUserPassword";
@@ -14,6 +13,7 @@ import { AppError } from "shared/errors/AppError";
 import { IApplyForBusinessVeficationUseCase } from "@application/IUseCases/business/IBusinessApplyForVerification";
 import { IUpdateBusinessVerificationStatusUseCase } from "@application/IUseCases/business/IUpdateVerificationStatus";
 import { logger } from "@infrastructure/logging/Logger";
+import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 
 export class BusinessController {
     constructor(
@@ -34,15 +34,13 @@ export class BusinessController {
             const { page, search, status, limit, verificationStatus } = query
             const result = await this._getBusinessesUseCase.execute({ page, search, status, limit, verificationStatus });
 
-            const response: GetBusinessesResponseDTO = {
-                success: true,
-                message: MESSAGES.BUSINESS_FETCHED,
+
+            logger.info("Business fetched for listing successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success(MESSAGES.BUSINESS_FETCHED,{
                 businesses: result.businesses,
                 totalCount: result.totalCount,
                 totalPages: result.totalPages
-            }
-            logger.info("Business fetched for listing successfully.")
-            res.status(STATUS_CODES.OK).json(response);
+            }));
 
         } catch (error) {
             logger.warn("Failed to fetch businesses for listing.")
@@ -59,7 +57,10 @@ export class BusinessController {
             }
             await this._updateBusinessStatusUseCase.execute(id);
             logger.info("Updated business status successfully.");
-            res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.BUSINESS_UPDATED })
+            res
+  .status(STATUS_CODES.OK)
+  .json(ResponseBuilder.success(MESSAGES.BUSINESS_UPDATED));
+
         } catch (error) {
             logger.warn("Failed to update business status")
             next(error)
@@ -74,13 +75,15 @@ export class BusinessController {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             const result = await this._getBusinessDataUseCase.execute(id);
-            const response: GetBusinessProfileResponseDTO = {
-                success: true,
-                message: MESSAGES.BUSINESS_UPDATED,
-                business: result
-            };
             logger.info("Business data fetched successfully");
-            res.status(STATUS_CODES.OK).json(response)
+            res
+  .status(STATUS_CODES.OK)
+  .json(
+    ResponseBuilder.success(MESSAGES.BUSINESS_FETCHED, {
+      business: result
+    })
+  );
+
         } catch (error) {
             logger.warn("Failed to get business data for profile.")
             next(error)
@@ -98,9 +101,12 @@ export class BusinessController {
             }
 
             await this._updateBusinessDataUseCase.execute(id, { name, businessDomain, website, location });
-            const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            
             logger.info("Business profile updated successfully");
-            res.status(STATUS_CODES.OK).json(response)
+            res
+  .status(STATUS_CODES.OK)
+  .json(ResponseBuilder.success(MESSAGES.BUSINESS_UPDATED));
+
         } catch (error) {
             logger.warn("Failed to update business profile")
             next(error)
@@ -117,9 +123,12 @@ export class BusinessController {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             await this._updateBusinessDataUseCase.execute(id, { profilePic: imageURL });
-            const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            
             logger.info("Business profile image updated successfully");
-            res.status(STATUS_CODES.OK).json(response)
+            res
+  .status(STATUS_CODES.OK)
+  .json(ResponseBuilder.success(MESSAGES.BUSINESS_UPDATED));
+
         } catch (error) {
             logger.warn("Failed to update business profile image.")
             next(error)
@@ -136,9 +145,12 @@ export class BusinessController {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             await this._updateBusinessDataUseCase.execute(id, { license });
-            const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+
             logger.info("Business license updated successfully.")
-            res.status(STATUS_CODES.OK).json(response)
+            res
+  .status(STATUS_CODES.OK)
+  .json(ResponseBuilder.success(MESSAGES.BUSINESS_UPDATED));
+
         } catch (error) {
             logger.warn("Failed to update business license.")
             next(error)
@@ -156,7 +168,10 @@ export class BusinessController {
             }
             await this._updateBusinessPasswordUseCase.execute(id, currentPassword, newPassword);
             logger.info("Business password updated successfully");
-            res.status(STATUS_CODES.OK).json({ success: true, message: MESSAGES.BUSINESS_UPDATED })
+            res
+  .status(STATUS_CODES.OK)
+  .json(ResponseBuilder.success(MESSAGES.BUSINESS_UPDATED));
+
         } catch (error) {
             logger.warn("Failed to update business password.")
             next(error)
@@ -174,9 +189,12 @@ export class BusinessController {
 
             await this._applyForVerificationUseCase.execute(id);
 
-            const response = { success: true, message: MESSAGES.SEND_VERIFICATION_SUCCESS };
+            
             logger.info("Applied for Business verification successfully.")
-            res.status(STATUS_CODES.CREATED).json(response)
+            res
+  .status(STATUS_CODES.CREATED)
+  .json(ResponseBuilder.success(MESSAGES.SEND_VERIFICATION_SUCCESS));
+
         } catch (error) {
             logger.warn("Failed to apply for Business verification.")
             next(error)
@@ -191,13 +209,16 @@ export class BusinessController {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
             const result = await this._getBusinessDataUseCase.execute(id);
-            const response: GetBusinessProfileResponseDTO = {
-                success: true,
-                message: MESSAGES.BUSINESS_UPDATED,
-                business: result
-            };
+            
             logger.info("Business data fetched successfully.")
-            res.status(STATUS_CODES.OK).json(response)
+            res
+  .status(STATUS_CODES.OK)
+  .json(
+    ResponseBuilder.success(MESSAGES.BUSINESS_FETCHED, {
+      business: result
+    })
+  );
+
         } catch (error) {
             logger.warn("Failed to fetch business data for admin");
 
@@ -212,9 +233,12 @@ export class BusinessController {
             const { id, status, remarks } = req.body;
             await this._updateVerificationStatusUseCase.execute({ id, status, remarks });
 
-            const response = { success: true, message: MESSAGES.BUSINESS_UPDATED };
+            
             logger.info("Business verification status updated successfully.")
-            res.status(STATUS_CODES.CREATED).json(response)
+            res
+  .status(STATUS_CODES.CREATED)
+  .json(ResponseBuilder.success(MESSAGES.BUSINESS_UPDATED));
+
         } catch (error) {
             logger.warn("Failed to update business verification status.")
             next(error)

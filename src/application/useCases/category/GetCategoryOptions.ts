@@ -1,7 +1,8 @@
+import { IGetCategoryOptionsUseCase } from "@application/IUseCases/category/IGetCategoryOptions";
 import { Category } from "@domain/entities/Category";
 import { ICategoryRepository } from "@domain/interfaces/ICategoryRepository";
 
-export class GetCategoryOptionsUseCase{
+export class GetCategoryOptionsUseCase implements IGetCategoryOptionsUseCase{
     constructor(
         private _categoryRepository:ICategoryRepository
     ){}

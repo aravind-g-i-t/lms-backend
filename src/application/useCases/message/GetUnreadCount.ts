@@ -1,6 +1,6 @@
 import { IConversationRepository } from "@domain/interfaces/IConversationRepository";
 
-export class GetUnreadMessagesCountUseCase{
+export class GetUnreadMessagesCountUseCase {
     constructor(
         private _conversationRepository:IConversationRepository
     ){}

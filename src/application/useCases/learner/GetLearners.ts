@@ -34,7 +34,7 @@ export class GetLearnersUseCase implements IGetLearnersUseCase {
             result.learners.map(async learner => {
                 
                 if (learner.profilePic) {
-                    learner.profilePic = await this._fileStorageService.getDownloadUrl(learner.profilePic);
+                    learner.profilePic = await this._fileStorageService.getViewURL(learner.profilePic);
                 }
                 return LearnerDTOMapper.toGetLearnersDTO(learner);
             })

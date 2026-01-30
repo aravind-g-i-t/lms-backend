@@ -13,6 +13,8 @@ import { IRemoveFromFavouritesUseCase } from "@application/IUseCases/favourite/I
 import { AppError } from "shared/errors/AppError";
 import { logger } from "@infrastructure/logging/Logger";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
+import { IGetLearnerHomeDataUseCase } from "@application/IUseCases/course/IGetHomeData";
+import { IGetHomePageDataUseCase } from "@application/dtos/learner/IGetHomePageData";
 
 export class LearnerController {
     constructor(
@@ -22,7 +24,9 @@ export class LearnerController {
         private _updatePassword: IUpdateUserPassword,
         private _getLearnerData: IGetLearnerDataUseCase,
         private _addToFavouritesUseCase: IAddtoFavouritesUseCase,
-        private _removeFromFavouritesUseCase: IRemoveFromFavouritesUseCase
+        private _removeFromFavouritesUseCase: IRemoveFromFavouritesUseCase,
+        private _getLearnerHomeDataUseCase: IGetLearnerHomeDataUseCase,
+        private _getHomePageDataUseCase:IGetHomePageDataUseCase
     ) { }
 
     getLearners = async (
@@ -280,5 +284,50 @@ export class LearnerController {
         }
     };
 
-    
+    getHomePageData = async (
+        req: AuthenticatedRequest,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+
+            
+            const result = await this._getHomePageDataUseCase.execute();
+            
+
+            res.status(STATUS_CODES.OK)
+                .json(
+                    ResponseBuilder.success("Learner details fetched", result)
+                );
+        } catch (error) {
+            logger.warn("Failed to fetch learner data for admin.");
+            next(error);
+        }
+    };
+
+    getLearnerHomeData = async (
+        req: AuthenticatedRequest,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const learnerId = req.user?.id;
+            if (!learnerId) {
+                throw new AppError(
+                    MESSAGES.SERVER_ERROR,
+                    STATUS_CODES.INTERNAL_SERVER_ERROR
+                );
+            }
+
+            const result = await this._getLearnerHomeDataUseCase.execute(learnerId);
+
+            res.status(STATUS_CODES.OK)
+                .json(
+                    ResponseBuilder.success("Learner details fetched", result)
+                );
+        } catch (error) {
+            logger.warn("Failed to fetch learner data for admin.");
+            next(error);
+        }
+    };
 }

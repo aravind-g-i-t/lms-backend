@@ -5,6 +5,7 @@ import { S3Controller } from "@presentation/http/controllers/S3Controller";
 import { UserAuthController } from "@presentation/http/controllers/UserAuthController";
 import { MessageController } from "@presentation/http/controllers/MessageController";
 import { PaymentController } from "@presentation/http/controllers/PaymentController";
+import { getPopularCoursesUseCase } from "../learner/useCases";
 
 
 export const userAuthController=new UserAuthController(
@@ -50,7 +51,8 @@ export const courseController=new CourseController(
     getFavouritesUseCase,
     getVideoUseCase,
     s3Service,
-    getCourseOptionsUseCase
+    getCourseOptionsUseCase,
+    getPopularCoursesUseCase
 );
 
 

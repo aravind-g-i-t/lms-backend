@@ -13,6 +13,8 @@ import { AuthenticatedRequest } from "@presentation/http/middlewares/createAuthM
 import { logger } from "@infrastructure/logging/Logger";
 import { IUpdateInstructorVerificationStatusUseCase } from "@application/IUseCases/instructor/IUpdateVerificationStatus";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
+import { IGetInstructorEarningsUseCase } from "@application/IUseCases/instructor/IGetInstructorEarnings";
+import { IGetInstructorDashboardUseCase } from "@application/IUseCases/instructor/IGetInstructorDashboard";
 
 export class InstructorController {
     constructor(
@@ -22,7 +24,9 @@ export class InstructorController {
         private _updateInstructorDataUseCase: IUpdateInstructorDataUseCase,
         private _updateInstructorPasswordUseCase: IUpdateUserPassword,
         private _applyForVerificationUseCase: IInstructorApplyForVeficationUseCase,
-        private _updateVerificationStatusUseCase: IUpdateInstructorVerificationStatusUseCase
+        private _updateVerificationStatusUseCase: IUpdateInstructorVerificationStatusUseCase,
+        private _getInstructorEarnings:IGetInstructorEarningsUseCase,
+        private _getInstructorDashboard:IGetInstructorDashboardUseCase
 
     ) { }
 
@@ -245,6 +249,52 @@ export class InstructorController {
             res.status(STATUS_CODES.CREATED).json(ResponseBuilder.success(MESSAGES.INSTRUCTOR_UPDATED))
         } catch (error) {
             logger.warn("Failed to update instructor verification status.")
+            next(error);
+        }
+    }
+
+    
+    getEarnings = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to get instructor earnings.")
+            const { search, status, page,limit } = req.query;
+
+            const instructorId = req.user?.id
+            if (!instructorId) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            const result= await this._getInstructorEarnings.execute({
+                instructorId,
+                page:Number(page),
+                limit:Number(limit),
+                search:search as string|undefined,
+                status:status as string|undefined
+            });
+
+            
+            logger.info("Instructor earnings fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Instructor earnings fetched successfully.",result))
+        } catch (error) {
+            logger.warn("Failed to fetch instructor earnings.")
+            next(error);
+        }
+    }
+
+    getDashboard = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to get instructor dashboard data.")
+
+            const instructorId = req.user?.id
+            if (!instructorId) {
+                throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+            const result= await this._getInstructorDashboard.execute(instructorId);
+
+            
+            logger.info("Instructor dashboard data fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Instructor dashboard data fetched successfully.",result))
+        } catch (error) {
+            logger.warn("Failed to fetch instructor dashboard data.")
             next(error);
         }
     }

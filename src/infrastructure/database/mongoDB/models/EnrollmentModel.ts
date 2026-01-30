@@ -1,5 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 import { EnrollmentStatus } from "@domain/entities/Enrollment";
+import { LearnerDoc } from "./LearnerModel";
+import { PaymentDoc } from "./PaymentModel";
 
 export interface EnrollmentDoc extends Document {
     _id: Types.ObjectId
@@ -8,6 +10,24 @@ export interface EnrollmentDoc extends Document {
     enrolledAt: Date|null;
     status: EnrollmentStatus;
     paymentId: Types.ObjectId;
+    certificate: string | null;
+    completedAt: Date | null;
+    cancelledAt: Date | null;
+    createdAt:Date;
+    instructorId:Types.ObjectId;
+    courseTitle:string;
+    instructorName:string
+    thumbnail:string;
+    duration:number;
+}
+
+export interface HydratedEnrollmentDoc {
+    _id: Types.ObjectId
+    learnerId: LearnerDoc;
+    courseId: Types.ObjectId;
+    enrolledAt: Date|null;
+    status: EnrollmentStatus;
+    paymentId: PaymentDoc;
     certificate: string | null;
     completedAt: Date | null;
     cancelledAt: Date | null;

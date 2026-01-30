@@ -1,6 +1,6 @@
 
 import { InstructorController } from "@presentation/http/controllers/InstructorController";
-import { addQuestionUseCase, applyForVerificationUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDataUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
+import { addQuestionUseCase, applyForVerificationUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorEarningsUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
 import { QuizController } from "@presentation/http/controllers/QuizController";
 import { getCertificatesUseCase } from "../admin/useCases";
 import { LiveSessionController } from "@presentation/http/controllers/LiveSessionController";
@@ -17,7 +17,9 @@ export const instructorController=new InstructorController(
     updateInstructorDataUseCase,
     updateInstructorPasswordUseCase,
     applyForVerificationUseCase,
-    updateVerificationStatusUseCase
+    updateVerificationStatusUseCase,
+    getInstructorEarningsUseCase,
+    getInstructorDashboardData
 );
 
 export const quizController = new QuizController(
@@ -38,5 +40,5 @@ export const liveSessionController = new LiveSessionController(
     startLiveSessionUseCase,
     joinLiveSessionUseCase,
     getLiveSessionsForLearner,
-    endLiveSessionUseCase
+    endLiveSessionUseCase,
 )

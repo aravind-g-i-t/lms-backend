@@ -29,51 +29,60 @@ learnerRouter.patch(ROUTES.PASSWORD,learnerAuthMiddleware,validateRequest(Update
 
 learnerRouter.get(ROUTES.COURSES,(req:Request,res:Response,next:NextFunction)=>courseController.getCoursesForLearner(req,res,next));
 
-learnerRouter.get("/course/preview",(req:Request,res:Response,next:NextFunction)=>courseController.getCourseDetailsForLearner(req,res,next));
+learnerRouter.get(ROUTES.COURSE_PREVIEW,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseDetailsForLearner(req,res,next));
 
 
-learnerRouter.get("/enrollments",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>enrollmentController.getEnrollments(req,res,next));
+learnerRouter.get(ROUTES.ENROLLMENTS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>enrollmentController.getEnrollments(req,res,next));
 
-learnerRouter.get("/course/learn",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getFullCourseForLearner(req,res,next));
+learnerRouter.get(ROUTES.LEARN_COURSE,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getFullCourseForLearner(req,res,next));
 
-learnerRouter.get("/course/checkout",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseDetailsForCheckout(req,res,next));
+learnerRouter.get(ROUTES.CHECKOUT,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseDetailsForCheckout(req,res,next));
 
-learnerRouter.patch("/progress/chapter/complete",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.markChapterAsCompleted(req,res,next));
+learnerRouter.patch(ROUTES.PROGRESS_CHAPTER_COMPLETE,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.markChapterAsCompleted(req,res,next));
 
-learnerRouter.patch("/progress/chapter/current",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.updateCurrentChapter(req,res,next));
+learnerRouter.patch(ROUTES.PROGRESS_CHAPTER_CURRENT,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>progressController.updateCurrentChapter(req,res,next));
 
-learnerRouter.post("/favourites",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.addToFavourites(req,res,next));
+learnerRouter.post(ROUTES.FAVOURITES,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.addToFavourites(req,res,next));
 
-learnerRouter.delete("/favourites/:courseId",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.removeFromFavourites(req,res,next));
+learnerRouter.delete(ROUTES.FAVOURITE_COURSE,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.removeFromFavourites(req,res,next));
 
-learnerRouter.get("/favourites",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getFavourites(req,res,next));
-
-
-learnerRouter.get("/conversations",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getConversationsForLearner(req,res,next))
-
-learnerRouter.get("/messages",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getMessages(req,res,next))
-
-learnerRouter.get("/quiz",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getQuizForLearner(req,res,next));
-
-learnerRouter.post("/quiz",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.submitQuiz(req,res,next))
-
-learnerRouter.get("/certificates",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getCertificates(req,res,next));
-
-learnerRouter.get("/video",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getVideo(req,res,next));
-
-learnerRouter.get("/courses/:courseId/modules/:moduleId/chapters/:chapterId/stream",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.streamVideo(req,res,next));
-
-learnerRouter.get("/ping",learnerAuthMiddleware,(req:Request,res:Response)=>res.json({success:true,message:"Pinged learner route successfully"}));
+learnerRouter.get(ROUTES.FAVOURITES,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getFavourites(req,res,next));
 
 
-learnerRouter.post("/messages/delete",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
+learnerRouter.get(ROUTES.CONVERSATIONS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getConversationsForLearner(req,res,next))
 
-learnerRouter.post("/session/join",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.joinLiveSession(req,res,next));
+learnerRouter.get(ROUTES.MESSAGES,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getMessages(req,res,next))
 
-learnerRouter.get("/sessions",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.getSessionsForLearner(req,res,next));
+learnerRouter.get(ROUTES.QUIZ,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getQuizForLearner(req,res,next));
 
-learnerRouter.post("/course/review",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.addReview(req,res,next));
+learnerRouter.post(ROUTES.QUIZ,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.submitQuiz(req,res,next))
 
-learnerRouter.get("/course/reviews",learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.getReviewsForLearner(req,res,next));
+learnerRouter.get(ROUTES.CERTIFICATES,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.getCertificates(req,res,next));
+
+learnerRouter.get(ROUTES.VIDEO,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getVideo(req,res,next));
+
+learnerRouter.get(ROUTES.COURSE_VIDEO_STREAM,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.streamVideo(req,res,next));
+
+learnerRouter.get(ROUTES.PING,learnerAuthMiddleware,(req:Request,res:Response)=>res.json({success:true,message:"Pinged learner route successfully"}));
+
+
+learnerRouter.post(ROUTES.DELETE_MESSAGE,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
+
+learnerRouter.post(ROUTES.JOIN_SESSION,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.joinLiveSession(req,res,next));
+
+learnerRouter.get(ROUTES.SESSIONS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.getSessionsForLearner(req,res,next));
+
+learnerRouter.post(ROUTES.COURSE_REVIEW,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.addReview(req,res,next));
+
+learnerRouter.get(ROUTES.COURSE_REVIEWS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.getReviewsForLearner(req,res,next));
+
+learnerRouter.get(ROUTES.HOME,(req:Request,res:Response,next:NextFunction)=>learnerController.getHomePageData(req,res,next));
+
+learnerRouter.get(ROUTES.HOME_LEARNER_DATA,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.getLearnerHomeData(req,res,next));
+
+learnerRouter.get(ROUTES.POPULAR_COURSES,(req:Request,res:Response,next:NextFunction)=>courseController.getPopularCourses(req,res,next));
+
+learnerRouter.patch(ROUTES.COURSE_REVIEW,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.updateReview(req,res,next));
+
 
 export default learnerRouter;

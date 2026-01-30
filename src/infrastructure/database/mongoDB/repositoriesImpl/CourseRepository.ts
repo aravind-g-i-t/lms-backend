@@ -161,7 +161,6 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
             pagination = { page: 1, limit: 10 },
         } = input;
 
-        console.log("search", search);
 
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -583,7 +582,7 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
     async countCoursesByCategory(): Promise<
         { categoryId: string; count: number }[]
     > {
-        return CourseModel.aggregate([
+        const result= await CourseModel.aggregate([
             {
                 $match: {
                     status: CourseStatus.Published,
@@ -597,7 +596,16 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
                 }
             }
         ]).exec();
+        
+        return result.map(summary=>{
+            return {
+                categoryId:summary._id.toString(),
+                count:summary.count
+            }
+        })
     }
+
+    
 
 }
 

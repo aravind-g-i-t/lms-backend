@@ -102,13 +102,15 @@ adminRouter.get(ROUTES.COURSES,adminAuthMiddleware, validateRequest(GetCoursesFo
 
 adminRouter.post("/coupon",adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.createCoupon(req,res,next));
 
-adminRouter.get("/coupons",adminAuthMiddleware,validateRequest(GetAllCouponsRequestSchema),(req:Request,res:Response,next:NextFunction)=>couponController.getAllCoupons(req,res,next));
+adminRouter.get(ROUTES.COUPONS,adminAuthMiddleware,validateRequest(GetAllCouponsRequestSchema),(req:Request,res:Response,next:NextFunction)=>couponController.getAllCoupons(req,res,next));
 
-adminRouter.put("/coupon",adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateCoupon(req,res,next));
+adminRouter.put(ROUTES.COUPON,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateCoupon(req,res,next));
 
-adminRouter.patch("/coupon/status",adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateStatus(req,res,next));
+adminRouter.patch(ROUTES.COUPON_STATUS,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>couponController.updateStatus(req,res,next));
 
 adminRouter.get(ROUTES.COURSE,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseDetails(req,res,next));
+
+adminRouter.get(ROUTES.DASHBOARD,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>adminController.getDashboard(req,res,next));
 
 
 export default adminRouter;

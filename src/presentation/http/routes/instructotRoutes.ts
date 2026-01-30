@@ -73,50 +73,54 @@ instructorRouter.patch(ROUTES.ADD_MODULE,instructorAuthMiddleware,(req:Request,r
 
 instructorRouter.patch(ROUTES.ADD_CHAPTER,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.addChapter(req,res,next));
 
-instructorRouter.patch("/course/chapter/update",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateChapter(req,res,next));
+instructorRouter.patch(ROUTES.UPDATE_CHAPTER,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateChapter(req,res,next));
 
-instructorRouter.patch("/course/video/update",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateVideo(req,res,next));
+instructorRouter.patch(ROUTES.UPDATE_VIDEO,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateVideo(req,res,next));
 
-instructorRouter.patch("/course/module/update",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateModule(req,res,next));
+instructorRouter.patch(ROUTES.UPDATE_MODULE,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateModule(req,res,next));
 
-instructorRouter.patch("/course/module/delete",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteModule(req,res,next));
+instructorRouter.patch(ROUTES.DELETE_MODULE,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteModule(req,res,next));
 
-instructorRouter.patch("/course/chapter/delete",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteChapter(req,res,next));
+instructorRouter.patch(ROUTES.DELETE_CHAPTER,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteChapter(req,res,next));
 
-instructorRouter.patch("/course/verification",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.submitForReview(req,res,next));
+instructorRouter.patch(ROUTES.COURSE_VERIFICATION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.submitForReview(req,res,next));
 
 instructorRouter.patch(ROUTES.COURSE_STATUS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.updateStatus(req,res,next));
 
-instructorRouter.patch("/course/resource/add",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.addResource(req,res,next));
+instructorRouter.patch(ROUTES.ADD_RESOURCE,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.addResource(req,res,next));
 
-instructorRouter.patch("/course/resource/delete",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteResource(req,res,next));
+instructorRouter.patch(ROUTES.DELETE_RESOURCE,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.deleteResource(req,res,next));
 
-instructorRouter.post("/course/quiz",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.createQuiz(req,res,next));
+instructorRouter.post(ROUTES.COURSE_QUIZ,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.createQuiz(req,res,next));
 
-instructorRouter.patch("/course/quiz",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.updateQuiz(req,res,next));
+instructorRouter.patch(ROUTES.COURSE_QUIZ,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.updateQuiz(req,res,next));
 
-instructorRouter.post("/course/quiz/question",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.addQuestion(req,res,next));
+instructorRouter.post(ROUTES.COURSE_QUIZ_QUESTION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.addQuestion(req,res,next));
 
-instructorRouter.patch("/course/quiz/question",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.updateQuestion(req,res,next));
+instructorRouter.patch(ROUTES.COURSE_QUIZ_QUESTION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.updateQuestion(req,res,next));
 
-instructorRouter.delete("/course/quiz/question",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.deleteQuestion(req,res,next));
+instructorRouter.delete(ROUTES.COURSE_QUIZ_QUESTION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.deleteQuestion(req,res,next));
 
-instructorRouter.delete("/course/quiz",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.deleteQuiz(req,res,next));
+instructorRouter.delete(ROUTES.COURSE_QUIZ,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>quizController.deleteQuiz(req,res,next));
 
-instructorRouter.get("/conversations",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getConversationsForInstructor(req,res,next));
+instructorRouter.get(ROUTES.CONVERSATIONS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getConversationsForInstructor(req,res,next));
 
-instructorRouter.get("/messages",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getMessages(req,res,next));
+instructorRouter.get(ROUTES.MESSAGES,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.getMessages(req,res,next));
 
-instructorRouter.post("/messages/delete",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
+instructorRouter.post(ROUTES.DELETE_MESSAGE,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>messageController.deleteMessages(req,res,next));
 
-instructorRouter.get("/course/options",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseOptions(req,res,next));
+instructorRouter.get(ROUTES.COURSE_OPTIONS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseOptions(req,res,next));
 
-instructorRouter.post("/session",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.createLiveSession(req,res,next));
+instructorRouter.post(ROUTES.SESSION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.createLiveSession(req,res,next));
 
-instructorRouter.get("/sessions",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.getSessionsForInstructor(req,res,next));
+instructorRouter.get(ROUTES.SESSIONS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.getSessionsForInstructor(req,res,next));
 
-instructorRouter.post("/session/start",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.startLiveSession(req,res,next));
+instructorRouter.post(ROUTES.START_SESSION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.startLiveSession(req,res,next));
 
-instructorRouter.post("/session/end",instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.endLiveSession(req,res,next));
+instructorRouter.post(ROUTES.END_SESSION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.endLiveSession(req,res,next));
 
-export default instructorRouter
+instructorRouter.get(ROUTES.EARNINGS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getEarnings(req,res,next));
+
+instructorRouter.get(ROUTES.DASHBOARD,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getDashboard(req,res,next));
+
+export default instructorRouter;

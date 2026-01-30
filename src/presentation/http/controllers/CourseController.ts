@@ -13,7 +13,7 @@ import { IGetCoursesForAdminUseCase } from "@application/IUseCases/course/IGetCo
 import { IGetCoursesForInstructorUseCase } from "@application/IUseCases/course/IGetCoursesForInstructor";
 import { IGetCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetCoursesForLearner";
 import { IGetFullCourseForLearnerUseCase } from "@application/IUseCases/course/IGetFullCourseForLearner";
-import { IGetRecommendedCoursesForLearnerUseCase } from "@application/IUseCases/course/IGetRecommended";
+import { IGetPopularCoursesUseCase } from "@application/IUseCases/course/IGetPopularCourses";
 import { IGetVideoUseCase } from "@application/IUseCases/course/IGetVideo";
 import { ISubmitCourseForReviewUseCase } from "@application/IUseCases/course/ISubmitForReview";
 import { IUpdateChapterInfoUseCase } from "@application/IUseCases/course/IUpdateChapterInfo";
@@ -64,7 +64,7 @@ export class CourseController {
         private _getVideoUseCase: IGetVideoUseCase,
         private _fileStorageService: IFileStorageService,
         private _getCourseOptionsUseCase:IGetCourseOptionsUseCase,
-        private _getRecommendationUseCase:IGetRecommendedCoursesForLearnerUseCase
+        private _getPopularCourses:IGetPopularCoursesUseCase
     ) { }
 
     async createCourse(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
@@ -656,19 +656,15 @@ export class CourseController {
         }
     }
 
-    async getRecommendations(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    async getPopularCourses(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
 
 
-            const instructorId = req.user?.id
-            if (!instructorId) {
-                throw new AppError("Failed to access user details", STATUS_CODES.NOT_FOUND)
-            }
+             const { categoryId,limit } = req.query;
 
-
-
-            const response = await this._getCourseOptionsUseCase.execute({
-                instructorId
+            const response = await this._getPopularCourses.execute({
+                categoryId:categoryId as string|null,
+                limit:Number(limit) as number
             });
 
 
@@ -680,5 +676,6 @@ export class CourseController {
             next(error);
         }
     }
+
 }
 

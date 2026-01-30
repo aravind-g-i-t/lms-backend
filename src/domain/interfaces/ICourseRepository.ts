@@ -143,5 +143,6 @@ export interface ICourseRepository {
         { categoryId: string; count: number }[]
     >;
 
+    getCount(filter:Partial<Course>):Promise<number>
 
 }

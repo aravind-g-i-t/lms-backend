@@ -9,6 +9,7 @@ import { IUpdateCategoryStatusUseCase } from "@application/IUseCases/category/IU
 import { IGetCategoryOptionsUseCase } from "@application/IUseCases/category/IGetCategoryOptions";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { AppError } from "shared/errors/AppError";
+// import { IGetCourseCategoriesSummaryUseCase } from "@application/IUseCases/category/IGetCategorySummary";
 
 export class CategoryController {
     constructor(
@@ -16,7 +17,8 @@ export class CategoryController {
         private _getCategoriesUseCase: IGetCategoriesUseCase,
         private _updateCategoryUseCase: IUpdateCategoryUseCase,
         private _updateCategoryStatusUseCase: IUpdateCategoryStatusUseCase,
-        private _getCategoryOptionsUseCase: IGetCategoryOptionsUseCase
+        private _getCategoryOptionsUseCase: IGetCategoryOptionsUseCase,
+        // private _getCategorySummaryUseCase:IGetCourseCategoriesSummaryUseCase
     ) { }
 
     async addCategory(
@@ -150,4 +152,26 @@ export class CategoryController {
             next(err);
         }
     }
+
+    // async getCategorySummary(
+    //     req: Request,
+    //     res: Response,
+    //     next: NextFunction
+    // ): Promise<void> {
+    //     try {
+    //         logger.info("Request recieved to fetch category options");
+
+    //         const categories = await this._getCategorySummaryUseCase.execute();
+
+    //         res.status(STATUS_CODES.OK)
+    //             .json(
+    //                 ResponseBuilder.success("Fetched category options successfully", {
+    //                     categories,
+    //                 })
+    //             );
+    //     } catch (err) {
+    //         next(err);
+    //     }
+    // }
+
 }

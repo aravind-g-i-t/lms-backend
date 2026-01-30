@@ -19,6 +19,9 @@ export class UpdateCouponUseCase implements IUpdateCouponUseCase{
         if (new Date(data.expiresAt) <= new Date()) {
             throw new Error("Expiry date must be a future date");
         }
+        if(discountType===DiscountType.Amount && discountValue>minCost){
+            throw new AppError("Minimum cost must be greater that discount amount.",STATUS_CODES.BAD_REQUEST)
+        }
 
         const updated = await this.couponRepo.updateById(id,{
             description,

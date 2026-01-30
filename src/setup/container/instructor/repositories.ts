@@ -13,3 +13,5 @@ export const instructorEarningsRepository = new InstructorEarningsRepositoryImpl
 export const quizRepository= new QuizRepository();
 
 export const liveSessionRepository= new LiveSessionRepository()
+
+

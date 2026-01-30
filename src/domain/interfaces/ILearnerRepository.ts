@@ -20,5 +20,6 @@ export interface ILearnerRepository{
 
     findByIdAndUpdate(id:string,learner:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>,
 
-    updateOne(filter:Partial<Learner>,update:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>
+    updateOne(filter:Partial<Learner>,update:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>;
+
 };

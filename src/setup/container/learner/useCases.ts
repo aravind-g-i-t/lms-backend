@@ -12,13 +12,19 @@ import { InitiateEnrollmentUseCase } from "@application/useCases/enrollment/Init
 import { GetEnrollmentsUseCase } from "@application/useCases/enrollment/GetEnrollments";
 import { courseRepository } from "../shared/repositories";
 import { instructorRepository, liveSessionRepository } from "../instructor/repositories";
-import { couponRepository } from "../admin/repositories";
-import { createPaymentUseCase } from "../shared/useCases";
+import { categoryRepository, couponRepository } from "../admin/repositories";
+import { createPaymentUseCase, getCoursesForLearnerUseCase } from "../shared/useCases";
 import { MarkChapterAsCompletedUseCase } from "@application/useCases/learnerProgress/MarkChapterAsCompleted";
 import { UpdateCurrentChapterUseCase } from "@application/useCases/course/UpdateCurrentChapter";
 import { GetSessionListForLearnerUseCase } from "@application/useCases/liveSession/GetSessionListForLearner";
 import { CreateReviewUseCase } from "@application/useCases/review/CreateReview";
 import { GetReviewsForLearnerUseCase } from "@application/useCases/review/GetReviewsForLearner";
+import { GetHomePageData } from "@application/useCases/learner/GetHomePageData";
+import { GetCourseCategoriesSummaryUseCase } from "@application/useCases/category/GetCategorySummary";
+import { GetLearnerHomeDataUseCase } from "@application/useCases/learner/GetLearnerHomeData";
+import { GetRecommendedCoursesForLearnerUseCase } from "@application/useCases/course/GetRecommended";
+import { GetPopularCoursesUseCase } from "@application/useCases/course/GetPopularCourses";
+import { UpdateReviewUseCase } from "@application/useCases/review/UpdateReview";
 
 export const getLearnersUseCase=new GetLearnersUseCase(learnerRepository,s3Service)
 
@@ -57,3 +63,15 @@ export const getLiveSessionsForLearner= new GetSessionListForLearnerUseCase(live
 export const createReviewUseCase= new CreateReviewUseCase(reviewRepository,enrollmentRepository,courseRepository);
 
 export const getReviewsForLearnerUseCase= new GetReviewsForLearnerUseCase(reviewRepository,s3Service)
+
+export const getCategorySummaryUseCase= new GetCourseCategoriesSummaryUseCase(courseRepository,categoryRepository)
+
+export const getRecommendedCoursesUseCase= new GetRecommendedCoursesForLearnerUseCase(enrollmentRepository,courseRepository,s3Service)
+
+export const getHomePageDataUseCase= new GetHomePageData(getCategorySummaryUseCase)
+
+export const getLearnerHomeDataUseCase= new GetLearnerHomeDataUseCase(getEnrollmentsUseCase,getRecommendedCoursesUseCase);
+
+export const getPopularCoursesUseCase= new GetPopularCoursesUseCase(getCoursesForLearnerUseCase)
+
+export const updateReviewUseCase= new UpdateReviewUseCase(reviewRepository,enrollmentRepository,courseRepository)

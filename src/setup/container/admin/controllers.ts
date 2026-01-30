@@ -1,11 +1,12 @@
 import { AdminController } from "@presentation/http/controllers/AdminController";
-import { addCategoryUseCase, adminRefreshTokenUseCase, adminSigninUseCase, createCouponUseCase, getAllCouponsUseCase, getCategoriesUseCase, getCategoryOptionsUseCase, updateCategoryStatusUseCase, updateCategoryUseCase, updateCouponStatusUseCase, updateCouponUseCase } from "./useCases";
+import { addCategoryUseCase, adminRefreshTokenUseCase, adminSigninUseCase, createCouponUseCase, getAdminDashboardUseCase, getAllCouponsUseCase, getCategoriesUseCase, getCategoryOptionsUseCase, updateCategoryStatusUseCase, updateCategoryUseCase, updateCouponStatusUseCase, updateCouponUseCase } from "./useCases";
 import { CouponController } from "@presentation/http/controllers/CouponController";
 import { CategoryController } from "@presentation/http/controllers/CategoryController";
 
 export const adminController= new AdminController(
     adminSigninUseCase,
-    adminRefreshTokenUseCase
+    adminRefreshTokenUseCase,
+    getAdminDashboardUseCase
 )
 
 export const couponController= new CouponController(

@@ -9,19 +9,21 @@ export class GetCourseCategoriesSummaryUseCase implements IGetCourseCategoriesSu
     ) { }
 
     async execute(): Promise<CategorySummary[]> {
+        
         const [categories, counts] = await Promise.all([
             this.categoryRepo.findMany({}),
             this.courseRepo.countCoursesByCategory()
-        ]);
+        ]);        
+        
 
         const countMap = new Map(
-            counts.map(c => [c.categoryId.toString(), c.count])
-        );
+            counts.map(c => [c.categoryId, c.count])
+        );        
 
         const totalCount = counts.reduce(
             (sum, c) => sum + c.count,
             0
-        );
+        );        
 
         const summaries: CategorySummary[] = [
             {
@@ -40,7 +42,7 @@ export class GetCourseCategoriesSummaryUseCase implements IGetCourseCategoriesSu
                 });
             }
 
-        }
+        }        
 
         return summaries;
     }

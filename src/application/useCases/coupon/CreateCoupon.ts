@@ -17,7 +17,10 @@ export class CreateCouponUseCase implements ICreateCouponUseCase{
         }
 
         if (new Date(data.expiresAt) <= new Date()) {
-            throw new Error("Expiry date must be a future date");
+            throw new AppError("Expiry date must be a future date",STATUS_CODES.BAD_REQUEST);
+        }
+        if(discountType===DiscountType.Amount && discountValue>minCost){
+            throw new AppError("Minimum cost must be greater that discount amount.",STATUS_CODES.BAD_REQUEST)
         }
 
         const created = await this.couponRepo.create({

@@ -1,5 +1,5 @@
 import { GetInstructorsUseCase } from "@application/useCases/instructor/GetInstructors";
-import { instructorRepository, liveSessionRepository, quizRepository } from "./repositories";
+import { instructorEarningsRepository, instructorRepository, instructorWalletRepository, liveSessionRepository, quizRepository } from "./repositories";
 import { s3Service } from "../shared/services";
 import { UpdateInstructorStatusUseCase } from "@application/useCases/instructor/UpdateInstructorStatus";
 import { GetInstructorDataUseCase } from "@application/useCases/instructor/GetInstructorData";
@@ -23,6 +23,8 @@ import { ScheduleLiveSessionUseCase } from "@application/useCases/liveSession/Sc
 import { StartLiveSessionUseCase } from "@application/useCases/liveSession/StartLiveSession";
 import { JoinLiveSessionUseCase } from "@application/useCases/liveSession/JoinLiveSession";
 import { EndLiveSessionUseCase } from "@application/useCases/liveSession/EndLIveSession";
+import { GetInstructorWalletAndEarningsUseCase } from "@application/useCases/instructor/GetInstructorEarnings";
+import { GetInstructorDashboardUseCase } from "@application/useCases/instructor/GetInstructorDashboard";
 
 export const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository,s3Service);
 
@@ -62,4 +64,8 @@ export const startLiveSessionUseCase= new StartLiveSessionUseCase(liveSessionRep
 
 export const joinLiveSessionUseCase= new JoinLiveSessionUseCase(liveSessionRepository,enrollmentRepository)
 
-export const endLiveSessionUseCase= new EndLiveSessionUseCase(liveSessionRepository)
+export const endLiveSessionUseCase= new EndLiveSessionUseCase(liveSessionRepository);
+
+export const getInstructorEarningsUseCase= new GetInstructorWalletAndEarningsUseCase(instructorWalletRepository,instructorEarningsRepository)
+
+export const getInstructorDashboardData= new GetInstructorDashboardUseCase(courseRepository,liveSessionRepository,instructorWalletRepository,s3Service)

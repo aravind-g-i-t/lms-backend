@@ -96,6 +96,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             const instructorEarnings = await this._instructorEarningsRepository.create({
                 instructorId: enrollment.instructorId,
                 courseId: enrollment.courseId,
+                learnerId:enrollment.learnerId,
                 amount: instructorShare,
                 releaseAt,
                 cancelledAt: null,

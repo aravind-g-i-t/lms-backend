@@ -19,5 +19,4 @@ export interface Instructor{
     googleId:string|null;
     website:string|null;
     bio:string|null;
-
 }

@@ -9,6 +9,7 @@ export interface InstructorEarnings {
     instructorId: string;
     courseId: string;
     enrollmentId: string;
+    learnerId:string
     amount: number;
     createdAt: Date;
     releaseAt: Date;

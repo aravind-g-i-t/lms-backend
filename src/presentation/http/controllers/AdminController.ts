@@ -9,6 +9,7 @@ import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { AppError } from "shared/errors/AppError";
+import { IGetAdminDashboardUseCase } from "@application/IUseCases/admin/IGetAdminDashboard";
 
 const accessTokenCookieMaxAge= parseInt(process.env.ACCESS_TOKEN_COOKIE_MAX_AGE!)
 const refreshTokenCookieMaxAge= parseInt(process.env.REFRESH_TOKEN_COOKIE_MAX_AGE!)
@@ -16,7 +17,8 @@ const refreshTokenCookieMaxAge= parseInt(process.env.REFRESH_TOKEN_COOKIE_MAX_AG
 export class AdminController {
     constructor(
         private _adminSigninUseCase: IAdminSigninUseCase,
-        private _refreshTokenUseCase: IRefreshTokenUseCase
+        private _refreshTokenUseCase: IRefreshTokenUseCase,
+        private _getAdminDashboardUseCase:IGetAdminDashboardUseCase
     ) { }
 
     signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -80,6 +82,24 @@ export class AdminController {
             next(error)
         }
     }
+
+    getDashboard = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            logger.info("Request received to get admin dashboard.")
+
+            const result = await this._getAdminDashboardUseCase.execute();
+
+
+            logger.info("Admin dashboard data fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Admin dashboard data fetched successfully.",result))
+           
+        } catch (error) {
+            logger.warn("Failed to fetch admin dashboard data.")
+            next(error)
+        }
+    }
+
+    
 
     // refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     //     try {

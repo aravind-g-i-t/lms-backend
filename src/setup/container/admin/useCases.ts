@@ -13,6 +13,10 @@ import { UpdateCategoryUseCase } from "@application/useCases/category/UpdateCate
 import { GetCategoryOptionsUseCase } from "@application/useCases/category/GetCategoryOptions";
 import { UpdateCategoryStatusUseCase } from "@application/useCases/category/UpdateStatus";
 import { GetCertificatesForLearnerUseCase } from "@application/useCases/certificate/GetCertificates";
+import { GetAdminDashboardUseCase } from "@application/useCases/admin/GetAdminDashboard";
+import { enrollmentRepository, learnerRepository } from "../learner/repostitories";
+import { instructorRepository } from "../instructor/repositories";
+import { courseRepository, paymentRepository } from "../shared/repositories";
 
 export const adminSigninUseCase=new AdminSigninUseCase(adminRepository,tokenService);
 
@@ -39,3 +43,5 @@ export const getCategoryOptionsUseCase=new GetCategoryOptionsUseCase(categoryRep
 export const updateCategoryStatusUseCase = new UpdateCategoryStatusUseCase(categoryRepository);
 
 export const getCertificatesUseCase=new GetCertificatesForLearnerUseCase(certificateRepository,s3Service);
+
+export const getAdminDashboardUseCase= new GetAdminDashboardUseCase(enrollmentRepository,learnerRepository,instructorRepository,courseRepository,paymentRepository)

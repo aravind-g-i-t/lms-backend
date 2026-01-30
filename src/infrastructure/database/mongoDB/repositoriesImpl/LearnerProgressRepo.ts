@@ -4,16 +4,17 @@ import { LearnerProgressModel } from "../models/LearnerProgressModel";
 import { LearnerProgressMapper } from "../mappers/LeanerProgressMapper";
 import { LearnerProgress } from "@domain/entities/LearnerProgress";
 import { BaseRepository } from "./BaseRepository";
+import { Types } from "mongoose";
 
 export class LearnerProgressRepository extends BaseRepository<LearnerProgress> implements ILearnerProgressRepository {
-    constructor(){
-        super(LearnerProgressModel,LearnerProgressMapper)
+    constructor() {
+        super(LearnerProgressModel, LearnerProgressMapper)
     }
-    
 
-    
 
-    
+
+
+
 
     async findManyByCourseIds(learnerId: string, courseIds: string[]): Promise<LearnerProgress[]> {
         const docs = await LearnerProgressModel.find({
@@ -60,4 +61,27 @@ export class LearnerProgressRepository extends BaseRepository<LearnerProgress> i
     }
 
 
+    async getAverageProgress(courseId: string): Promise<number> {
+        const result = await LearnerProgressModel.aggregate([
+            {
+                $match: {
+                    courseId: new Types.ObjectId(courseId),
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    avgProgress: { $avg: "$progressPercentage" },
+                },
+            },
+        ]);
+
+        return result.length > 0
+            ? Number(result[0].avgProgress.toFixed(2))
+            : 0;
+    }
+
+    
 }
+
+

@@ -2,6 +2,7 @@ import { GetLiveSessionsForLearnerOutput } from "@application/dtos/liveSession/G
 import { LiveSessionStatus } from "@domain/entities/LiveSession";
 import { ILiveSessionRepository } from "@domain/interfaces/ILiveSessionRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class GetSessionListForLearnerUseCase {
@@ -19,7 +20,7 @@ export class GetSessionListForLearnerUseCase {
             status: status as LiveSessionStatus
         })
         if(!result){
-            throw new AppError("Failed to schedule new live session",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return {
             totalCount:result.totalCount,

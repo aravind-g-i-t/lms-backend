@@ -7,6 +7,7 @@ import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository"
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLearnerUseCase {
@@ -20,7 +21,7 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
     async execute({ courseId, learnerId }: { courseId: string, learnerId: string | null }): Promise<GetCourseDetailsForLearnerOutput> {
         const course = await this._courseRepository.findHydratedCourseById(courseId);
         if (!course) {
-            throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         const thumbnail = course.thumbnail
             ? await this._fileStorageService.getViewURL(course.thumbnail)

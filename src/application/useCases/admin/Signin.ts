@@ -17,7 +17,7 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
         const admin=await this._adminRepository.findByEmail(email);
         
         if(!admin){
-            throw new AppError(MESSAGES.NO_ACCOUNT,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
 
         const passwordMatch=await comparePassword(password,admin.password);

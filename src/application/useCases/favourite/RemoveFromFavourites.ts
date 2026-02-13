@@ -1,6 +1,7 @@
 import { IRemoveFromFavouritesUseCase } from "@application/IUseCases/favourite/IRemoveFromFavourites";
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class RemoveFromFavouritesUseCase implements IRemoveFromFavouritesUseCase{
@@ -20,7 +21,7 @@ export class RemoveFromFavouritesUseCase implements IRemoveFromFavouritesUseCase
             learnerId
         })
         if(exists){
-            throw new AppError("Failed to remove course from favourites",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

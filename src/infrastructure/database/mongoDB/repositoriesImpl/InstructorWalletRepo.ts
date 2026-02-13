@@ -6,43 +6,42 @@ import { BaseRepository } from "./BaseRepository";
 
 
 
-export class InstructorWalletRepositoryImpl extends BaseRepository<InstructorWallet> implements IInstructorWalletRepository
-{
-  constructor(){
-    super(InstructorWalletModel,InstructorWalletMapper)
-  }
-  
+export class InstructorWalletRepositoryImpl extends BaseRepository<InstructorWallet> implements IInstructorWalletRepository {
+    constructor() {
+        super(InstructorWalletModel, InstructorWalletMapper)
+    }
 
-  async findByInstructorId(
-    instructorId: string
-  ): Promise<InstructorWallet | null> {
-    const doc = await InstructorWalletModel.findOne({ instructorId }).exec();
-    return doc ? InstructorWalletMapper.toDomain(doc) : null;
-  }
 
-  async updateBalance(input: {
-  instructorId: string;
-  availableBalance?: number;
-  pendingBalance?: number;
-}): Promise<InstructorWallet | null> {
+    async findByInstructorId(
+        instructorId: string
+    ): Promise<InstructorWallet | null> {
+        const doc = await InstructorWalletModel.findOne({ instructorId }).exec();
+        return doc ? InstructorWalletMapper.toDomain(doc) : null;
+    }
 
-  const inc: Record<string, number> = {};
+    async updateBalance(input: {
+        instructorId: string;
+        availableBalance?: number;
+        pendingBalance?: number;
+    }): Promise<InstructorWallet | null> {
 
-  if (input.availableBalance !== undefined) {
-    inc.availableBalance = input.availableBalance;   // can be + or -
-  }
+        const inc: Record<string, number> = {};
 
-  if (input.pendingBalance !== undefined) {
-    inc.pendingBalance = input.pendingBalance;       // can be + or -
-  }
+        if (input.availableBalance !== undefined) {
+            inc.availableBalance = input.availableBalance;
+        }
 
-  const wallet = await InstructorWalletModel.findOneAndUpdate(
-    { instructorId: input.instructorId },
-    { $inc: inc },
-    { new: true }
-  );
+        if (input.pendingBalance !== undefined) {
+            inc.pendingBalance = input.pendingBalance;
+        }
 
-  return wallet ? InstructorWalletMapper.toDomain(wallet) : null;
-}
+        const wallet = await InstructorWalletModel.findOneAndUpdate(
+            { instructorId: input.instructorId },
+            { $inc: inc },
+            { new: true }
+        );
+
+        return wallet ? InstructorWalletMapper.toDomain(wallet) : null;
+    }
 
 }

@@ -9,6 +9,7 @@ import { IUpdateCategoryStatusUseCase } from "@application/IUseCases/category/IU
 import { IGetCategoryOptionsUseCase } from "@application/IUseCases/category/IGetCategoryOptions";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { AppError } from "shared/errors/AppError";
+import { MESSAGES } from "shared/constants/messages";
 // import { IGetCourseCategoriesSummaryUseCase } from "@application/IUseCases/category/IGetCategorySummary";
 
 export class CategoryController {
@@ -31,7 +32,7 @@ export class CategoryController {
 
             if (!name || !description) {
                 throw new AppError(
-                    "Name and description are required",
+                    MESSAGES.MISSING_FIELDS,
                     STATUS_CODES.BAD_REQUEST
                 );
             }

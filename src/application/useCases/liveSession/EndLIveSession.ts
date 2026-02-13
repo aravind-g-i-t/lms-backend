@@ -33,7 +33,7 @@ export class EndLiveSessionUseCase implements IEndLiveSessionUseCase{
 
 
         if(!liveSessionEnded){
-            throw new AppError("Failed to update liveSesion status",STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         
     }

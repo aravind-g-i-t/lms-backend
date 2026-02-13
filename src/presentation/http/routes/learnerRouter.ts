@@ -84,5 +84,9 @@ learnerRouter.get(ROUTES.POPULAR_COURSES,(req:Request,res:Response,next:NextFunc
 
 learnerRouter.patch(ROUTES.COURSE_REVIEW,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.updateReview(req,res,next));
 
+learnerRouter.patch(ROUTES.CANCEL_ENROLLMENT,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>enrollmentController.cancelEnrollment(req,res,next));
+
+learnerRouter.get(ROUTES.WALLET,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.getWalletData(req,res,next));
+
 
 export default learnerRouter;

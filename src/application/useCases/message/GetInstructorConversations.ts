@@ -12,6 +12,7 @@ import { IPresenceService } from "@domain/interfaces/IPresenceService";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
+import { MESSAGES } from "shared/constants/messages";
 
 
 export class GetInstructorConversationUseCase implements IGetInstructorConversationsUseCase {
@@ -36,7 +37,7 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
             courseId: selectedCourse
         });
         if(!result){
-            throw new AppError("Failed to fetch conversation",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.BAD_REQUEST)
         }
         let conversations = result.conversations.map(c => ConversationDTOMapper.toListing(c))
         let messages: Message[] = []
@@ -50,16 +51,16 @@ export class GetInstructorConversationUseCase implements IGetInstructorConversat
             } else {
                 const courseInfo = await this._courseRepository.findById(courseId);
                 if (!courseInfo) {
-                    throw new AppError("Failed to fetch course details.")
+                    throw new AppError(MESSAGES.COURSE_NOT_FOUND,STATUS_CODES.NOT_FOUND)
                 }
                 const instructorInfo = await this._instructorRepository.findById(courseInfo.instructorId);
                 if (!instructorInfo) {
-                    throw new AppError("Failed to fetch instructor details.")
+                    throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND,STATUS_CODES.NOT_FOUND)
                 }
 
                 const learnerInfo = await this._learnerRepository.findById(learnerId);
                 if (!learnerInfo) {
-                    throw new AppError("Failed to fetch learner details.")
+                    throw new AppError(MESSAGES.LEARNER_NOT_FOUND,STATUS_CODES.NOT_FOUND)
                 }
 
                 const tempConversation = {

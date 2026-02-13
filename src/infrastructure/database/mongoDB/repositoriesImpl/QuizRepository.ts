@@ -73,14 +73,14 @@ export class QuizRepository extends BaseRepository<Quiz> implements IQuizReposit
 
         // ✅ Create a plain object with all required fields
         const updatedQuestion = {
-            id: existing.id, // Explicitly preserve custom id field
+            id: existing.id, 
             question: data.question ?? existing.question,
             options: data.options ?? existing.options,
             correctAnswer: data.correctAnswer ?? existing.correctAnswer,
             points: data.points ?? existing.points,
             explanation: data.explanation ?? existing.explanation,
             order: data.order ?? existing.order,
-            _id: existing._id
+            // _id: existing._id
         };
 
         quiz.questions[index] = updatedQuestion;

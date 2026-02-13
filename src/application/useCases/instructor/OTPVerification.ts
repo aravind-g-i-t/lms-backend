@@ -46,7 +46,7 @@ export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUse
             expertise:[],
         });
         if(!instructorCreated){
-            throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED,STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
         const instructorWalletCreated=this._instructorWalletRepository.create({
             instructorId:instructorCreated.id,
@@ -54,7 +54,7 @@ export class InstructorOTPVerificationUseCase implements IUserOTPVerificationUse
             availableBalance: 0,
         });
         if(!instructorWalletCreated){
-            throw new AppError("Failed to create instructor wallet.",STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
     }

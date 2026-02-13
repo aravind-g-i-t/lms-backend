@@ -25,6 +25,8 @@ import { JoinLiveSessionUseCase } from "@application/useCases/liveSession/JoinLi
 import { EndLiveSessionUseCase } from "@application/useCases/liveSession/EndLIveSession";
 import { GetInstructorWalletAndEarningsUseCase } from "@application/useCases/instructor/GetInstructorEarnings";
 import { GetInstructorDashboardUseCase } from "@application/useCases/instructor/GetInstructorDashboard";
+import { CancelLiveSessionUseCase } from "@application/useCases/liveSession/CancelLiveSession";
+import { ReleaseInstructorEarningsUseCase } from "@application/useCases/payment/ReleaseInstructorEarnings";
 
 export const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository,s3Service);
 
@@ -66,6 +68,10 @@ export const joinLiveSessionUseCase= new JoinLiveSessionUseCase(liveSessionRepos
 
 export const endLiveSessionUseCase= new EndLiveSessionUseCase(liveSessionRepository);
 
+export const cancelLiveSessionUseCase= new CancelLiveSessionUseCase(liveSessionRepository)
+
 export const getInstructorEarningsUseCase= new GetInstructorWalletAndEarningsUseCase(instructorWalletRepository,instructorEarningsRepository)
 
 export const getInstructorDashboardData= new GetInstructorDashboardUseCase(courseRepository,liveSessionRepository,instructorWalletRepository,s3Service)
+
+export const releaseInstructorEarningsUseCase= new ReleaseInstructorEarningsUseCase(instructorWalletRepository,instructorEarningsRepository)

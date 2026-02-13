@@ -1,6 +1,7 @@
 import { IDeleteQuizQuestionUseCase } from "@application/IUseCases/course/IDeleteQuestion";
 import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class DeleteQuizQuestionUseCase implements IDeleteQuizQuestionUseCase{
@@ -12,7 +13,7 @@ export class DeleteQuizQuestionUseCase implements IDeleteQuizQuestionUseCase{
 
         const notDeleted = updatedQuiz?.questions.find(q=>q.id===input.questionId);
         if(notDeleted){
-            throw new AppError("Failed to delete quiz.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

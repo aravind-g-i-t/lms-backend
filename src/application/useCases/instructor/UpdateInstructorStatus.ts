@@ -14,7 +14,7 @@ export class UpdateInstructorStatusUseCase implements IUpdateUserStatusUseCase{
         
         const updated=await this._instructorRepository.updateStatus(id);
         if(!updated){
-            throw new AppError(MESSAGES.INSTRUCTOR_NOT_UPDATED,STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

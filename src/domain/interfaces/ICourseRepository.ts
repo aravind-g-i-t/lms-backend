@@ -102,6 +102,8 @@ export interface ICourseRepository {
 
     incrementEnrollment(id: string): Promise<Course | null>;
 
+    decrementEnrollment(id: string): Promise<Course | null>
+
     addModule(input: { courseId: string, module: Module }): Promise<Course | null>;
 
     removeModule(input: { courseId: string, moduleId: string }): Promise<Course | null>;

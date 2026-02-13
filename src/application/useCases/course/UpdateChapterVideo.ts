@@ -1,6 +1,7 @@
 import { IUpdateChapterVideoUseCase } from "@application/IUseCases/course/IUpdateChapterVideo";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateChapterVideoUseCase implements IUpdateChapterVideoUseCase {
@@ -19,7 +20,7 @@ export class UpdateChapterVideoUseCase implements IUpdateChapterVideoUseCase {
         });
 
         if (!updatedCourse) {
-            throw new AppError("Failed to update chapter video — course or chapter not found", STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
     }
 }

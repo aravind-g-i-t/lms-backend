@@ -1,6 +1,7 @@
 import { IUpdateChapterInfoUseCase } from "@application/IUseCases/course/IUpdateChapterInfo";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateChapterInfoUseCase implements IUpdateChapterInfoUseCase {
@@ -12,7 +13,7 @@ export class UpdateChapterInfoUseCase implements IUpdateChapterInfoUseCase {
 
         const updatedCourse = await this._courseRepository.updateChapterInfo({ courseId, moduleId, chapterId, updates: { title, description } })
         if (!updatedCourse) {
-            throw new AppError("Failed to update chapter info — course or chapter not found", STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
     }
 }

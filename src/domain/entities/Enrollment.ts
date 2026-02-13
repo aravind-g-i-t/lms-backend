@@ -21,7 +21,9 @@ export interface Enrollment {
     createdAt:Date;
     instructorId:string;
     courseTitle:string;
-    instructorName:string
+    instructorName:string;
+    learnerName:string;
     thumbnail:string;
     duration:number;
+    progressId:string|null;
 }

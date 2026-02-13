@@ -12,6 +12,7 @@ import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressR
 import { IPaymentGatewayService } from "@domain/interfaces/IPaymentGatewayService";
 import { IPaymentRepository } from "@domain/interfaces/IPaymentRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 const PLATFORM_CUT = Number(process.env.PLATFORM_CUT) || 30;
@@ -34,7 +35,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         const session = await this.paymentGateway.retrieveCheckoutSession(sessionId);
 
         if (!session) {
-            throw new AppError("Invalid session ID", STATUS_CODES.NOT_FOUND);
+            throw new AppError(MESSAGES.INVALID_PAYMENT_ID, STATUS_CODES.NOT_FOUND);
         }
 
 
@@ -42,10 +43,12 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         const paymentId = session.metadata.paymentId;
         const enrollmentId = session.metadata.referenceId;
 
+
+
         const paymentRecord = await this.paymentRepo.findById(paymentId);
 
         if (!paymentRecord) {
-            throw new AppError("Payment record not found", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.PAYMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
 
         // ❗ Prevent duplicate verification
@@ -69,16 +72,13 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             });
 
             if (!payment) {
-                throw new AppError("Failed to activate payment", STATUS_CODES.BAD_REQUEST)
+                throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
-            const enrollment = await this.enrollmentRepo.updateById(enrollmentId, {
-                status: EnrollmentStatus.Active,
-                enrolledAt: new Date(),
-            });
+            const enrollment = await this.enrollmentRepo.findById(enrollmentId);
 
             if (!enrollment) {
-                throw new AppError("Failed to activate enrollment", STATUS_CODES.BAD_REQUEST)
+                throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND)
             }
 
             // const isFavourite = await this._favouriteRepository.exists({
@@ -96,7 +96,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             const instructorEarnings = await this._instructorEarningsRepository.create({
                 instructorId: enrollment.instructorId,
                 courseId: enrollment.courseId,
-                learnerId:enrollment.learnerId,
+                learnerId: enrollment.learnerId,
                 amount: instructorShare,
                 releaseAt,
                 cancelledAt: null,
@@ -118,22 +118,37 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             const course = await this._courseRepository.incrementEnrollment(enrollment.courseId);
 
             if (!course) {
-                throw new AppError("Failed to fetch course", STATUS_CODES.BAD_REQUEST)
+                throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.NOT_FOUND)
             }
 
-            const learnerProgress = await this._learnerProgress.create({
-                learnerId: enrollment.learnerId,
-                courseId: enrollment.courseId,
-                completedChapters: [],
-                progressPercentage: 0,
-                currentChapterId: null,
-                totalChapters: course.totalChapters,
-                lastAccessedAt: null,
-            });
+            let learnerProgress = await this._learnerProgress.findOne({ learnerId: enrollment.learnerId, courseId: enrollment.courseId });
 
             if (!learnerProgress) {
-                throw new AppError("Failed to update initiate learner progress", STATUS_CODES.BAD_REQUEST, false)
+                learnerProgress = await this._learnerProgress.create({
+                    learnerId: enrollment.learnerId,
+                    courseId: enrollment.courseId,
+                    completedChapters: [],
+                    progressPercentage: 0,
+                    currentChapterId: null,
+                    totalChapters: course.totalChapters,
+                    lastAccessedAt: null,
+                });
             }
+
+            if (!learnerProgress) {
+                throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
+            const updatedEnrollment = await this.enrollmentRepo.updateById(enrollmentId, {
+                status: EnrollmentStatus.Active,
+                enrolledAt: new Date(),
+                progressId: learnerProgress.id
+            });
+
+            if (!updatedEnrollment) {
+                throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
+
 
             if (payment.coupon) {
                 await this._couponRepository.incrementUsage(payment.coupon)

@@ -23,7 +23,7 @@ export class TokenService implements ITokenService {
         const token= jwt.sign(payload, this.accessSecret, { expiresIn: accessTokenMaxAge });
         if(!token){
             logger.warn("Failed to generate access token");
-            throw new AppError("Failed to generate accessToken",STATUS_CODES.SERVICE_UNAVAILABLE,false)
+            throw new AppError(MESSAGES.ACCESS_TOKEN_NOT_CREATED,STATUS_CODES.SERVICE_UNAVAILABLE,false)
         }
         logger.info("Access token genetated successfully");
         return token
@@ -34,7 +34,7 @@ export class TokenService implements ITokenService {
         const token= jwt.sign(payload, this.refreshSecret, { expiresIn: refreshTokenMaxAge });
         if(!token){
             logger.warn("Failed to generate refresh token");
-            throw new AppError("Failed to generate refresh",STATUS_CODES.SERVICE_UNAVAILABLE,false)
+            throw new AppError(MESSAGES.REFRESH_TOKEN_NOT_CREATED,STATUS_CODES.SERVICE_UNAVAILABLE,false)
         }
         logger.info("Refresh token genetated successfully");
         return token;

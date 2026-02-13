@@ -1,5 +1,5 @@
 import { CourseController } from "@presentation/http/controllers/CourseController";
-import {  addChapterUseCase, addModuleUseCase, addResourceUseCase, businessGoogleSigninUseCase, businessOTPVerificationUseCase, businessSigninUseCase, createCourseUseCase, deleteChapterUseCase, deleteForEveryoneUseCase, deleteForMeUseCase, deleteModuleUseCase, deleteResourceUseCase, getConversationsUseCase, getCourseDetailsForCheckout, getCourseDetailsForLearner, getCourseDetailsUseCase, getCourseOptionsUseCase, getCoursesForAdminUseCase, getCoursesForInstructorUseCase, getCoursesForLearnerUseCase, getDownloadUrlUseCase, getFavouritesUseCase, getFullCourseForLearnerUseCase,  getInstructorConversations,  getMessagesUseCase,  getUploadUrlUseCase, getVideoCallTokenUseCase, getVideoUseCase, instructorGoogleSigninUseCase, instructorOTPVerificationUseCase, instructorSigninUseCase, learnerGoogleSigninUseCase, learnerOTPVerificationUseCase, learnerSigninUseCase, resendOTPUseCase, resetPasswordUseCase, submitCourseForReviewUseCase, updateChapterUseCase, updateCourseStatusUseCase, updateCourseUseCase, updateCourseVerificationUseCase, updateModuleUseCase, updateVideoUseCase, userRefreshTokenUseCase, userSignupUseCase, verifyEmailUseCase, verifyOTPUseCase, verifyPaymentUseCase } from "./useCases";
+import {  addChapterUseCase, addModuleUseCase, addResourceUseCase, businessGoogleSigninUseCase, businessOTPVerificationUseCase, businessSigninUseCase, createCourseUseCase, deleteChapterUseCase, deleteForEveryoneUseCase, deleteForMeUseCase, deleteModuleUseCase, deleteResourceUseCase, getConversationsUseCase, getCourseAnalyticsUseCase, getCourseDetailsForCheckout, getCourseDetailsForLearner, getCourseDetailsUseCase, getCourseOptionsUseCase, getCoursesForAdminUseCase, getCoursesForInstructorUseCase, getCoursesForLearnerUseCase, getDownloadUrlUseCase, getFavouritesUseCase, getFullCourseForLearnerUseCase,  getInstructorConversations,  getMessagesUseCase,  getUploadUrlUseCase, getVideoCallTokenUseCase, getVideoUseCase, instructorGoogleSigninUseCase, instructorOTPVerificationUseCase, instructorSigninUseCase, learnerGoogleSigninUseCase, learnerOTPVerificationUseCase, learnerSigninUseCase, resendOTPUseCase, resetPasswordUseCase, submitCourseForReviewUseCase, updateChapterUseCase, updateCourseStatusUseCase, updateCourseUseCase, updateCourseVerificationUseCase, updateModuleUseCase, updateVideoUseCase, userRefreshTokenUseCase, userSignupUseCase, verifyEmailUseCase, verifyOTPUseCase, verifyPaymentUseCase } from "./useCases";
 import { s3Service } from "./services";
 import { S3Controller } from "@presentation/http/controllers/S3Controller";
 import { UserAuthController } from "@presentation/http/controllers/UserAuthController";
@@ -52,7 +52,8 @@ export const courseController=new CourseController(
     getVideoUseCase,
     s3Service,
     getCourseOptionsUseCase,
-    getPopularCoursesUseCase
+    getPopularCoursesUseCase,
+    getCourseAnalyticsUseCase
 );
 
 

@@ -4,6 +4,7 @@ import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository"
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { logger } from "@infrastructure/logging/Logger";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class AuthorizationService implements IAuthorizationService {
@@ -19,7 +20,7 @@ export class AuthorizationService implements IAuthorizationService {
       const learner = await this.learnerRepo.findById(userId);
       if(!learner){
         logger.warn("Learner failed to fetch learner for status verification");
-        throw new AppError("Failed to fetch learner for status verification.",STATUS_CODES.INTERNAL_SERVER_ERROR,false)
+        throw new AppError(MESSAGES.LEARNER_NOT_FOUND,STATUS_CODES.NOT_FOUND)
       }
       return learner.isActive;
     }

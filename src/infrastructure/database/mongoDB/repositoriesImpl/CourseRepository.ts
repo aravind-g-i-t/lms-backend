@@ -474,6 +474,18 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
         return CourseMapper.toDomain(updated);
     }
 
+    async decrementEnrollment(id: string): Promise<Course | null> {
+        const updated = await CourseModel.findByIdAndUpdate(
+            id,
+            { $inc: { enrollmentCount: -1 } },
+            { new: true }
+        ).exec();
+
+        if (!updated) return null;
+
+        return CourseMapper.toDomain(updated);
+    }
+
     async addResource({ courseId, moduleId, chapterId, resource }: { courseId: string; moduleId: string; chapterId: string; resource: Resource }): Promise<Course | null> {
         const course = await CourseModel.findById(courseId).exec();
         if (!course) return null;

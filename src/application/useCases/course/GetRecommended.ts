@@ -33,7 +33,7 @@ export class GetRecommendedCoursesForLearnerUseCase implements IGetRecommendedCo
         }else if(courseId){
             const course=await this._courseRepository.findById(courseId);
             if(!course){
-                throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+                throw new AppError(MESSAGES.COURSE_NOT_FOUND,STATUS_CODES.NOT_FOUND)
             }
             tags=course.tags;
             categoryIds=[course.categoryId]

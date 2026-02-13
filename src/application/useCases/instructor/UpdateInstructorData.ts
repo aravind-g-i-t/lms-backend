@@ -13,7 +13,7 @@ export class UpdateInstructorDataUseCase implements IUpdateInstructorDataUseCase
     async execute(id: string, update: Partial<InstructorAsRaw>): Promise<void> {
         const instructor=await this._instructorRepository.findByIdAndUpdate(id,update);
         if(!instructor){
-            throw new AppError(MESSAGES.INSTRUCTOR_NOT_UPDATED,STATUS_CODES.NOT_MODIFIED)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return;
     }

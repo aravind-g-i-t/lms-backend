@@ -3,6 +3,7 @@ import { IUpdateCouponUseCase } from "@application/IUseCases/coupon/IUpdateCoupo
 import {  DiscountType } from "@domain/entities/Coupon";
 import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateCouponUseCase implements IUpdateCouponUseCase{
@@ -13,14 +14,14 @@ export class UpdateCouponUseCase implements IUpdateCouponUseCase{
         const {id, description, code, discountType, discountValue, maxDiscount, minCost, expiresAt, isActive, usageLimit } = data;
         const existing = await this.couponRepo.findOne({code:data.code});
         if (existing && existing.id !== id) {
-            throw new Error("Coupon code already exists");
+            throw new AppError(MESSAGES.COUPON_EXISTS,STATUS_CODES.CONFLICT);
         }
 
         if (new Date(data.expiresAt) <= new Date()) {
-            throw new Error("Expiry date must be a future date");
+            throw new AppError(MESSAGES.COUPON_EXPIRY_INVALID,STATUS_CODES.BAD_REQUEST);
         }
         if(discountType===DiscountType.Amount && discountValue>minCost){
-            throw new AppError("Minimum cost must be greater that discount amount.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COUPON_MIN_COST_INVALID,STATUS_CODES.BAD_REQUEST)
         }
 
         const updated = await this.couponRepo.updateById(id,{
@@ -37,7 +38,7 @@ export class UpdateCouponUseCase implements IUpdateCouponUseCase{
         });
 
         if(!updated){
-            throw new AppError("Failed to update coupon.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

@@ -2,6 +2,7 @@
 import { IDeleteResourceUseCase } from "@application/IUseCases/course/IDeleteResource";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class DeleteResourceUseCase implements IDeleteResourceUseCase {
@@ -19,7 +20,7 @@ export class DeleteResourceUseCase implements IDeleteResourceUseCase {
         });
 
         if (!updated) {
-            throw new AppError("Failed to add module.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
 
     }

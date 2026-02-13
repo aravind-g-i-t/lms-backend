@@ -16,7 +16,7 @@ export class GetBusinessDataUseCase implements IGetBusinessDataUseCase {
     async execute(id: string): Promise<GetBusinessDataOutputDTO> {
         const user = await this._businessRepository.findById(id, true);
         if (!user) {
-            throw new AppError(MESSAGES.NOT_FOUND, STATUS_CODES.NOT_FOUND);
+            throw new AppError(MESSAGES.BUSINESS_NOT_FOUND, STATUS_CODES.NOT_FOUND);
         }
 
         const profilePicUrl = user.profilePic

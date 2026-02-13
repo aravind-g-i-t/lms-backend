@@ -62,6 +62,10 @@ export class LearnerProgressRepository extends BaseRepository<LearnerProgress> i
 
 
     async getAverageProgress(courseId: string): Promise<number> {
+
+        const docs = await LearnerProgressModel.find({ courseId });
+        console.log("docs",docs);
+
         const result = await LearnerProgressModel.aggregate([
             {
                 $match: {
@@ -76,12 +80,18 @@ export class LearnerProgressRepository extends BaseRepository<LearnerProgress> i
             },
         ]);
 
-        return result.length > 0
+        const output= result.length > 0
             ? Number(result[0].avgProgress.toFixed(2))
             : 0;
+
+        console.log("output",output);
+        
+
+            return output
+
     }
 
-    
+
 }
 
 

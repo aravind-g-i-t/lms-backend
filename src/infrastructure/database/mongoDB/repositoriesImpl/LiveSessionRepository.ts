@@ -39,7 +39,7 @@ export class LiveSessionRepository extends BaseRepository<LiveSession> implement
         const [sessions, totalCount] = await Promise.all([
             this.model
                 .find(filter)
-                .sort({ scheduledAt: 1 })
+                .sort({ scheduledAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .lean(),

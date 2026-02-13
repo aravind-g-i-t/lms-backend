@@ -86,7 +86,7 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
         const learner = await LearnerModel.findById(id).select("isActive");
         if (!learner) {
             logger.error("Failed to fetch Learner for status update.")
-            throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND, false)
+            throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
         learner.isActive = !learner.isActive;
         await learner.save();

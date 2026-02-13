@@ -112,5 +112,7 @@ adminRouter.get(ROUTES.COURSE,adminAuthMiddleware,(req:Request,res:Response,next
 
 adminRouter.get(ROUTES.DASHBOARD,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>adminController.getDashboard(req,res,next));
 
+adminRouter.get(ROUTES.COURSE_ANALYTICS,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseAnalytics(req,res,next));
+
 
 export default adminRouter;

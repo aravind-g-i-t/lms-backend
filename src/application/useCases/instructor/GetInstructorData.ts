@@ -16,7 +16,7 @@ export class GetInstructorDataUseCase implements IGetInstructorDataUseCase {
     async execute(id: string): Promise<GetInstructorDataOutputDTO> {
         const user = await this._instructorRepository.findById(id, true);
         if (!user) {
-            throw new AppError(MESSAGES.NOT_FOUND, STATUS_CODES.NOT_FOUND);
+            throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND, STATUS_CODES.NOT_FOUND);
         }
 
         const profilePicUrl = user.profilePic

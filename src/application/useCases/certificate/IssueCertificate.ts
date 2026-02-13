@@ -6,6 +6,7 @@ import { IPdfGeneratorService } from "@domain/interfaces/IPdfGeneratorService";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
+import { MESSAGES } from "shared/constants/messages";
 
 
 
@@ -72,7 +73,7 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
         
 
         if(!certificate){
-            throw new AppError("Failed to generate certificate",STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
         return certificate.id

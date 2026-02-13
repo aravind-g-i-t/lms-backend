@@ -3,6 +3,7 @@ import { CourseLevel, CourseStatus, VerificationStatus } from "@domain/entities/
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 
@@ -19,7 +20,7 @@ export class CreateCourseUseCase implements ICreateCourseUseCase {
 
         const instructor = await this._instructorRepository.findById(input.instructorId);
         if (!instructor) {
-            throw new AppError("Failed to fetch instructor for verification", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
         // if (instructor.verification.status !== "Verified") {
         //     throw new AppError("Please verify your profile before submitting course for review.")
@@ -64,7 +65,7 @@ export class CreateCourseUseCase implements ICreateCourseUseCase {
         });
 
         if (!course) {
-            throw new AppError("Failed to create course.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return course.id;
     }

@@ -2,6 +2,7 @@ import { IUpdateCourseVerificationUseCase } from "@application/IUseCases/course/
 import { Course, VerificationStatus } from "@domain/entities/Course";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateCourseVerificationUseCase implements IUpdateCourseVerificationUseCase {
@@ -15,7 +16,7 @@ export class UpdateCourseVerificationUseCase implements IUpdateCourseVerificatio
 
         const course = await this._courseRepository.findById(courseId);
         if (!course) {
-            throw new AppError("Course not found", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
 
         const updatedVerification = {
@@ -34,7 +35,7 @@ export class UpdateCourseVerificationUseCase implements IUpdateCourseVerificatio
         );
 
         if (!updatedCourse) {
-            throw new AppError("Failed to update verification status", STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
 
         return updatedCourse.verification

@@ -16,7 +16,7 @@ export class GetLearnerHomeDataUseCase implements IGetLearnerHomeDataUseCase{
     async execute(learnerId:string):Promise<GetLearnerHomeDataOutput>{
         const enrollementData= await this._getEnrollmentsUseCase.execute({learnerId,limit:2});
         if(!enrollementData){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         const {data,total}= enrollementData;
 

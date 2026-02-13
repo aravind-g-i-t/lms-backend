@@ -53,7 +53,7 @@ export class LearnerOTPVerificationUseCase implements IUserOTPVerificationUseCas
             balance:0
         });
         if(!walletCreated){
-            throw new AppError("Failed to create wallet.",STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 

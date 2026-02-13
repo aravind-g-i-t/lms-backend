@@ -2,6 +2,7 @@ import { ICreateEnrollmentUseCase } from "@application/IUseCases/enrollment/ICre
 import { Enrollment, EnrollmentStatus } from "@domain/entities/Enrollment";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class CreateEnrollmentUseCase implements ICreateEnrollmentUseCase{
@@ -9,8 +10,8 @@ export class CreateEnrollmentUseCase implements ICreateEnrollmentUseCase{
         private _enrollmentRepository:IEnrollmentRepository
     ){}
 
-    async execute(input:{learnerId:string,courseId:string, paymentId:string,status:EnrollmentStatus,instructorId:string,instructorName:string,courseTitle:string,thumbnail:string,duration:number}):Promise<Enrollment>{
-        const {learnerId,courseId,paymentId,status,instructorId,instructorName,thumbnail,courseTitle,duration} = input;
+    async execute(input:{learnerId:string,courseId:string, paymentId:string,status:EnrollmentStatus,instructorId:string,instructorName:string, learnerName:string; courseTitle:string,thumbnail:string,duration:number}):Promise<Enrollment>{
+        const {learnerId,courseId,paymentId,status,instructorId,instructorName,thumbnail,courseTitle,duration,learnerName} = input;
 
         console.log(input);
         
@@ -27,10 +28,11 @@ export class CreateEnrollmentUseCase implements ICreateEnrollmentUseCase{
             instructorName,
             thumbnail,
             courseTitle,
+            learnerName,
             duration
         });
         if(!newEnrollment){
-            throw new AppError("Failed to create enrollment record.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return newEnrollment
     }

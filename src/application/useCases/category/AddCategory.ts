@@ -5,6 +5,7 @@ import { CategoryDTOMapper } from "@application/mappers/CategoryMapper";
 import { CategoryForListing } from "@application/dtos/category/CategoryDTO";
 import { AppError } from "shared/errors/AppError";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 
 export class AddCategoryUseCase implements IAddCategoryUseCase {
     constructor(private _categoryRepository: ICategoryRepository) { }
@@ -19,13 +20,13 @@ export class AddCategoryUseCase implements IAddCategoryUseCase {
 
         const existingCategory = await this._categoryRepository.findOne({name:category.name});
         if (existingCategory) {
-            throw new AppError("Another category with this name already exists", STATUS_CODES.CONFLICT);
+            throw new AppError(MESSAGES.CATEGORY_EXISTS, STATUS_CODES.CONFLICT);
         }
 
 
         const newCategory = await this._categoryRepository.create(category);
         if(!newCategory){
-            throw new AppError("Failed to create new category.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return CategoryDTOMapper.toCategoryForListing(newCategory)
     }

@@ -4,6 +4,7 @@ import { EarningStatus } from "@domain/entities/InstructorEarning";
 import { IInstructorEarningsRepository } from "@domain/interfaces/IInstructorEarningsRepo";
 import { IInstructorWalletRepository } from "@domain/interfaces/IInstructorWalletRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 
@@ -19,7 +20,7 @@ export class GetInstructorWalletAndEarningsUseCase {
     const wallet = await this.walletRepo.findByInstructorId(input.instructorId);
     
     if (!wallet) {
-      throw new AppError("Instructor wallet not found",STATUS_CODES.NOT_FOUND);
+      throw new AppError(MESSAGES.INSTRUCTOR_WALLET_NOT_FOUND,STATUS_CODES.NOT_FOUND);
     }
 
     const earningsResult = await this.earningsRepo.getEarnings({
@@ -46,7 +47,6 @@ export class GetInstructorWalletAndEarningsUseCase {
       }
     })
 
-    console.log(earningsResult.total);
     
 
     
@@ -61,17 +61,6 @@ export class GetInstructorWalletAndEarningsUseCase {
         currentPage: input.page,
         limit: input.limit,
       },
-    //   summary: {
-    //     pendingCount: earningsResult.earnings.filter(
-    //       e => e.status === EarningStatus.Pending
-    //     ).length,
-    //     releasedCount: earningsResult.earnings.filter(
-    //       e => e.status === EarningStatus.Released
-    //     ).length,
-    //     cancelledCount: earningsResult.earnings.filter(
-    //       e => e.status === EarningStatus.Cancelled
-    //     ).length,
-    //   },
     };
   }
 }

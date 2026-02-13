@@ -22,7 +22,7 @@ export class GetVideoUseCase implements IGetVideoUseCase{
         }
         const videoKey=await this._courseRepository.getChapterVideo({courseId,moduleId,chapterId});
         if(!videoKey){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
 
         return videoKey

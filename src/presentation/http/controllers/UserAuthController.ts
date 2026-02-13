@@ -67,7 +67,7 @@ export class UserAuthController {
             if (role === "learner") {
                 await this._learnerOTPVerificationUseCase.execute({ email, otp });
                 res.status(STATUS_CODES.CREATED).json(
-                    ResponseBuilder.success(MESSAGES.LEARNER_CREATED)
+                    ResponseBuilder.success(MESSAGES.ACCOUNT_CREATED_SUCCESS)
                 );
                 return;
             }
@@ -75,14 +75,14 @@ export class UserAuthController {
             if (role === "instructor") {
                 await this._instructorOTPVerificationUseCase.execute({ email, otp });
                 res.status(STATUS_CODES.CREATED).json(
-                    ResponseBuilder.success(MESSAGES.INSTRUCTOR_CREATED)
+                    ResponseBuilder.success(MESSAGES.ACCOUNT_CREATED_SUCCESS)
                 );
                 return;
             }
 
             await this._businessOTPVerificationUseCase.execute({ email, otp });
             res.status(STATUS_CODES.CREATED).json(
-                ResponseBuilder.success(MESSAGES.BUSINESS_CREATED)
+                ResponseBuilder.success(MESSAGES.ACCOUNT_CREATED_SUCCESS)
             );
         } catch (error) {
             next(error);
@@ -264,15 +264,14 @@ export class UserAuthController {
                 maxAge: accessTokenCookieMaxAge,
             });
 
-            const response = {
-                success: true,
-                message: MESSAGES.LOGIN_SUCCESS,
-                user: result.user,
-                accessToken: result.accessToken,
-                role
-            };
+            // const response = {
+            //     success: true,
+            //     message: MESSAGES.LOGIN_SUCCESS,
+            //     user: result.user,
+            //     accessToken: result.accessToken,
+            //     role
+            // };
 
-            res.status(STATUS_CODES.OK).json(response);
             res.status(STATUS_CODES.OK).json(
                 ResponseBuilder.success(MESSAGES.LOGIN_SUCCESS, {
                     user: result.user,

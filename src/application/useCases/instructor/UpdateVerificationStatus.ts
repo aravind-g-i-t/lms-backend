@@ -19,7 +19,7 @@ export class UpdateInstructorVerificationStatusUseCase implements IUpdateInstruc
         };
         const updatedInstructor=await this._instructorRepository.findByIdAndUpdate(id,{verification})
         if(!updatedInstructor){
-            throw new AppError(MESSAGES.INSTRUCTOR_NOT_UPDATED,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

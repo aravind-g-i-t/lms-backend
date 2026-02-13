@@ -6,6 +6,8 @@ import { logger } from "@infrastructure/logging/Logger";
 import { escapeRegExp } from "shared/utils/escapeRegExp";
 import { AppError } from "shared/errors/AppError";
 import { BaseRepository } from "./BaseRepository";
+import { MESSAGES } from "shared/constants/messages";
+import { STATUS_CODES } from "shared/constants/httpStatus";
 
 export class CouponRepository extends BaseRepository<Coupon> implements ICouponRepository {
 
@@ -76,7 +78,7 @@ export class CouponRepository extends BaseRepository<Coupon> implements ICouponR
     async updateStatus(id: string): Promise<Coupon | null> {
         const coupon = await CouponModel.findById(id);
         if (!coupon) {
-            throw new AppError("Coupon not found")
+            throw new AppError(MESSAGES.COUPON_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         coupon.isActive = !coupon.isActive;
         await coupon.save();

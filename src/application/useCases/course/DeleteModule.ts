@@ -1,6 +1,7 @@
 import { IDeleteModuleUseCase } from "@application/IUseCases/course/IDeleteModule";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class DeleteModuleUseCase implements IDeleteModuleUseCase {
@@ -15,7 +16,7 @@ export class DeleteModuleUseCase implements IDeleteModuleUseCase {
         const deleted = await this._courseRepository.removeModule({ courseId, moduleId });
 
         if (!deleted) {
-            throw new AppError("Failed to delete module.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

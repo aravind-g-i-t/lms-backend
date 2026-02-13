@@ -15,6 +15,7 @@ import { IEndLiveSessionUseCase } from "@application/IUseCases/liveSession/IEndL
 import { GetSessionListForInstructorRequestSchema } from "@presentation/dtos/liveSession/GetSessionListForInstructor";
 import { GetSessionListForLearnerRequestSchema } from "@presentation/dtos/liveSession/GetSessionListForLearner";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
+import { ICancelLiveSessionUseCase } from "@application/IUseCases/liveSession/ICancelLiveSession";
 
 export class LiveSessionController {
     constructor(
@@ -23,7 +24,8 @@ export class LiveSessionController {
         private _startLiveSessionUseCase: IStartLiveSessionUseCase,
         private _joinLiveSessionUseCase: IJoinLiveSessionUseCase,
         private _getSessionListForLearnerUseCase: IGetSessionListForLearnerUseCase,
-        private _endLiveSessionUseCase: IEndLiveSessionUseCase
+        private _endLiveSessionUseCase: IEndLiveSessionUseCase,
+        private _cancelLiveSessionUseCase:ICancelLiveSessionUseCase
     ) { }
 
     async createLiveSession(
@@ -231,6 +233,37 @@ export class LiveSessionController {
                 );
         } catch (err) {
             logger.warn("Failed to end live session.");
+            next(err);
+        }
+    }
+
+    async cancelLiveSession(
+        req: AuthenticatedRequest,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { sessionId } = req.body;
+
+            const instructorId = req.user?.id;
+            if (!instructorId) {
+                throw new AppError(
+                    MESSAGES.SERVER_ERROR,
+                    STATUS_CODES.INTERNAL_SERVER_ERROR
+                );
+            }
+
+            const result= await this._cancelLiveSessionUseCase.execute({
+                instructorId,
+                sessionId,
+            });
+
+            res.status(STATUS_CODES.OK)
+                .json(ResponseBuilder.success("Live session cancelled successfully",{
+                    liveSession:result
+                }));
+        } catch (err) {
+            logger.warn("Failed to cancel live session.");
             next(err);
         }
     }

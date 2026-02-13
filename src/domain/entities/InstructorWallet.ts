@@ -4,5 +4,3 @@ export interface InstructorWallet {
   pendingBalance: number;
   availableBalance: number;
 }
-
-

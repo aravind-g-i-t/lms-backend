@@ -3,27 +3,28 @@ import { ICreateCouponUseCase } from "@application/IUseCases/coupon/ICreateCoupo
 import { Coupon, DiscountType } from "@domain/entities/Coupon";
 import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class CreateCouponUseCase implements ICreateCouponUseCase{
-    constructor(private couponRepo: ICouponRepository) { }
+    constructor(private _couponRepo: ICouponRepository) { }
 
     async execute(data: CreateCouponInputDTO): Promise<Coupon> {
 
         const { description, code, discountType, discountValue, maxDiscount, minCost, expiresAt, isActive, usageLimit } = data;
-        const existing = await this.couponRepo.findOne({code:data.code});
+        const existing = await this._couponRepo.findOne({code:data.code});
         if (existing) {
-            throw new Error("Coupon code already exists");
+            throw new AppError(MESSAGES.COUPON_EXISTS,STATUS_CODES.CONFLICT);
         }
 
         if (new Date(data.expiresAt) <= new Date()) {
-            throw new AppError("Expiry date must be a future date",STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.COUPON_EXPIRY_INVALID,STATUS_CODES.BAD_REQUEST);
         }
         if(discountType===DiscountType.Amount && discountValue>minCost){
-            throw new AppError("Minimum cost must be greater that discount amount.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COUPON_MIN_COST_INVALID,STATUS_CODES.BAD_REQUEST)
         }
 
-        const created = await this.couponRepo.create({
+        const created = await this._couponRepo.create({
             description,
             code,
             discountType: discountType as DiscountType,
@@ -36,7 +37,7 @@ export class CreateCouponUseCase implements ICreateCouponUseCase{
             usageCount:0
         });
         if(!created){
-            throw new AppError("Failed to create coupon.",STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
         return created;

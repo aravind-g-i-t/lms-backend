@@ -5,6 +5,7 @@ import { LearnerRepositoryImpl } from "@infrastructure/database/mongoDB/reposito
 import { QuizAttemptRepository } from "@infrastructure/database/mongoDB/repositoriesImpl/QuizAttemptRepository"
 import { ReviewRepository } from "@infrastructure/database/mongoDB/repositoriesImpl/ReviewRepository"
 import { WalletRepositoryImpl } from "@infrastructure/database/mongoDB/repositoriesImpl/WalletRepository"
+import { WalletTransactionRepositoryImpl } from "@infrastructure/database/mongoDB/repositoriesImpl/WalletTxnRepository"
 
 export const learnerRepository=new LearnerRepositoryImpl()
 
@@ -18,4 +19,7 @@ export const learnerProgressRepository= new LearnerProgressRepository();
 
 export const enrollmentRepository = new EnrollmentRepositoryImpl();
 
-export const reviewRepository= new ReviewRepository()
+export const reviewRepository= new ReviewRepository();
+
+export const walletTransactionRepository= new WalletTransactionRepositoryImpl()
+

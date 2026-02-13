@@ -69,6 +69,7 @@ export const ROUTES = {
     CHECKOUT:"/course/checkout",
     COURSE_VIDEO_STREAM:"/courses/:courseId/modules/:moduleId/chapters/:chapterId/stream",
     POPULAR_COURSES:"/courses/popular",
+    COURSE_ANALYTICS:"/course/analytics",
 
 
     PROGRESS_CHAPTER_COMPLETE:"/progress/chapter/complete",
@@ -84,6 +85,7 @@ export const ROUTES = {
     START_SESSION:"/session/start",
     END_SESSION:"/session/end",
     JOIN_SESSION:"/session/join",
+    CANCEL_SESSION:"/session/cancel",
 
     CONVERSATIONS:"/conversations",
 
@@ -98,6 +100,7 @@ export const ROUTES = {
     EARNINGS:"/earnings",
 
     ENROLLMENTS:"/enrollments",
+    CANCEL_ENROLLMENT:"/enrollment/cancel",
 
     FAVOURITES:"/favourites",
     FAVOURITE_COURSE:"/favourites/:courseId",
@@ -121,10 +124,9 @@ export const ROUTES = {
 
     VIDEO:"/video",
 
-    VERIFY:"/verify"
+    VERIFY:"/verify",
 
-
-
+    WALLET:"/wallet"
 
 
 

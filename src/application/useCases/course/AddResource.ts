@@ -4,6 +4,7 @@ import { Resource } from "@domain/entities/Course";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 import { IdGenerator } from "shared/utils/IdGenerator";
 
@@ -29,7 +30,7 @@ export class AddResourceUseCase implements IAddResourceUseCase  {
         });
 
         if (!updated) {
-            throw new AppError("Failed to add module.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         const file = await this._fileStorageService.getViewURL(input.resource.file);
         return { ...newResource, file };

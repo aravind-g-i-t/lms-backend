@@ -12,6 +12,7 @@ import { MessageDTOMapper } from "@application/mappers/MessageDTOMapper";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { AppError } from "shared/errors/AppError";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 
 
 
@@ -53,7 +54,7 @@ export class SendMessageUseCase implements ISendMessageUseCase {
                 status: ConversationStatus.Active,
             });
             if(!conversation){
-                throw new AppError("Failed to create conversation",STATUS_CODES.BAD_REQUEST)
+                throw new AppError(MESSAGES.CONVERSATION_NOT_FOUND,STATUS_CODES.NOT_FOUND)
             }
         }
         const attachmentswithId = attachments.map(attachment => {

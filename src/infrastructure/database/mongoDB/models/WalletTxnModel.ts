@@ -1,28 +1,31 @@
+import { TransactionReason, TransactionType } from "@domain/entities/WalletTransaction";
 import { Schema, model, Document, Types } from "mongoose";
+import { EnrollmentDoc } from "./EnrollmentModel";
 
-enum WalletTxnType {
-    Credit = "credit",
-    Debit = "debit"
-}
 
-enum WalletTxnReason {
-    CoursePurchase = "course_purchase",
-    Refund = "refund",
-}
 
 export interface WalletTransactionDoc extends Document {
     _id: Types.ObjectId;
     walletId: Types.ObjectId;
     learnerId: Types.ObjectId;
-    type: WalletTxnType;
+    type: TransactionType;
+    reason:TransactionReason;
     amount: number;
-    reason: WalletTxnReason;
-    relatedPaymentId: Types.ObjectId | null;
-    relatedEnrollmentId: Types.ObjectId | null;
+    enrollmentId: Types.ObjectId|null;
     createdAt:Date;
-
-
 }
+
+export interface HydratedWalletTransactionDoc {
+    _id: Types.ObjectId;
+    walletId: Types.ObjectId;
+    learnerId: Types.ObjectId;
+    type: TransactionType;
+    reason: TransactionReason
+    amount: number;
+    enrollmentId: EnrollmentDoc|null ;
+    createdAt:Date;
+}
+
 
 const WalletTransactionSchema = new Schema<WalletTransactionDoc>(
     {
@@ -45,25 +48,19 @@ const WalletTransactionSchema = new Schema<WalletTransactionDoc>(
             enum: ["credit", "debit"],
             required: true,
         },
+        reason:{
+            type: String,
+            enum:Object.values(TransactionReason),
+            required: true,
+        },
 
         amount: {
             type: Number,
             required: true,
         },
 
-        reason: {
-            type: String,
-            enum: ["course_purchase", "refund"],
-            required: true,
-        },
 
-        relatedPaymentId: {
-            type: Schema.Types.ObjectId,
-            ref: "Payment",
-            default: null,
-        },
-
-        relatedEnrollmentId: {
+        enrollmentId: {
             type: Schema.Types.ObjectId,
             ref: "Enrollment",
             default: null,

@@ -1,21 +1,21 @@
-export enum WalletTxnType {
+export enum TransactionType {
   Credit = "credit",
   Debit = "debit"
 }
 
-export enum WalletTxnReason {
+export enum TransactionReason {
   CoursePurchase = "course_purchase",
   Refund = "refund",
+  Redeem="redeem"
 }
 
 export interface WalletTransaction {
   id: string;
   walletId: string;
   learnerId: string;
-  type: WalletTxnType;
+  type: TransactionType;
   amount: number;
-  reason: WalletTxnReason;
-  relatedPaymentId: string|null;
-  relatedEnrollmentId: string|null;
+  reason: TransactionReason;
+  enrollmentId: string|null;
   createdAt: Date;
 }

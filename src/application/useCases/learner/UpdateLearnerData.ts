@@ -13,7 +13,7 @@ export class UpdateLearnerDataUseCase implements IUpdateLearnerDataUseCase{
     async execute(id: string, update: Partial<LearnerAsRaw>): Promise<void> {
         const learner=await this._learnerRepository.findByIdAndUpdate(id,update);
         if(!learner){
-            throw new AppError(MESSAGES.BUSINESS_NOT_UPDATED,STATUS_CODES.NOT_MODIFIED)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return;
     }

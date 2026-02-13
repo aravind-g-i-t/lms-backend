@@ -5,6 +5,7 @@ import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressR
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
+import { MESSAGES } from "shared/constants/messages";
 
 export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerUseCase {
     constructor(
@@ -19,7 +20,7 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         const course = await this._courseRepository.findHydratedCourseById(courseId);
         console.log("course", course);
         if (!course) {
-            throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.BAD_REQUEST)
         }
         const progress = await this._progressRepository.findByLearnerAndCourseAndUpdate(
             learnerId,
@@ -28,7 +29,7 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         );
 
         if (!progress) {
-            throw new AppError("Failed to get learner progress")
+            throw new AppError(MESSAGES.PROGRESS_NOT_FOUND,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         const currentChapterId = progress.currentChapterId || course.modules[0].chapters[0].id;
 
@@ -89,39 +90,4 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         };
 
     }
-
-    // private _toCourseDetails(input: HydratedCourse, progress: LearnerProgress): GetFullCourseForLearnerOutput {
-    //     return {
-    //         id: input.id,
-    //         title: input.title,
-    //         description: input.description,
-    //         thumbnail: input.thumbnail,
-    //         previewVideo: input.previewVideo,
-    //         prerequisites: input.prerequisites,
-    //         category: {
-    //             id: input.category.id,
-    //             name: input.category.name,
-    //         },
-    //         enrollmentCount: input.enrollmentCount,
-    //         instructor: {
-    //             id: input.instructor.id,
-    //             name: input.instructor.name,
-    //             profilePic: input.instructor.profilePic
-    //         },
-    //         modules: input.modules,
-    //         whatYouWillLearn: input.whatYouWillLearn,
-    //         price: input.price,
-    //         level: input.level,
-    //         duration: input.duration,
-    //         tags: input.tags,
-    //         rating: input.rating,
-    //         totalRatings: input.totalRatings,
-    //         publishedAt: input.publishedAt,
-    //         totalChapters: input.totalChapters,
-    //         completedChapters: progress.completedChapters,
-    //         progressPercentage: progress.progressPercentage,
-    //         currentChapterId: progress.currentChapterId,
-    //         quizStatus: progress.quizAttemptStatus
-    //     }
-    // }
 }

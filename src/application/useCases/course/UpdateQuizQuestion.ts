@@ -3,6 +3,7 @@ import { IUpdateQuizQuestionUseCase } from "@application/IUseCases/course/IUpdat
 import { QuizQuestion } from "@domain/entities/Quiz";
 import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateQuizQuesitonUseCase implements IUpdateQuizQuestionUseCase {
@@ -28,11 +29,11 @@ export class UpdateQuizQuesitonUseCase implements IUpdateQuizQuestionUseCase {
             }
         )
         if (!updatedQuiz) {
-            throw new AppError("Failed to update question", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         const question = updatedQuiz.questions.find(q => q.id === input.questionId);
         if (!question) {
-            throw new AppError("Failed to update question", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return question;
     }

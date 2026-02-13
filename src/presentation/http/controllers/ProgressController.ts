@@ -6,6 +6,7 @@ import { IUpdateCurrentChapterUseCase } from "@application/IUseCases/course/IUpd
 import { AppError } from "shared/errors/AppError";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
+import { MESSAGES } from "shared/constants/messages";
 
 export class ProgressController {
   constructor(
@@ -24,7 +25,7 @@ export class ProgressController {
       const learnerId = req.user?.id;
       if (!learnerId) {
         throw new AppError(
-          "Failed to access user details",
+          MESSAGES.LEARNER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }
@@ -57,7 +58,7 @@ export class ProgressController {
       const learnerId = req.user?.id;
       if (!learnerId) {
         throw new AppError(
-          "Failed to access user details",
+          MESSAGES.LEARNER_NOT_FOUND,
           STATUS_CODES.NOT_FOUND
         );
       }

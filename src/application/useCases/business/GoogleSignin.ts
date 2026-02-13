@@ -43,7 +43,7 @@ export class BusinessGoogleSigninUseCase implements IBusinessGoogleSigninUseCase
         }
 
         if (!business) {
-            throw new AppError(MESSAGES.INSTRUCTOR_NOT_CREATED, STATUS_CODES.UNAUTHORIZED);
+            throw new AppError(MESSAGES.SIGNUP_FAILED, STATUS_CODES.UNAUTHORIZED);
         }
         const role = 'business'
 

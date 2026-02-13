@@ -2,6 +2,7 @@ import { IUpdateCourseStatusUseCase } from "@application/IUseCases/course/IUpdat
 import { Course, CourseStatus } from "@domain/entities/Course";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateCourseStatusUseCase implements IUpdateCourseStatusUseCase {
@@ -19,7 +20,7 @@ export class UpdateCourseStatusUseCase implements IUpdateCourseStatusUseCase {
         const updated = await this._courseRepositoty.updateById(courseId,updates);
 
         if (!updated) {
-            throw new AppError("Failed to update course status.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

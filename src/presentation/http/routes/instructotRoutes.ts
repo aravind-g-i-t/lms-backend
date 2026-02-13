@@ -6,6 +6,7 @@ import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/U
 import { validateRequest } from "@presentation/http/middlewares/validateRequest";
 import { categoryController } from "@setup/container/admin/controllers";
 import { instructorController, liveSessionController, quizController } from "@setup/container/instructor/controllers";
+import { enrollmentController } from "@setup/container/learner/controllers";
 import { courseController, messageController } from "@setup/container/shared/controllers";
 import { instructorAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import express, { Request, Response ,NextFunction} from "express";
@@ -119,8 +120,14 @@ instructorRouter.post(ROUTES.START_SESSION,instructorAuthMiddleware,(req:Request
 
 instructorRouter.post(ROUTES.END_SESSION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.endLiveSession(req,res,next));
 
+instructorRouter.post(ROUTES.CANCEL_SESSION,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>liveSessionController.cancelLiveSession(req,res,next));
+
 instructorRouter.get(ROUTES.EARNINGS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getEarnings(req,res,next));
 
 instructorRouter.get(ROUTES.DASHBOARD,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getDashboard(req,res,next));
+
+instructorRouter.get(ROUTES.COURSE_ANALYTICS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseAnalytics(req,res,next));
+
+instructorRouter.get(ROUTES.LEARNERS,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>enrollmentController.getLearnerEnrollmentsForInstructor(req,res,next));
 
 export default instructorRouter;

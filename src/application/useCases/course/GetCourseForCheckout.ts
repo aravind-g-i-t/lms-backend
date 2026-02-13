@@ -5,6 +5,7 @@ import { IGetCourseDetailsForCheckoutUseCase } from "@application/IUseCases/cour
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class GetCourseDetailsForCheckoutUseCase implements IGetCourseDetailsForCheckoutUseCase {
@@ -17,7 +18,7 @@ export class GetCourseDetailsForCheckoutUseCase implements IGetCourseDetailsForC
 
         const course = await this._courseRepository.findHydratedCourseById(id);
         if (!course) {
-            throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         const thumbnail = course.thumbnail
             ? await this._fileStorageService.getViewURL(course.thumbnail)

@@ -29,30 +29,30 @@ export class InstructorEarningsRepositoryImpl extends BaseRepository<InstructorE
     async findPending(beforeDate: Date): Promise<InstructorEarnings[]> {
         const docs = await InstructorEarningsModel.find({
             status: EarningStatus.Pending,
-            createdAt: { $lte: beforeDate }
+            releaseAt: { $lte: beforeDate }
         }).exec();
 
         return docs.map(d => InstructorEarningsMapper.toDomain(d));
     }
 
-    async updateStatus(
-        id: string,
-        status: EarningStatus,
-        releaseAt?: Date | null,
-        cancelledAt?: Date | null
-    ): Promise<InstructorEarnings | null> {
-        const doc = await InstructorEarningsModel.findByIdAndUpdate(
-            id,
-            {
-                status,
-                releaseAt: releaseAt ?? null,
-                cancelledAt: cancelledAt ?? null
-            },
-            { new: true }
-        ).exec();
+    // async updateStatus(
+    //     id: string,
+    //     status: EarningStatus,
+    //     releaseAt?: Date | null,
+    //     cancelledAt?: Date | null
+    // ): Promise<InstructorEarnings | null> {
+    //     const doc = await InstructorEarningsModel.findByIdAndUpdate(
+    //         id,
+    //         {
+    //             status,
+    //             releaseAt: releaseAt ?? null,
+    //             cancelledAt: cancelledAt ?? null
+    //         },
+    //         { new: true }
+    //     ).exec();
 
-        return doc ? InstructorEarningsMapper.toDomain(doc) : null;
-    }
+    //     return doc ? InstructorEarningsMapper.toDomain(doc) : null;
+    // }
 
 
     async getEarnings(

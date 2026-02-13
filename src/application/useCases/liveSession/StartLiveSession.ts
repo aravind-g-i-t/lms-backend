@@ -14,7 +14,7 @@ export class StartLiveSessionUseCase implements IStartLiveSessionUseCase{
         const {sessionId,instructorId}= input
         const liveSession= await this._liveSessionRepository.findById(sessionId);
         if(!liveSession){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.LIVE_SESSION_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         if(liveSession.instructorId!==instructorId){
             throw new AppError(MESSAGES.UNAUTHORIZED,STATUS_CODES.UNAUTHORIZED)
@@ -22,9 +22,13 @@ export class StartLiveSessionUseCase implements IStartLiveSessionUseCase{
         if(liveSession.status=== LiveSessionStatus.Live){
             return liveSession.meetingRoomId
         }
-        if(liveSession.status!== LiveSessionStatus.Scheduled){
+        if(liveSession.status=== LiveSessionStatus.Ended){
             throw new AppError("Live has already started",STATUS_CODES.CONFLICT);
         }
+        if(liveSession.status=== LiveSessionStatus.Cancelled){
+            throw new AppError("Live has been cancelled.",STATUS_CODES.CONFLICT);
+        }
+
 
         await this._liveSessionRepository.updateById(
             sessionId,

@@ -1,5 +1,7 @@
 import { WalletTransaction } from "@domain/entities/WalletTransaction";
-import { WalletTransactionDoc } from "../models/WalletTxnModel";
+import { HydratedWalletTransactionDoc, WalletTransactionDoc } from "../models/WalletTxnModel";
+import { HydratedWalletTransaction } from "@domain/interfaces/IWalletTxnRepository";
+import { EnrollmentMapper } from "./EnrollmentMapper";
 
 
 
@@ -11,10 +13,23 @@ export class WalletTxnMapper {
             learnerId:doc.learnerId.toString(),
             walletId:doc.walletId.toString(),
             type:doc.type,
-            amount:doc.amount,
             reason:doc.reason,
-            relatedEnrollmentId:doc.relatedEnrollmentId?doc.relatedEnrollmentId.toString():null,
-            relatedPaymentId:doc.relatedPaymentId?doc.relatedPaymentId.toString():null,
+            amount:doc.amount,
+            enrollmentId:doc.enrollmentId?doc.enrollmentId.toString():null,
+            createdAt:doc.createdAt
+        };
+    }
+
+    static toHydratedDomain(doc: HydratedWalletTransactionDoc): HydratedWalletTransaction {
+
+        return {
+            id: doc._id.toString(),
+            learnerId:doc.learnerId.toString(),
+            walletId:doc.walletId.toString(),
+            reason:doc.reason,
+            type:doc.type,
+            amount:doc.amount,
+            enrollmentId:doc.enrollmentId?EnrollmentMapper.toDomain(doc.enrollmentId):null,
             createdAt:doc.createdAt
         };
     }

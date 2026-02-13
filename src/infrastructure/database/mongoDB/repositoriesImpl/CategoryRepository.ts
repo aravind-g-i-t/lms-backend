@@ -5,6 +5,8 @@ import { AppError } from "shared/errors/AppError";
 import { CategoryMapper } from "../mappers/CategoryMapper";
 import { BaseRepository } from "./BaseRepository";
 import { Category } from "@domain/entities/Category";
+import { MESSAGES } from "shared/constants/messages";
+import { STATUS_CODES } from "shared/constants/httpStatus";
 
 type AllCategoryQuery = {
     isActive?: boolean;
@@ -65,7 +67,7 @@ export class CategoryRepositoryImpl extends BaseRepository<Category> implements 
     async updateCategoryStatus(id: string): Promise<Category | null> {
         const category = await CategoryModel.findById(id);
         if(!category){
-            throw new AppError("Category not found")
+            throw new AppError(MESSAGES.CATEGORY_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         category.isActive = !category.isActive;
                 await category.save();

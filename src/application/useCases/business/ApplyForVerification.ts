@@ -12,7 +12,7 @@ export class ApplyForBusinessVerificationUseCase implements IApplyForBusinessVef
     async execute(id: string): Promise<void> {
         const business =await this._businessRepository.findById(id);
         if(!business){
-            throw new AppError(MESSAGES.BUSINESS_NOT_FOUND,STATUS_CODES.NOT_FOUND,false)
+            throw new AppError(MESSAGES.BUSINESS_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         if(!business.name|| !business.businessDomain||!business.website|| !business.location || !business.license){
             throw new AppError(MESSAGES.INCOMPLETE_PROFILE,STATUS_CODES.BAD_REQUEST)
@@ -22,7 +22,7 @@ export class ApplyForBusinessVerificationUseCase implements IApplyForBusinessVef
             remarks:null
         }})
         if(!updated){
-            throw new AppError(MESSAGES.SERVER_ERROR,STATUS_CODES.INTERNAL_SERVER_ERROR)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

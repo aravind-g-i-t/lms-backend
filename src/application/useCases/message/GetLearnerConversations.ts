@@ -11,6 +11,8 @@ import { IMessageRepository } from "@domain/interfaces/IMessageRepository";
 import { IPresenceService } from "@domain/interfaces/IPresenceService";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { AppError } from "shared/errors/AppError";
+import { MESSAGES } from "shared/constants/messages";
+import { STATUS_CODES } from "shared/constants/httpStatus";
 
 export class GetLearnerConversationsUseCase implements IGetLearnerConversationsUseCase {
     constructor(
@@ -42,16 +44,16 @@ export class GetLearnerConversationsUseCase implements IGetLearnerConversationsU
             } else {
                 const courseInfo = await this._courseRepo.findById(courseId);
                 if (!courseInfo) {
-                    throw new AppError("Failed to fetch course details.")
+                    throw new AppError(MESSAGES.COURSE_NOT_FOUND,STATUS_CODES.NOT_FOUND)
                 }
                 const instructorInfo = await this._instructorRepo.findById(courseInfo.instructorId);
                 if (!instructorInfo) {
-                    throw new AppError("Failed to fetch instructor details.")
+                    throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND,STATUS_CODES.NOT_FOUND)
                 }
 
                 const learnerInfo = await this._learnerRepo.findById(learnerId);
                 if (!learnerInfo) {
-                    throw new AppError("Failed to fetch learner details.")
+                    throw new AppError(MESSAGES.LEARNER_NOT_FOUND,STATUS_CODES.NOT_FOUND)
                 }
 
                 const tempConversation = {

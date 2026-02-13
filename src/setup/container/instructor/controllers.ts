@@ -1,6 +1,6 @@
 
 import { InstructorController } from "@presentation/http/controllers/InstructorController";
-import { addQuestionUseCase, applyForVerificationUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorEarningsUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
+import { addQuestionUseCase, applyForVerificationUseCase, cancelLiveSessionUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorEarningsUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
 import { QuizController } from "@presentation/http/controllers/QuizController";
 import { getCertificatesUseCase } from "../admin/useCases";
 import { LiveSessionController } from "@presentation/http/controllers/LiveSessionController";
@@ -41,4 +41,5 @@ export const liveSessionController = new LiveSessionController(
     joinLiveSessionUseCase,
     getLiveSessionsForLearner,
     endLiveSessionUseCase,
+    cancelLiveSessionUseCase
 )

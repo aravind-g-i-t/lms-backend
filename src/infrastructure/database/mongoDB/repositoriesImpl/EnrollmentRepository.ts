@@ -1,11 +1,13 @@
-import { HydratedEnrollment, IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
+import {  HydratedEnrollment, IEnrollmentRepository, LearnerEnrollmentsOutput } from "@domain/interfaces/IEnrollmentRepository";
 import { EnrollmentModel } from "../models/EnrollmentModel";
 import { EnrollmentMapper } from "../mappers/EnrollmentMapper";
 import { Enrollment, EnrollmentStatus } from "@domain/entities/Enrollment";
 import { BaseRepository } from "./BaseRepository";
 import { LearnerDoc } from "../models/LearnerModel";
 import { PaymentDoc } from "../models/PaymentModel";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
+import { LearnerProgressDoc } from "../models/LearnerProgressModel";
+
 
 
 
@@ -103,27 +105,30 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
         return enrollments.map(e => e.courseId.toString());
     }
 
-    async findHydratedEnrollments(input:{filter:Partial<Enrollment>,limit:number}): Promise<{
-        enrollments:HydratedEnrollment[],
-        total:number
+    async findHydratedEnrollments(input: { filter: Partial<Enrollment>, limit: number, page: number }): Promise<{
+        enrollments: HydratedEnrollment[],
+        total: number
     }> {
-        const {filter,limit}=input
+        const { filter, limit, page } = input
+        const skip = (page - 1) * limit;
 
-        const enrollments=await EnrollmentModel
-        .find(filter)
-        .sort({createdAt:-1})
-        .limit(limit)
-        .populate<{ learnerId: LearnerDoc }>("learnerId")
-        .populate<{ paymentId: PaymentDoc }>("paymentId")
-        .lean()
-        .exec()
+        const enrollments = await EnrollmentModel
+            .find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .populate<{ learnerId: LearnerDoc }>("learnerId")
+            .populate<{ paymentId: PaymentDoc }>("paymentId")
+            .populate<{ progressId: LearnerProgressDoc }>("progressId")
+            .lean()
+            .exec()
 
-        const total=await EnrollmentModel.countDocuments(filter)
-        
+        const total = await EnrollmentModel.countDocuments(filter)
 
-        
 
-      
+
+
+
         return {
             enrollments: enrollments.map(r => EnrollmentMapper.toHydratedDomain(r)),
             total
@@ -131,63 +136,202 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
     }
 
     async getEnrollmentTrend(
-    courseId: string,
-    from: Date
-  ): Promise<
-    {
-      date: string;
-      enrollments: number;
-      revenue: number;
-    }[]
-  > {
-    const courseObjectId = new Types.ObjectId(courseId);
+        courseId: string,
+        from: Date
+    ): Promise<
+        {
+            date: string;
+            enrollments: number;
+            revenue: number;
+        }[]
+    > {
+        const courseObjectId = new Types.ObjectId(courseId);
 
-    const trend = await EnrollmentModel.aggregate([
-      {
-        $match: {
-          courseId: courseObjectId,
-          createdAt: { $gte: from },
-          status: { $in: ["active", "completed"] },
-        },
-      },
-
-      /* ---- Group by week ---- */
-      {
-        $group: {
-          _id: {
-            year: { $year: "$createdAt" },
-            week: { $isoWeek: "$createdAt" },
-          },
-          enrollments: { $sum: 1 },
-          revenue: { $sum: "$amount" }, // or "$price"
-          firstDate: { $min: "$createdAt" },
-        },
-      },
-
-      /* ---- Sort chronologically ---- */
-      {
-        $sort: {
-          "_id.year": 1,
-          "_id.week": 1,
-        },
-      },
-
-      /* ---- Shape output ---- */
-      {
-        $project: {
-          _id: 0,
-          date: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$firstDate",
+        const trend = await EnrollmentModel.aggregate([
+            {
+                $match: {
+                    courseId: courseObjectId,
+                    createdAt: { $gte: from },
+                    status: { $in: ["active", "completed"] },
+                },
             },
-          },
-          enrollments: 1,
-          revenue: 1,
-        },
-      },
-    ]);
 
-    return trend;
-  }
+            // ✅ join payment
+            {
+                $lookup: {
+                    from: "payments",          // <-- collection name
+                    localField: "paymentId",
+                    foreignField: "_id",
+                    as: "payment",
+                },
+            },
+
+            { $unwind: "$payment" },
+
+            // ✅ compute revenue share
+            {
+                $addFields: {
+                    instructorRevenue: {
+                        $subtract: [
+                            "$payment.paidAmount",
+                            { $multiply: ["$payment.grossAmount", 0.7] },
+                        ],
+                    },
+                },
+            },
+
+            // ✅ group
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        week: { $isoWeek: "$createdAt" },
+                    },
+                    enrollments: { $sum: 1 },
+                    revenue: { $sum: "$instructorRevenue" },
+                    firstDate: { $min: "$createdAt" },
+                },
+            },
+
+            { $sort: { "_id.year": 1, "_id.week": 1 } },
+
+            {
+                $project: {
+                    _id: 0,
+                    date: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$firstDate",
+                        },
+                    },
+                    enrollments: 1,
+                    revenue: { $round: ["$revenue", 2] },
+                },
+            },
+        ]);
+
+        return trend;
+    }
+
+    async findLearnerEnrollmentsForInstructor(input: { instructorId: string; page: number; limit: number; search?: string; }): Promise<{
+        data: LearnerEnrollmentsOutput[];
+        total: number;
+    }> {
+        const instructorId = new Types.ObjectId(input.instructorId);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const search: FilterQuery<any> = {}
+        if (input.search) {
+            search["learner.name"] = { $regex: input.search, $options: "i" }
+        }
+        const skip = (input.page - 1) * input.limit;
+        console.log(skip);
+
+
+        const result = await EnrollmentModel.aggregate([
+            {
+                $match: {
+                    instructorId,
+                    status: EnrollmentStatus.Active,
+                },
+            },
+
+            {
+                $lookup: {
+                    from: "learners",
+                    localField: "learnerId",
+                    foreignField: "_id",
+                    as: "learner",
+                },
+            },
+
+            { $unwind: "$learner" },
+
+            { $match: search },
+
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "paymentId",
+                    foreignField: "_id",
+                    as: "payment",
+                },
+            },
+
+            {
+                $lookup: {
+                    from: "learnerprogresses",
+                    localField: "progressId",
+                    foreignField: "_id",
+                    as: "progress",
+                },
+            },
+
+            { $unwind: "$payment" },
+            { $unwind: "$progress" },
+
+            {
+                $group: {
+                    _id: "$learner._id",
+
+                    learner: {
+                        $first: {
+                            name: "$learner.name",
+                            email: "$learner.email",
+                            profilePic: "$learner.profilePic",
+                        },
+                    },
+
+                    enrollments: {
+                        $push: {
+                            id: "$_id",
+                            courseTitle: "$courseTitle",
+                            grossAmount: "$payment.grossAmount",
+                            duration: "$duration",
+                            thumbnail: "$thumbnail",
+                            paidAmount: "$payment.paidAmount",
+                            progressPercentage: "$progress.progressPercentage",
+                            enrolledAt: "$enrolledAt",
+                            status: "$status",
+                            completedAt: "$completedAt",
+                            cancelledAt: "$cancelledAt",
+                            courseId:"$courseId"
+                        },
+                    },
+                },
+            },
+
+            /* ==============================
+               FACET MAGIC (IMPORTANT)
+            ============================== */
+            {
+                $facet: {
+                    data: [
+                        { $skip: skip },
+                        { $limit: input.limit },
+                    ],
+                    total: [
+                        { $count: "count" },
+                    ],
+                },
+            },
+        ]);
+
+
+
+        const data = result[0].data;
+        const total = result[0].total[0]?.count ?? 0;
+
+        return {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            data: data.map((doc:any) => ({
+                id: doc._id.toString(),
+                learner: doc.learner,
+                enrollments: doc.enrollments,
+            })),
+            total,
+        };
+
+    }
+
 }

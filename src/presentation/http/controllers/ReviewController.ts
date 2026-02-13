@@ -27,8 +27,8 @@ export class ReviewController {
             const learnerId = req.user?.id;
             if (!learnerId) {
                 throw new AppError(
-                    MESSAGES.SERVER_ERROR,
-                    STATUS_CODES.INTERNAL_SERVER_ERROR
+                    MESSAGES.LEARNER_NOT_FOUND,
+                    STATUS_CODES.NOT_FOUND
                 );
             }
 
@@ -95,7 +95,7 @@ export class ReviewController {
     ): Promise<void> {
         try {
             console.log("Entered controller");
-            
+
             const { courseId, rating, reviewText } = req.body;
 
             console.log(req.body);
@@ -106,7 +106,7 @@ export class ReviewController {
                     STATUS_CODES.INTERNAL_SERVER_ERROR
                 );
             }
-            
+
             const review = await this._updateReviewUseCase.execute({
                 courseId,
                 learnerId,

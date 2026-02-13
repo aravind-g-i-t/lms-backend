@@ -12,12 +12,14 @@ export class WalletRepositoryImpl extends BaseRepository<Wallet> implements IWal
     super(WalletModel,WalletMapper)
   }
 
-  async updateBalance(learnerId: string, newBalance: number): Promise<Wallet | null> {
+  async updateBalance(learnerId: string, incrementBy: number): Promise<Wallet | null> {
     const wallet = await WalletModel.findOneAndUpdate(
       { learnerId },
-      { balance: newBalance },
+      { $inc: {balance:incrementBy} },
       { new: true }
     );
+    console.log(wallet);
+    
     return wallet?WalletMapper.toDomain(wallet):null;
   }
 }

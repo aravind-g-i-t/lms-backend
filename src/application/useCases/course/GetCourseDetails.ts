@@ -6,6 +6,7 @@ import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
+import { MESSAGES } from "shared/constants/messages";
 
 export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
     constructor(
@@ -17,13 +18,13 @@ export class GetCourseDetailsUseCase implements IGetCourseDetailsUseCase {
 
         const course = await this._courseRepository.findHydratedCourseById(id);
         if (!course) {
-            throw new AppError("Failed to fetch course details.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         let quiz:Quiz|null=null;
         if(course.quizId){
             quiz= await this._quizRepository.findById(course.quizId);
             if(!quiz){
-                throw new AppError("Failed to fetch quiz details.", STATUS_CODES.BAD_REQUEST)
+                throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
         }
         const thumbnail = course.thumbnail

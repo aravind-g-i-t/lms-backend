@@ -3,6 +3,7 @@ import { IOTPService } from "@domain/interfaces/IOTPService";
 import { logger } from "@infrastructure/logging/Logger";
 import nodemailer from 'nodemailer';
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class OTPService implements IOTPService {
@@ -48,7 +49,7 @@ export class OTPService implements IOTPService {
             return new Date(Date.now()+2*60*1000)
         } catch  {
             logger.warn("Failed to send otp via email")
-            throw new AppError("Failed to send OTP. Please try again.",STATUS_CODES.SERVICE_UNAVAILABLE)
+            throw new AppError(MESSAGES.OTP_NOT_SENT,STATUS_CODES.SERVICE_UNAVAILABLE)
         }
         
     }

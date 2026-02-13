@@ -10,6 +10,7 @@ import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { IQuizAttemptRepository } from "@domain/interfaces/IQuizAttemptRepository";
 import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
@@ -30,7 +31,7 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         const quiz = await this._quizRepository.findById(quizId);
         console.log("quiz:",quiz);
         
-        if (!quiz) throw new AppError("Quiz not found", STATUS_CODES.NOT_FOUND);
+        if (!quiz) throw new AppError(MESSAGES.QUIZ_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
         const questionMap = new Map(quiz.questions.map(q => [q.id, q]));
         console.log("questionMap:",questionMap);
@@ -90,7 +91,7 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         console.log("quizAttempt",quizAttempt);
         
         if(!quizAttempt){
-            throw new AppError("Failed to initiate quiz attempt",STATUS_CODES.BAD_REQUEST,false);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
         const progressUpdated= await this._learnerProgressRepository.findByLearnerAndCourseAndUpdate(learnerId,courseId,{
@@ -100,7 +101,7 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         console.log("progressUpdated",progressUpdated);
 
         if(!progressUpdated){
-            throw new AppError("Failed to update progress.",STATUS_CODES.BAD_REQUEST,false);
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
 
@@ -112,11 +113,11 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         });
         
         console.log("enrollment",enrollment);
-        if (!enrollment) throw new AppError("Enrollment not found", STATUS_CODES.NOT_FOUND);
+        if (!enrollment) throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
         const learner = await this._learnerRepository.findById(learnerId);
         console.log("learner",learner);
-        if (!learner) throw new AppError("Learner not found", STATUS_CODES.NOT_FOUND);
+        if (!learner) throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
         let certificateId: string | null = null;
 

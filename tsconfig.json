@@ -29,5 +29,5 @@
         "skipLibCheck": true,
         
     },
-  "exclude": ["eslint.config.ts", "node_modules"]
+  "exclude": ["eslint.config.js", "node_modules"]
 }

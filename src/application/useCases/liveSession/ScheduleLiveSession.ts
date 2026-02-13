@@ -19,11 +19,11 @@ export class ScheduleLiveSessionUseCase implements IScheduleLiveSessionUseCase{
         const { instructorId, courseId, scheduledAt, durationInMinutes, description } = input;
         const course= await this._courseRepository.findById(courseId);
         if(!course){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         const instructor= await this._instructorRepository.findById(instructorId);
         if(!instructor){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         
         const liveSession = await this._liveSessionRepository.create({
@@ -38,7 +38,7 @@ export class ScheduleLiveSessionUseCase implements IScheduleLiveSessionUseCase{
             status: LiveSessionStatus.Scheduled,
         })
         if(!liveSession){
-            throw new AppError("Failed to schedule new live session",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return liveSession
     }

@@ -2,6 +2,7 @@ import { IUpdateCourseUseCase } from "@application/IUseCases/course/IUpdateCours
 import { Course } from "@domain/entities/Course";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class UpdateCourseUseCase implements IUpdateCourseUseCase {
@@ -16,7 +17,7 @@ export class UpdateCourseUseCase implements IUpdateCourseUseCase {
             updates
         );
         if (!updated) {
-            throw new AppError("Failed to update course.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

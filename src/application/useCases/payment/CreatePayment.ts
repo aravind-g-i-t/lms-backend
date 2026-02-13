@@ -2,6 +2,7 @@ import { ICreatePaymentUseCase } from "@application/IUseCases/payment/ICreatePay
 import { PayerType, Payment, PaymentMethod, PaymentReason, PaymentStatus } from "@domain/entities/Payment";
 import { IPaymentRepository } from "@domain/interfaces/IPaymentRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class CreatePaymentUseCase implements ICreatePaymentUseCase{
@@ -28,7 +29,7 @@ export class CreatePaymentUseCase implements ICreatePaymentUseCase{
             reason:reason as PaymentReason
         });
         if(!newPayment){
-            throw new AppError("Failed to create payment record.",STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
         return newPayment
     }

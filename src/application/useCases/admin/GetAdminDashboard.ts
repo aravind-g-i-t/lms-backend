@@ -33,7 +33,8 @@ export class GetAdminDashboardUseCase implements IGetAdminDashboardUseCase{
             filter:{
                 status:EnrollmentStatus.Active,
             },
-            limit:5
+            limit:5,
+            page:1
         });
         const recentEnrollments= enrollmentList.enrollments.map(enrollment=>{
             const amount=enrollment.paymentId.paidAmount-(enrollment.paymentId.grossAmount*70/100);

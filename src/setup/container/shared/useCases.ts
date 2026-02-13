@@ -60,6 +60,7 @@ import { GetUnreadMessagesCountUseCase } from "@application/useCases/message/Get
 import { CreatePaymentUseCase } from "@application/useCases/payment/CreatePayment";
 import { VerifyPaymentUseCase } from "@application/useCases/payment/VerifyPayment";
 import { GetVideoCallTokenUseCase } from "@application/useCases/videoCall/GetVideoCallToken";
+import { GetCourseAnalyticsUseCaseImpl } from "@application/useCases/course/GetCourseAnalytics";
 
 export const userSignupUseCase=new UserSignupUseCase(learnerRepository,instructorRepository,businessRepository,cacheService,nodemailerService)
 
@@ -80,9 +81,9 @@ export const businessSigninUseCase=new BusinessSigninUseCase(businessRepository,
 export const userRefreshTokenUseCase=new UserRefreshTokenUseCase(tokenService,learnerRepository,instructorRepository,businessRepository,adminRepository);
 
 
-export const learnerGoogleSigninUseCase=new LearnerGoogleSigninUseCase(learnerRepository,tokenService,googleAuthService);
+export const learnerGoogleSigninUseCase=new LearnerGoogleSigninUseCase(learnerRepository,tokenService,googleAuthService,walletRepository);
 
-export const instructorGoogleSigninUseCase= new InstructorGoogleSigninUseCase(instructorRepository,tokenService,googleAuthService)
+export const instructorGoogleSigninUseCase= new InstructorGoogleSigninUseCase(instructorRepository,tokenService,googleAuthService,instructorWalletRepository)
 
 export const businessGoogleSigninUseCase= new BusinessGoogleSigninUseCase(businessRepository,tokenService,googleAuthService);
 
@@ -183,4 +184,6 @@ export const verifyPaymentUseCase = new VerifyPaymentUseCase(
 );
 
 export const getVideoCallTokenUseCase= new GetVideoCallTokenUseCase(zegoService)
+
+export const getCourseAnalyticsUseCase= new GetCourseAnalyticsUseCaseImpl(enrollmentRepository,learnerProgressRepository);
 

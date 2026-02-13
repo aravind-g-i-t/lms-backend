@@ -47,7 +47,7 @@ export class BusinessOTPVerificationUseCase implements IUserOTPVerificationUseCa
         if(businessCreated){
             return;
         }else{
-            throw new AppError(MESSAGES.BUSINESS_NOT_CREATED,STATUS_CODES.INTERNAL_SERVER_ERROR);
+            throw new AppError(MESSAGES.SIGNUP_FAILED,STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
     }
 

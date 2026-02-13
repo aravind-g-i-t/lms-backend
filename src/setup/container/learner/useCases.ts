@@ -1,5 +1,5 @@
 import { GetLearnersUseCase } from "@application/useCases/learner/GetLearners";
-import { enrollmentRepository, favouriteRepository, learnerProgressRepository, learnerRepository, reviewRepository } from "./repostitories";
+import { enrollmentRepository, favouriteRepository, learnerProgressRepository, learnerRepository, reviewRepository, walletRepository, walletTransactionRepository } from "./repostitories";
 import { s3Service, stripeService } from "../shared/services";
 import { UpdateLearnerStatusUseCase } from "@application/useCases/learner/UpdateLearnerStatus";
 import { UpdateLearnerDataUseCase } from "@application/useCases/learner/UpdateLearnerData";
@@ -10,8 +10,8 @@ import { RemoveFromFavouritesUseCase } from "@application/useCases/favourite/Rem
 import { CreateEnrollmentUseCase } from "@application/useCases/enrollment/CreateEnrollment";
 import { InitiateEnrollmentUseCase } from "@application/useCases/enrollment/InitiateEnrollment";
 import { GetEnrollmentsUseCase } from "@application/useCases/enrollment/GetEnrollments";
-import { courseRepository } from "../shared/repositories";
-import { instructorRepository, liveSessionRepository } from "../instructor/repositories";
+import { courseRepository, paymentRepository } from "../shared/repositories";
+import { instructorEarningsRepository, instructorRepository, instructorWalletRepository, liveSessionRepository } from "../instructor/repositories";
 import { categoryRepository, couponRepository } from "../admin/repositories";
 import { createPaymentUseCase, getCoursesForLearnerUseCase } from "../shared/useCases";
 import { MarkChapterAsCompletedUseCase } from "@application/useCases/learnerProgress/MarkChapterAsCompleted";
@@ -25,6 +25,9 @@ import { GetLearnerHomeDataUseCase } from "@application/useCases/learner/GetLear
 import { GetRecommendedCoursesForLearnerUseCase } from "@application/useCases/course/GetRecommended";
 import { GetPopularCoursesUseCase } from "@application/useCases/course/GetPopularCourses";
 import { UpdateReviewUseCase } from "@application/useCases/review/UpdateReview";
+import { GetLearnerEnrollmentsUseCase } from "@application/useCases/enrollment/GetLearnerEnrollmentsForInstructor";
+import { CancelEnrollmentUseCase } from "@application/useCases/enrollment/CancelEnrollment";
+import { GetWalletDataUseCase } from "@application/useCases/wallet/GetWalletData";
 
 export const getLearnersUseCase=new GetLearnersUseCase(learnerRepository,s3Service)
 
@@ -49,7 +52,9 @@ export const initiateEnrollmentUseCase = new InitiateEnrollmentUseCase(
     createEnrollmentUseCase,
     stripeService,
     instructorRepository,
-    couponRepository
+    couponRepository,
+    learnerRepository,
+    enrollmentRepository
 );
 
 export const getEnrollmentsUseCase = new GetEnrollmentsUseCase(enrollmentRepository,learnerProgressRepository,s3Service);
@@ -75,3 +80,9 @@ export const getLearnerHomeDataUseCase= new GetLearnerHomeDataUseCase(getEnrollm
 export const getPopularCoursesUseCase= new GetPopularCoursesUseCase(getCoursesForLearnerUseCase)
 
 export const updateReviewUseCase= new UpdateReviewUseCase(reviewRepository,enrollmentRepository,courseRepository)
+
+export const getLearnerEnrollmentsForInstructorUseCase= new GetLearnerEnrollmentsUseCase(enrollmentRepository,s3Service);
+
+export const cancelEnrollmentUseCase= new CancelEnrollmentUseCase(enrollmentRepository,paymentRepository,instructorEarningsRepository,walletRepository,instructorWalletRepository,walletTransactionRepository,courseRepository)
+
+export const getWalletDataUseCase= new GetWalletDataUseCase(walletRepository,walletTransactionRepository)

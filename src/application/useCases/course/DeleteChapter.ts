@@ -1,6 +1,7 @@
 import { IDeleteChaperUseCase } from "@application/IUseCases/course/IDeleteChapter";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
+import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
 export class DeleteChapterUseCase implements IDeleteChaperUseCase {
@@ -12,7 +13,7 @@ export class DeleteChapterUseCase implements IDeleteChaperUseCase {
         const { courseId, moduleId, chapterId } = input;
         const deleted = await this._courseRepository.removeChapter({ courseId, moduleId, chapterId });
         if (!deleted) {
-            throw new AppError("Failed to delete chapter.", STATUS_CODES.BAD_REQUEST)
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
     }
 }

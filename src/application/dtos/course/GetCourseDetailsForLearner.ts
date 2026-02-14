@@ -52,6 +52,7 @@ export interface GetCourseDetailsForLearnerOutput {
     isEnrolled:boolean;
     enrolledAt:Date | null;
     isFavourite:boolean;
+    isCompleted:boolean;
     ratingDistribution:{
         1:number;
         2:number;

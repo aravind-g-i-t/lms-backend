@@ -71,6 +71,24 @@ const EnrollmentSchema = new Schema<EnrollmentDoc>(
 );
 
 // EnrollmentSchema.index({ learnerId: 1, courseId: 1 }, { unique: true });
+EnrollmentSchema.index(
+  { learnerId: 1, courseId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { status: EnrollmentStatus.Pending }
+  }
+);
+
+
+EnrollmentSchema.index(
+  { createdAt: 1 },
+  {
+    expireAfterSeconds: 60, // 2 minutes
+    partialFilterExpression: { status: EnrollmentStatus.Pending }
+  }
+);
+
+
 
 export const EnrollmentModel = model<EnrollmentDoc>(
     "Enrollment",

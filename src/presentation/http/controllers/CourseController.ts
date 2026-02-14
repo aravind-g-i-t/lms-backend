@@ -127,6 +127,8 @@ export class CourseController {
         try {
 
             const { id } = req.query;
+
+            
             const response = await this._getCourseDetailsUseCase.execute(id as string);
 
 

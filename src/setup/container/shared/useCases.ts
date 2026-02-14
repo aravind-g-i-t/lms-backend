@@ -127,7 +127,7 @@ export const updateCourseStatusUseCase = new UpdateCourseStatusUseCase(courseRep
 
 export const getCoursesForLearnerUseCase = new GetCoursesForLearnerUseCase(courseRepository,s3Service,favouriteRepository);
 
-export const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseRepository,s3Service,enrollmentRepository,favouriteRepository)
+export const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseRepository,s3Service,enrollmentRepository,favouriteRepository,learnerProgressRepository)
 
 export const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository)
 

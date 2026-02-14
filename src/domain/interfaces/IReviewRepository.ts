@@ -24,7 +24,7 @@ export interface IReviewRepository {
     updateById(id: string, data: Partial<Review>): Promise<Review | null>
     findOne(filter: Partial<Review>): Promise<Review | null>
 
-    findManyWithPagination({ skip, limit, courseId, learnerId }: { skip: number; limit: number; courseId: string; learnerId: string }): Promise<HydratedReview[]>
+    findManyWithPagination({ skip, limit, courseId, learnerId }: { skip: number; limit: number; courseId: string; learnerId?: string }): Promise<HydratedReview[]>
     getRatingSum(courseId: string): Promise<number>
 
 }

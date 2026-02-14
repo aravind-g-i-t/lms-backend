@@ -6,6 +6,7 @@ import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRep
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
+import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
@@ -15,7 +16,8 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
         private _courseRepository: ICourseRepository,
         private _fileStorageService: IFileStorageService,
         private _enrollmentRepository: IEnrollmentRepository,
-        private _favouriteRepository: IFavouriteRepository
+        private _favouriteRepository: IFavouriteRepository,
+        private _progressRepo:ILearnerProgressRepository
     ) { }
 
     async execute({ courseId, learnerId }: { courseId: string, learnerId: string | null }): Promise<GetCourseDetailsForLearnerOutput> {
@@ -32,6 +34,7 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
             const profilePic = course.instructor?.profilePic ? await this._fileStorageService.getViewURL(course.instructor.profilePic) : null;
             let enrollment;
             let favourite;
+            let isCompleted=false;
         if (learnerId) {
             enrollment = await this._enrollmentRepository.findOne({
                 courseId: courseId,
@@ -39,6 +42,11 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
                 status:EnrollmentStatus.Active
             });
             favourite=await this._favouriteRepository.exists({learnerId,courseId})
+            const progress= await this._progressRepo.findOne({
+                learnerId,
+                courseId
+            })
+            isCompleted=progress?.progressPercentage===100
         }
 
         return this._toCourseDetails(
@@ -51,12 +59,13 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
             {
                 isEnrolled:enrollment?true:false,
                 enrolledAt:enrollment?enrollment.enrolledAt:null,
-                isFavourite:favourite?true:false
+                isFavourite:favourite?true:false,
+                isCompleted
             }
     )
     }
 
-    private _toCourseDetails(input: HydratedCourse, status:{isFavourite:boolean; isEnrolled:boolean,enrolledAt:Date|null}): GetCourseDetailsForLearnerOutput {
+    private _toCourseDetails(input: HydratedCourse, status:{isFavourite:boolean; isEnrolled:boolean,enrolledAt:Date|null,isCompleted:boolean}): GetCourseDetailsForLearnerOutput {
         return {
             id: input.id,
             title: input.title,
@@ -90,7 +99,8 @@ export class GetCourseDetailsForLearnerUseCase implements IGetCourseDetailsForLe
             isEnrolled:status.isEnrolled,
             enrolledAt:status.enrolledAt,
             isFavourite:status.isFavourite,
-            ratingDistribution:input.ratingDistribution
+            ratingDistribution:input.ratingDistribution,
+            isCompleted:status.isCompleted
         }
     }
 

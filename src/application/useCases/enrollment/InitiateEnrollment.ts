@@ -38,6 +38,16 @@ export class InitiateEnrollmentUseCase implements IInitiateEnrollmentUseCase {
             throw new AppError("You have alread purchased the course",STATUS_CODES.BAD_REQUEST)
         }
         
+        const activeSessionExists= await this._enrollmentRepository.findOne({
+            learnerId,
+            courseId,
+            status:EnrollmentStatus.Pending
+        });
+        
+        if(activeSessionExists){
+            throw new AppError("Payment already in progress. Please complete the existing checkout.",STATUS_CODES.BAD_REQUEST)
+        }
+        
         const course = await this._courseRepository.findById(courseId);
         if (!course) {
             throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.NOT_FOUND)

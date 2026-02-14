@@ -74,7 +74,7 @@ learnerRouter.get(ROUTES.SESSIONS,learnerAuthMiddleware,(req:Request,res:Respons
 
 learnerRouter.post(ROUTES.COURSE_REVIEW,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.addReview(req,res,next));
 
-learnerRouter.get(ROUTES.COURSE_REVIEWS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>reviewController.getReviewsForLearner(req,res,next));
+learnerRouter.get(ROUTES.COURSE_REVIEWS,(req:Request,res:Response,next:NextFunction)=>reviewController.getReviewsForLearner(req,res,next));
 
 learnerRouter.get(ROUTES.HOME,(req:Request,res:Response,next:NextFunction)=>learnerController.getHomePageData(req,res,next));
 

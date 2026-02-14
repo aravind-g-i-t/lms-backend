@@ -4,7 +4,7 @@ import { ReviewModel } from "../models/ReviewModel";
 import { ReviewMapper } from "../mappers/ReviewMapper";
 import { HydratedReview, IReviewRepository, } from "@domain/interfaces/IReviewRepository";
 import { LearnerDoc } from "../models/LearnerModel";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 
 
 export class ReviewRepository extends BaseRepository<Review> implements IReviewRepository {
@@ -12,13 +12,18 @@ export class ReviewRepository extends BaseRepository<Review> implements IReviewR
         super(ReviewModel, ReviewMapper)
     }
 
-    async findManyWithPagination({ skip, limit, courseId, learnerId }: { skip: number; limit: number; courseId: string; learnerId: string }): Promise<HydratedReview[]> {
+    async findManyWithPagination({ skip, limit, courseId, learnerId }: { skip: number; limit: number; courseId: string; learnerId?: string }): Promise<HydratedReview[]> {
+
+        const filter:FilterQuery<Review>={
+            courseId,
+            isVisible:true
+        }
+        if(learnerId){
+            filter.learnerId={$ne:learnerId}
+        }
+        
         const docs = await ReviewModel
-            .find({
-                courseId,
-                learnerId: { $ne: learnerId },
-                isVisible: true,
-            })
+            .find(filter)
             .populate<{ categoryId: LearnerDoc }>("learnerId")
             .sort({ createdAt: -1 })
             .skip(skip)

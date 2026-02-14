@@ -10,12 +10,18 @@ export class GetReviewsForLearnerUseCase implements IGetReviewsForLearnerUseCase
         private _fileStorageService:IFileStorageService,
     ){}
 
-    async execute(input:{courseId:string; learnerId:string; skip:number; limit:number}):Promise<{myReview:MyReviewForLIsting|null; reviews:ReviewForLearnerListing[]}>{
+    async execute(input:{courseId:string; learnerId?:string; skip:number; limit:number}):Promise<{myReview:MyReviewForLIsting|null; reviews:ReviewForLearnerListing[]}>{
         const {courseId,learnerId,skip,limit}= input
-        const myReview= await this._reviewRepository.findOne({
+
+        let myReview;
+
+        if(learnerId){
+            myReview= await this._reviewRepository.findOne({
             courseId,
             learnerId
         });
+        }
+         
         const reviews= await this._reviewRepository.findManyWithPagination({
             skip,
             limit,

@@ -58,15 +58,15 @@ export class ReviewController {
     ): Promise<void> {
         try {
             const { query } = GetReviewsForLearnerRequestSchema.parse(req);
-            const { skip, limit, courseId } = query;
+            const { skip, limit, courseId,learnerId } = query;
 
-            const learnerId = req.user?.id;
-            if (!learnerId) {
-                throw new AppError(
-                    MESSAGES.SERVER_ERROR,
-                    STATUS_CODES.INTERNAL_SERVER_ERROR
-                );
-            }
+            // const learnerId = req.user?.id;
+            // if (!learnerId) {
+            //     throw new AppError(
+            //         MESSAGES.SERVER_ERROR,
+            //         STATUS_CODES.INTERNAL_SERVER_ERROR
+            //     );
+            // }
 
             const result = await this._getReviewsForLearnerUseCase.execute({
                 courseId,

@@ -1,5 +1,5 @@
 import { GetInstructorEarningsInput, GetInstructorEarningsOutput, IInstructorEarningsRepository } from "@domain/interfaces/IInstructorEarningsRepo";
-import { InstructorEarningsModel } from "../models/InstructorEarningsModel";
+import { InstructorEarningsDoc, InstructorEarningsModel } from "../models/InstructorEarningsModel";
 import { InstructorEarningsMapper } from "../mappers/InstructorEarningsMapper";
 import { EarningStatus, InstructorEarnings } from "@domain/entities/InstructorEarning";
 import { BaseRepository } from "./BaseRepository";
@@ -11,7 +11,7 @@ import { LearnerDoc } from "../models/LearnerModel";
 
 
 
-export class InstructorEarningsRepositoryImpl extends BaseRepository<InstructorEarnings> implements IInstructorEarningsRepository {
+export class InstructorEarningsRepositoryImpl extends BaseRepository<InstructorEarnings,InstructorEarningsDoc> implements IInstructorEarningsRepository {
 
     constructor() {
         super(InstructorEarningsModel, InstructorEarningsMapper)

@@ -1,5 +1,5 @@
 import {  HydratedEnrollment, IEnrollmentRepository, LearnerEnrollmentsOutput } from "@domain/interfaces/IEnrollmentRepository";
-import { EnrollmentModel } from "../models/EnrollmentModel";
+import { EnrollmentDoc, EnrollmentModel } from "../models/EnrollmentModel";
 import { EnrollmentMapper } from "../mappers/EnrollmentMapper";
 import { Enrollment, EnrollmentStatus } from "@domain/entities/Enrollment";
 import { BaseRepository } from "./BaseRepository";
@@ -11,7 +11,7 @@ import { LearnerProgressDoc } from "../models/LearnerProgressModel";
 
 
 
-export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> implements IEnrollmentRepository {
+export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,EnrollmentDoc> implements IEnrollmentRepository {
 
     constructor() {
         super(EnrollmentModel, EnrollmentMapper)
@@ -38,9 +38,8 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
 
         const skip = (page - 1) * limit;
 
-        // Base filter
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const query: Record<string, any> = {
+
+        const query: FilterQuery<Enrollment> = {
             learnerId
         };
 
@@ -219,10 +218,9 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
     }> {
         const instructorId = new Types.ObjectId(input.instructorId);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const search: FilterQuery<any> = {}
+        const search: FilterQuery<Enrollment> = {}
         if (input.search) {
-            search["learner.name"] = { $regex: input.search, $options: "i" }
+            search.learnerName = { $regex: input.search, $options: "i" }
         }
         const skip = (input.page - 1) * input.limit;
         console.log(skip);
@@ -334,4 +332,11 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment> impleme
 
     }
 
+    getCompletedEnrollmentsCount(courseId: string): Promise<number> {
+        return EnrollmentModel.countDocuments({
+            courseId,
+            status: EnrollmentStatus.Active,
+            completedAt: { $ne: null }
+        }).exec();
+    }
 }

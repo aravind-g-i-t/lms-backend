@@ -8,7 +8,7 @@ import { ROUTES } from "shared/constants/routes";
 import { learnerAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import { enrollmentController, learnerController, progressController, reviewController } from "@setup/container/learner/controllers";
 import { courseController, messageController } from "@setup/container/shared/controllers";
-import { liveSessionController, quizController } from "@setup/container/instructor/controllers";
+import { instructorController, liveSessionController, quizController } from "@setup/container/instructor/controllers";
 const learnerRouter=express.Router();
 
 // Learner profile
@@ -87,6 +87,8 @@ learnerRouter.patch(ROUTES.COURSE_REVIEW,learnerAuthMiddleware,(req:Request,res:
 learnerRouter.patch(ROUTES.CANCEL_ENROLLMENT,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>enrollmentController.cancelEnrollment(req,res,next));
 
 learnerRouter.get(ROUTES.WALLET,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.getWalletData(req,res,next));
+
+learnerRouter.get(ROUTES.INSTRUCTOR_DETAILS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getInstructorDetailsForLearner(req,res,next));
 
 
 export default learnerRouter;

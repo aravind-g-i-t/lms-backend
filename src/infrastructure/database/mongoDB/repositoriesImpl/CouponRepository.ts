@@ -1,4 +1,4 @@
-import { CouponModel } from "../models/CouponModel";
+import { CouponDoc, CouponModel } from "../models/CouponModel";
 import { CouponMapper } from "../mappers/CouponMapper";
 import { Coupon } from "@domain/entities/Coupon";
 import { ICouponRepository } from "@domain/interfaces/ICouponReposotory";
@@ -9,7 +9,7 @@ import { BaseRepository } from "./BaseRepository";
 import { MESSAGES } from "shared/constants/messages";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 
-export class CouponRepository extends BaseRepository<Coupon> implements ICouponRepository {
+export class CouponRepository extends BaseRepository<Coupon,CouponDoc> implements ICouponRepository {
 
 
     constructor(){

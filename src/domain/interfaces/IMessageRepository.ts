@@ -1,10 +1,8 @@
 import { Message, UserRole } from "@domain/entities/Message";
+import { IBaseRepository } from "./IBaseRepository";
 
 
-export interface IMessageRepository {
-    create(message: Partial<Message>): Promise<Message>;
-
-    findById(id: string): Promise<Message | null>;
+export interface IMessageRepository extends IBaseRepository<Message> {
 
     listByConversation(
         userId: string,

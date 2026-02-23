@@ -1,5 +1,5 @@
 import { IConversationRepository, HydratedConversation } from "@domain/interfaces/IConversationRepository";
-import { ConversationModel } from "../models/ConversationModel";
+import { ConversationDoc, ConversationModel } from "../models/ConversationModel";
 import { Conversation, ConversationStatus } from "@domain/entities/Conversation";
 import { UserRole } from "@domain/entities/Message";
 import { ConversationMapper, HydratedConversationDoc } from "../mappers/ConversationMapper";
@@ -10,7 +10,7 @@ import { PipelineStage, Types } from "mongoose";
 import { BaseRepository } from "./BaseRepository";
 
 
-export class ConversationRepositoryImpl extends BaseRepository<Conversation> implements IConversationRepository {
+export class ConversationRepositoryImpl extends BaseRepository<Conversation,ConversationDoc > implements IConversationRepository {
 
     constructor() {
         super(ConversationModel, ConversationMapper)

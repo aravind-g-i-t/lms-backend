@@ -1,12 +1,12 @@
 import { IWalletRepository } from "@domain/interfaces/IWalletRepository";
-import { WalletModel } from "../models/WalletModel";
+import { WalletDoc, WalletModel } from "../models/WalletModel";
 import { WalletMapper } from "../mappers/WalletMapper";
 import { BaseRepository } from "./BaseRepository";
 import { Wallet } from "@domain/entities/Wallet";
 
 
 
-export class WalletRepositoryImpl extends BaseRepository<Wallet> implements IWalletRepository {
+export class WalletRepositoryImpl extends BaseRepository<Wallet,WalletDoc> implements IWalletRepository {
 
   constructor(){
     super(WalletModel,WalletMapper)

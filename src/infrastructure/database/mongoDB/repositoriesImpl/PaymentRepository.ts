@@ -1,5 +1,5 @@
 import { IPaymentRepository, MonthlyRevenue } from "@domain/interfaces/IPaymentRepository";
-import { PaymentModel } from "../models/PaymentModel";
+import { PaymentDoc, PaymentModel } from "../models/PaymentModel";
 import { PaymentMapper } from "../mappers/PaymentMapper";
 import { Payment, PaymentReason, PaymentStatus } from "@domain/entities/Payment";
 import { BaseRepository } from "./BaseRepository";
@@ -7,7 +7,7 @@ import { BaseRepository } from "./BaseRepository";
 
 
 
-export class PaymentRepositoryImpl extends BaseRepository<Payment> implements IPaymentRepository {
+export class PaymentRepositoryImpl extends BaseRepository<Payment,PaymentDoc> implements IPaymentRepository {
 
     constructor() {
         super(PaymentModel, PaymentMapper)

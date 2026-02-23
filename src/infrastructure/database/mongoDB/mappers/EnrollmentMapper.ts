@@ -24,7 +24,7 @@ export class EnrollmentMapper {
             instructorId: doc.instructorId.toString(),
             courseTitle: doc.courseTitle,
             instructorName: doc.instructorName,
-            learnerName:doc.learnerName,
+            learnerName: doc.learnerName,
             thumbnail: doc.thumbnail,
             duration: doc.duration
         };
@@ -47,31 +47,69 @@ export class EnrollmentMapper {
             instructorId: doc.instructorId.toString(),
             courseTitle: doc.courseTitle,
             instructorName: doc.instructorName,
-            learnerName:doc.learnerName,
+            learnerName: doc.learnerName,
             thumbnail: doc.thumbnail,
             duration: doc.duration
         };
     }
 
     static toPersistence(entity: Partial<Enrollment>): Partial<EnrollmentDoc> {
-        return {
-            learnerId: new Types.ObjectId(entity.learnerId),
-            courseId: new Types.ObjectId(entity.courseId),
-            progressId: entity.progressId?new Types.ObjectId(entity.progressId):undefined,
-            enrolledAt: entity.enrolledAt,
-            status: entity.status,
-            paymentId: entity.paymentId?new Types.ObjectId(entity.paymentId):undefined,
-            completedAt: entity.completedAt,
-            certificate: entity.certificate,
-            cancelledAt: entity.cancelledAt,
-            createdAt: entity.createdAt,
-            instructorId: entity.paymentId?new Types.ObjectId(entity.paymentId):undefined,
-            courseTitle: entity.courseTitle,
-            instructorName: entity.instructorName,
-            learnerName:entity.learnerName,
-            thumbnail: entity.thumbnail,
-            duration: entity.duration
-        };
+        const data: Partial<EnrollmentDoc> = {};
+
+        if (entity.id !== undefined)
+            data._id = new Types.ObjectId(entity.id);
+
+        if (entity.learnerId !== undefined)
+            data.learnerId = new Types.ObjectId(entity.learnerId);
+
+        if (entity.courseId !== undefined)
+            data.courseId = new Types.ObjectId(entity.courseId);
+
+        if (entity.progressId !== undefined)
+            data.progressId = entity.progressId
+                ? new Types.ObjectId(entity.progressId)
+                : null;
+
+        if (entity.status !== undefined)
+            data.status = entity.status;
+
+        if (entity.paymentId !== undefined)
+            data.paymentId =  new Types.ObjectId(entity.paymentId)
+
+        if (entity.completedAt !== undefined)
+            data.completedAt = entity.completedAt;
+
+        if (entity.cancelledAt !== undefined)
+            data.cancelledAt = entity.cancelledAt;
+
+        if (entity.certificate !== undefined)
+            data.certificate = entity.certificate;
+
+        if (entity.courseTitle !== undefined)
+            data.courseTitle = entity.courseTitle;
+
+        if (entity.instructorName !== undefined)
+            data.instructorName = entity.instructorName;
+
+        if (entity.learnerName !== undefined)
+            data.learnerName = entity.learnerName;
+
+        if (entity.thumbnail !== undefined)
+            data.thumbnail = entity.thumbnail;
+
+        if (entity.duration !== undefined)
+            data.duration = entity.duration;
+
+        if (entity.instructorId !== undefined)
+            data.instructorId = new Types.ObjectId(entity.instructorId);
+
+        if(entity.enrolledAt !== undefined)
+            data.enrolledAt = entity.enrolledAt;
+
+        if(entity.createdAt !== undefined)                 data.createdAt = entity.createdAt;
+
+
+        return data;
     }
 
 

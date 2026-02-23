@@ -1,11 +1,8 @@
 import { LearnerProgress } from "@domain/entities/LearnerProgress";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface ILearnerProgressRepository {
-    create(data: Partial<LearnerProgress>): Promise<LearnerProgress | null>;
-    findOne(input: Partial<LearnerProgress>): Promise<LearnerProgress | null>;
+export interface ILearnerProgressRepository extends IBaseRepository<LearnerProgress> {
     findManyByCourseIds(learnerId: string, courseIds: string[]): Promise<LearnerProgress[]>;
-    findOneAndUpdate(fiter: Partial<LearnerProgress>, data: Partial<LearnerProgress>): Promise<LearnerProgress | null>
-    updateById(id: string, updateData: Partial<LearnerProgress>): Promise<LearnerProgress | null>;
     markChapterCompleted(
         { learnerId, courseId, chapterId }
             : {

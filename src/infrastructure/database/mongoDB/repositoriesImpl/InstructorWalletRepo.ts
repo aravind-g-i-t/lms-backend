@@ -1,12 +1,12 @@
 import { IInstructorWalletRepository } from "@domain/interfaces/IInstructorWalletRepository";
-import { InstructorWalletModel } from "../models/InstructorWalletModel";
+import { InstructorWalletDoc, InstructorWalletModel } from "../models/InstructorWalletModel";
 import { InstructorWalletMapper } from "../mappers/InstructorWalletMapper";
 import { InstructorWallet } from "@domain/entities/InstructorWallet";
 import { BaseRepository } from "./BaseRepository";
 
 
 
-export class InstructorWalletRepositoryImpl extends BaseRepository<InstructorWallet> implements IInstructorWalletRepository {
+export class InstructorWalletRepositoryImpl extends BaseRepository<InstructorWallet,InstructorWalletDoc> implements IInstructorWalletRepository {
     constructor() {
         super(InstructorWalletModel, InstructorWalletMapper)
     }

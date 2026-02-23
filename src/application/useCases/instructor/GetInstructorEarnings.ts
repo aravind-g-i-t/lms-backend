@@ -40,7 +40,7 @@ export class GetInstructorWalletAndEarningsUseCase {
         enrollmentId:earning.enrollmentId,
         learnerName:earning.learnerId.name,
         createdAt:earning.createdAt,
-        releasedAt:earning.releaseAt,
+        releaseAt:earning.releaseAt,
         cancelledAt:earning.cancelledAt,
         status:earning.status,
         amount:earning.amount

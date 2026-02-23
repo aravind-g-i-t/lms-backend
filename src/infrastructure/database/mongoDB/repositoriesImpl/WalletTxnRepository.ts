@@ -1,5 +1,5 @@
 import { FindManyTransactionsOutput, IWalletTransactionRepository } from "@domain/interfaces/IWalletTxnRepository";
-import { WalletTransactionModel } from "../models/WalletTxnModel";
+import { WalletTransactionDoc, WalletTransactionModel } from "../models/WalletTxnModel";
 import { WalletTxnMapper } from "../mappers/WalletTxnMapper";
 import { BaseRepository } from "./BaseRepository";
 import { WalletTransaction } from "@domain/entities/WalletTransaction";
@@ -10,7 +10,7 @@ import { EnrollmentDoc } from "../models/EnrollmentModel";
 
 
 
-export class WalletTransactionRepositoryImpl extends BaseRepository<WalletTransaction>
+export class WalletTransactionRepositoryImpl extends BaseRepository<WalletTransaction,WalletTransactionDoc>
     implements IWalletTransactionRepository {
 
     constructor(){

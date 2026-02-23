@@ -60,4 +60,43 @@ export class ConversationMapper {
             updatedAt: doc.updatedAt
         };
     }
+
+    static toPersistence(entity: Partial<Conversation>): Partial<ConversationDoc> {
+        const data: Partial<ConversationDoc> = {};
+
+        if (entity.id !== undefined)
+            data._id = new Types.ObjectId(entity.id);
+
+        if (entity.courseId !== undefined)
+            data.courseId = new Types.ObjectId(entity.courseId);
+
+        if (entity.instructorId !== undefined)
+            data.instructorId = new Types.ObjectId(entity.instructorId);
+
+        if (entity.learnerId !== undefined)
+            data.learnerId = new Types.ObjectId(entity.learnerId);
+
+        if (entity.lastMessageContent !== undefined)
+            data.lastMessageContent = entity.lastMessageContent;
+
+        if (entity.lastMessageAt !== undefined)
+            data.lastMessageAt = entity.lastMessageAt;
+
+        if (entity.instructorUnreadCount !== undefined)
+            data.instructorUnreadCount = entity.instructorUnreadCount;
+
+        if (entity.learnerUnreadCount !== undefined)
+            data.learnerUnreadCount = entity.learnerUnreadCount;
+
+        if (entity.status !== undefined)
+            data.status = entity.status;
+
+        if (entity.createdAt !== undefined)
+            data.createdAt = entity.createdAt;
+
+        if (entity.updatedAt !== undefined)
+            data.updatedAt = entity.updatedAt;
+
+        return data;
+    }
 }

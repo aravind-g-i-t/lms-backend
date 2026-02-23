@@ -1,4 +1,5 @@
 import { Category } from "@domain/entities/Category";
+import { IBaseRepository } from "./IBaseRepository";
 
 type AllCategoryQuery = {
     isActive?: boolean;
@@ -11,14 +12,10 @@ type FindAllCategoriesOutput={
     totalCount:number
 }
 
-export interface ICategoryRepository {
-  create(category: Partial<Category>): Promise<Category|null>;
-  findById(id: string): Promise<Category | null>;
-  findOne(input:Partial<Category>): Promise<Category | null> 
+export interface ICategoryRepository extends IBaseRepository<Category> {
   findAll(query: AllCategoryQuery,
         options: { page: number; limit: number }): Promise<FindAllCategoriesOutput>;
-  updateById(id: string, data: Partial<Category>): Promise<Category|null>;
   updateCategoryStatus(id: string): Promise<Category|null>;
   findActiveCategories():Promise<Category[]>
-  findMany(filter: Partial<Category>):Promise<Category[]>
+
 }

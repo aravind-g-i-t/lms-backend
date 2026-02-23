@@ -1,6 +1,7 @@
 import { Category } from "@domain/entities/Category";
 import { Chapter, Course, CourseLevel, CourseStatus, Module, Resource, VerificationStatus } from "@domain/entities/Course";
 import { Instructor } from "@domain/entities/Instructor";
+import { IBaseRepository } from "./IBaseRepository";
 
 interface FindAllInput {
     pageOptions: {
@@ -81,11 +82,9 @@ export interface HydratedCourse {
     quizId: string | null
 }
 
-export interface ICourseRepository {
+export interface ICourseRepository extends IBaseRepository<Course> {
 
-    create(courseData: Partial<Course>): Promise<Course | null>;
-
-    findById(id: string): Promise<Course | null>;
+    
 
     findHydratedCourseById(id: string): Promise<HydratedCourse | null>;
 
@@ -94,11 +93,9 @@ export interface ICourseRepository {
     findByCategory(categoryId: string): Promise<Course[]>;
 
     findAll(input: FindAllInput): Promise<FindAllOutput>
-    updateById(id: string, updates: Partial<Course>): Promise<Course | null>;
+    
 
     findAllCourses(input: FindAllCoursesInput): Promise<FindAllOutput>
-
-    deleteById(id: string): Promise<boolean>;
 
     incrementEnrollment(id: string): Promise<Course | null>;
 
@@ -128,12 +125,11 @@ export interface ICourseRepository {
 
     removeResource({ courseId, moduleId, chapterId, resourceId }: { courseId: string; moduleId: string; chapterId: string; resourceId: string }): Promise<Course | null>;
 
-    findMany(input: Partial<Course>): Promise<Course[]>
-
     getInterestSignals(courseIds: string[]): Promise<{
         tags: string[];
         categoryIds: string[];
     }>;
+
     getRecommendedCourses(input: {
         tags: string[];
         categoryIds: string[];
@@ -144,7 +140,5 @@ export interface ICourseRepository {
     countCoursesByCategory(): Promise<
         { categoryId: string; count: number }[]
     >;
-
-    getCount(filter:Partial<Course>):Promise<number>
 
 }

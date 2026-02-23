@@ -1,12 +1,12 @@
 
 import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
-import { LearnerProgressModel } from "../models/LearnerProgressModel";
+import { LearnerProgressDoc, LearnerProgressModel } from "../models/LearnerProgressModel";
 import { LearnerProgressMapper } from "../mappers/LeanerProgressMapper";
 import { LearnerProgress } from "@domain/entities/LearnerProgress";
 import { BaseRepository } from "./BaseRepository";
 import { Types } from "mongoose";
 
-export class LearnerProgressRepository extends BaseRepository<LearnerProgress> implements ILearnerProgressRepository {
+export class LearnerProgressRepository extends BaseRepository<LearnerProgress,LearnerProgressDoc> implements ILearnerProgressRepository {
     constructor() {
         super(LearnerProgressModel, LearnerProgressMapper)
     }

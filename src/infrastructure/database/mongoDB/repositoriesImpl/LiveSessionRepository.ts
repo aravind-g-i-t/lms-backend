@@ -7,7 +7,7 @@ import { FilterQuery } from "mongoose";
 
 
 
-export class LiveSessionRepository extends BaseRepository<LiveSession> implements ILiveSessionRepository {
+export class LiveSessionRepository extends BaseRepository<LiveSession,LiveSessionDoc> implements ILiveSessionRepository {
     constructor() {
         super(LiveSessionModel, LiveSessionMapper)
     }

@@ -1,5 +1,5 @@
 import { ICategoryRepository } from "@domain/interfaces/ICategoryRepository";
-import {  CategoryModel } from "../models/CategoryModel";
+import {  CategoryDoc, CategoryModel } from "../models/CategoryModel";
 import { logger } from "@infrastructure/logging/Logger";
 import { AppError } from "shared/errors/AppError";
 import { CategoryMapper } from "../mappers/CategoryMapper";
@@ -23,7 +23,7 @@ type FindAllCategoriesOutput={
 
 
 
-export class CategoryRepositoryImpl extends BaseRepository<Category> implements ICategoryRepository {
+export class CategoryRepositoryImpl extends BaseRepository<Category,CategoryDoc> implements ICategoryRepository {
 
     constructor(){
         super(CategoryModel,CategoryMapper)
@@ -34,18 +34,18 @@ export class CategoryRepositoryImpl extends BaseRepository<Category> implements 
         const { page, limit } = options;
         const skip = (page - 1) * limit;
         const [docs, totalCount] = await Promise.all([
-            CategoryModel.find(query)
+            this.model.find(query)
                 .select("-password -__v -updatedAt")
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .lean(),
-            CategoryModel.countDocuments(query)
+            this.model.countDocuments(query)
         ]);
         if (docs) {
             logger.info("Categories fetched successfully.");
         }
-        const categories = docs.map(doc => CategoryMapper.toDomain(doc));
+        const categories = docs.map((doc:CategoryDoc) => this.mapper.toDomain(doc));
         return {
             categories,
             totalPages: Math.ceil(totalCount / limit),
@@ -54,18 +54,18 @@ export class CategoryRepositoryImpl extends BaseRepository<Category> implements 
     }
 
     async findActiveCategories():Promise<Category[]>{
-        const docs=await CategoryModel.find({isActive:true}).lean();
+        const docs=await this.model.find({isActive:true}).lean();
         if (docs) {
             logger.info("Categories fetched successfully.");
         }
-        const categories = docs.map(doc => CategoryMapper.toDomain(doc));
+        const categories = docs.map((doc:CategoryDoc) => this.mapper.toDomain(doc));
         return categories;
     }
 
     
 
     async updateCategoryStatus(id: string): Promise<Category | null> {
-        const category = await CategoryModel.findById(id);
+        const category = await this.model.findById(id);
         if(!category){
             throw new AppError(MESSAGES.CATEGORY_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
@@ -75,6 +75,6 @@ export class CategoryRepositoryImpl extends BaseRepository<Category> implements 
                     logger.warn("Failed to update Category status")
                 }
                 logger.info("Category status updated successfully.")
-        return CategoryMapper.toDomain(category);
+        return this.mapper.toDomain(category);
     }
 }

@@ -1,5 +1,6 @@
-import { QuizAnswerDoc, QuizAttemptDoc } from "../models/QuizAttempt";
-import { QuizAnswer, QuizAttempt } from "@domain/entities/QuizAttempt";
+import { Types } from "mongoose";
+import {  QuizAttemptDoc } from "../models/QuizAttempt";
+import {  QuizAttempt } from "@domain/entities/QuizAttempt";
 
 export class QuizAttemptMapper {
     constructor(){}
@@ -19,17 +20,48 @@ export class QuizAttemptMapper {
             timeTakenSeconds:raw.timeTakenSeconds,
             correctAnswers:raw.correctAnswers,
             totalQuestions:raw.totalQuestions,
-            answers:raw.answers.map(ans=>this.toQuizAnswerDomain(ans)),
+            answers:raw.answers,
             createdAt:raw.createdAt
         };
     }
 
-    static toQuizAnswerDomain(raw:QuizAnswerDoc):QuizAnswer{
-        return {
-            questionId:raw.questionId.toString(),
-            selectedOption:raw.selectedOption,
-            isCorrect:raw.isCorrect,
-            pointsEarned:raw.pointsEarned
-        }
+
+
+    static toPersistence(entity: Partial<QuizAttempt>): Partial<QuizAttemptDoc> {
+
+        const data: Partial<QuizAttemptDoc> = {};
+
+        if (entity.id !== undefined)
+            data._id = new Types.ObjectId(entity.id);
+        if (entity.learnerId !== undefined)
+            data.learnerId = new Types.ObjectId(entity.learnerId);
+        if (entity.courseId !== undefined)
+            data.courseId = new Types.ObjectId(entity.courseId);
+        if (entity.quizId !== undefined)
+            data.quizId = new Types.ObjectId(entity.quizId);
+        if (entity.status !== undefined)
+            data.status = entity.status;
+        if (entity.submittedAt !== undefined)
+            data.submittedAt = entity.submittedAt;
+        if (entity.score !== undefined)
+            data.score = entity.score;
+        if (entity.maxScore !== undefined)
+            data.maxScore = entity.maxScore;
+
+        if (entity.percentage !== undefined)
+            data.percentage = entity.percentage;
+        if (entity.timeTakenSeconds !== undefined)
+            data.timeTakenSeconds = entity.timeTakenSeconds;
+        if (entity.correctAnswers !== undefined)
+            data.correctAnswers = entity.correctAnswers;
+        if (entity.totalQuestions !== undefined)
+            data.totalQuestions = entity.totalQuestions;
+        if (entity.answers !== undefined)
+            data.answers = entity.answers;
+        if (entity.createdAt !== undefined)
+            data.createdAt = entity.createdAt;
+
+        return data;
     }
+
 }

@@ -1,11 +1,11 @@
 import { ICertificateRepository } from "@domain/interfaces/ICertificateRepository";
 import { Certificate } from "@domain/entities/Certificate";
 import { CertificateMapper } from "../mappers/CertificateMapper";
-import { CertificateModel } from "../models/CertificateModel";
+import { CertificateDoc, CertificateModel } from "../models/CertificateModel";
 import { logger } from "@infrastructure/logging/Logger";
 import { BaseRepository } from "./BaseRepository";
 
-export class CertificateRepository extends BaseRepository<Certificate> implements ICertificateRepository {
+export class CertificateRepository extends BaseRepository<Certificate,CertificateDoc> implements ICertificateRepository {
 
     constructor (){
         super(CertificateModel,CertificateMapper)

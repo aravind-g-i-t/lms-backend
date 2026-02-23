@@ -1,5 +1,6 @@
 import { Wallet } from "@domain/entities/Wallet";
 import { WalletDoc } from "../models/WalletModel";
+import { Types } from "mongoose";
 
 
 export class WalletMapper {
@@ -12,5 +13,18 @@ export class WalletMapper {
         };
     }
 
+    static toPersistence(entity: Partial<Wallet>): Partial<WalletDoc> {
 
+        const data: Partial<WalletDoc> = {};
+
+        if (entity.id !== undefined)
+            data._id = new Types.ObjectId(entity.id);
+        if (entity.learnerId !== undefined)
+            data.learnerId = new Types.ObjectId(entity.learnerId);
+        if (entity.balance !== undefined)
+            data.balance = entity.balance;
+
+        return data;
+
+    }
 }

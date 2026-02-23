@@ -1,4 +1,5 @@
 import { LiveSession, LiveSessionStatus } from "@domain/entities/LiveSession";
+import { IBaseRepository } from "./IBaseRepository";
 
 export interface PaginatedLiveSession {
     sessions: LiveSession[];
@@ -6,11 +7,8 @@ export interface PaginatedLiveSession {
     totalPages: number;
 }
 
-export interface ILiveSessionRepository {
-    create(input: Partial<LiveSession>): Promise<LiveSession | null>
+export interface ILiveSessionRepository extends IBaseRepository<LiveSession> {
 
     findManyWithPagination(input: { status?: LiveSessionStatus; search: string, filter: Partial<LiveSession>, page: number, limit: number }): Promise<PaginatedLiveSession>
 
-    findById(id: string): Promise<LiveSession | null>;
-    updateById(id: string, data: Partial<LiveSession>): Promise<LiveSession | null>
 }

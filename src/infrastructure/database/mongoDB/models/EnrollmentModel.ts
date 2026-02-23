@@ -83,7 +83,7 @@ EnrollmentSchema.index(
 EnrollmentSchema.index(
   { createdAt: 1 },
   {
-    expireAfterSeconds: 60, // 2 minutes
+    expireAfterSeconds: 300, // 5 minutes
     partialFilterExpression: { status: EnrollmentStatus.Pending }
   }
 );

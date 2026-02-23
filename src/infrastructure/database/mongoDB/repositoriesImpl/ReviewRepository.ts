@@ -1,13 +1,13 @@
 import { Review } from "@domain/entities/Review";
 import { BaseRepository } from "./BaseRepository";
-import { ReviewModel } from "../models/ReviewModel";
+import {  ReviewDoc, ReviewModel } from "../models/ReviewModel";
 import { ReviewMapper } from "../mappers/ReviewMapper";
 import { HydratedReview, IReviewRepository, } from "@domain/interfaces/IReviewRepository";
 import { LearnerDoc } from "../models/LearnerModel";
 import { FilterQuery, Types } from "mongoose";
 
 
-export class ReviewRepository extends BaseRepository<Review> implements IReviewRepository {
+export class ReviewRepository extends BaseRepository<Review,ReviewDoc> implements IReviewRepository {
     constructor() {
         super(ReviewModel, ReviewMapper)
     }
@@ -24,14 +24,14 @@ export class ReviewRepository extends BaseRepository<Review> implements IReviewR
         
         const docs = await ReviewModel
             .find(filter)
-            .populate<{ categoryId: LearnerDoc }>("learnerId")
+            .populate<{ learnerId: LearnerDoc }>("learnerId")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
             .lean()
             .exec();
 
-        return docs.map(doc => this.mapper.toHydratedDomain(doc))
+        return docs.map(doc => ReviewMapper.toHydratedDomain(doc))
     }
 
     async getRatingSum(courseId: string): Promise<number> {

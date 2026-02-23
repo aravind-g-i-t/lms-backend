@@ -1,73 +1,80 @@
-import { FilterQuery } from "mongoose";
+import { IBaseRepository } from "@domain/interfaces/IBaseRepository";
+import { Model, FilterQuery, UpdateQuery } from "mongoose";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export abstract class BaseRepository<T> {
-
-    constructor(
-
-        protected model: any,
-        protected mapper: any
-    ) { }
-
-    async findById(id: string): Promise<T | null> {
-        const doc = await this.model.findById(id).lean();
-        console.log(doc);
-
-        return doc ? this.mapper.toDomain(doc) : null
+export abstract class BaseRepository<T, D> implements IBaseRepository<T> {
+  constructor(
+    protected model: Model<D>,
+    protected mapper: {
+      toDomain(doc: D): T;
+      toPersistence(entity: Partial<T>): Partial<D>;
     }
+  ) { }
 
-    async findOne(filter: Partial<T>): Promise<T | null> {
-        const doc = await this.model.findOne(filter).lean();
-        return doc ? this.mapper.toDomain(doc) : null
-    }
+  async findById(id: string): Promise<T | null> {
+    const doc = await this.model.findById(id).lean();
+    return doc ? this.mapper.toDomain(doc as D) : null;
+  }
 
-    async create(data: Partial<T>): Promise<T | null> {
-        const doc = await this.model.create(data);
-        const leanDoc = await this.model.findById(doc._id).lean();
-        return leanDoc ? this.mapper.toDomain(leanDoc) : null;
+  async findOne(filter: Partial<T>): Promise<T | null> {
+    const filterQuery: FilterQuery<T> = filter as FilterQuery<T>;
+    console.log("filter", filter);
+    
+    const doc = await this.model.findOne(filterQuery).lean();
+    return doc ? this.mapper.toDomain(doc as D) : null;
+  }
 
-    }
+  async create(data: Partial<T>): Promise<T | null> {
+    const doc = await this.model.create(data);
+    const leanDoc = await this.model.findById(doc._id).lean();
+    return leanDoc ? this.mapper.toDomain(leanDoc as D) : null;
+  }
 
-    async updateById(id: string, data: Partial<T>): Promise<T | null> {
-        const doc = await this.model.findByIdAndUpdate(id, data, { new: true }).lean();
-        return doc ? this.mapper.toDomain(doc) : null
-    }
+  async updateById(id: string, data: Partial<T>): Promise<T | null> {
+    const update: UpdateQuery<D> = { 
+      $set: this.mapper.toPersistence(data) as UpdateQuery<D>
+    };
+    const doc = await this.model
+      .findByIdAndUpdate(id, update, { new: true })
+      .lean();
 
-    async findOneAndUpdate(fiter: Partial<T>, data: Partial<T>): Promise<T | null> {
-        const doc = await this.model.findOneAndUpdate(fiter, data, { new: true }).lean();
-        return doc ? this.mapper.toDomain(doc) : null
-    }
+    return doc ? this.mapper.toDomain(doc as D) : null;
+  }
 
-    async deleteById(id: string): Promise<boolean> {
-        const result = await this.model.findByIdAndDelete(id);
-        return !!result;
-    }
+  async findOneAndUpdate(
+    filter: Partial<T>,
+    data: Partial<T>
+  ): Promise<T | null> {
+    const update: UpdateQuery<D> = { 
+      $set: this.mapper.toPersistence(data) as UpdateQuery<D>
+    };
+    const filterQuery: FilterQuery<T> = filter as FilterQuery<T>;
 
-    async findByIds(ids: string[]): Promise<T[]> {
-        const docs = await this.model.
-            find({
-                _id: { $in: ids }
-            })
-            .lean()
-            .exec();
+    const doc = await this.model
+      .findOneAndUpdate(filterQuery, update, { new: true })
+      .lean();
 
-        return docs.map((doc: any) => this.mapper.toDomain(doc));
+    return doc ? this.mapper.toDomain(doc as D) : null;
+  }
 
-    }
+  async deleteById(id: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(id);
+    return !!result;
+  }
 
-    async findMany(filter: Partial<T>): Promise<T[]> {
-        const docs = await this.model
-            .find(filter)
-            .lean()
-            .exec();;
-        return docs.map((doc: any) => this.mapper.toDomain(doc));
-    }
+  async findByIds(ids: string[]): Promise<T[]> {
+    const docs = await this.model
+      .find({ _id: { $in: ids } })
+      .lean();
 
+    return docs.map(doc => this.mapper.toDomain(doc as D));
+  }
 
-    async getCount(filter: FilterQuery<T>): Promise<number> {
-        return this.model.countDocuments(filter);
-    }
+  async findMany(filter: FilterQuery<T>): Promise<T[]> {
+    const docs = await this.model.find(filter).lean();
+    return docs.map(doc => this.mapper.toDomain(doc as D));
+  }
 
-
-
+  async getCount(filter: FilterQuery<T>): Promise<number> {
+    return this.model.countDocuments(filter);
+  }
 }

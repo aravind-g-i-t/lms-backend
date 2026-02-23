@@ -98,7 +98,7 @@ interface FindAllOutput {
     courses: HydratedCourseEntity[];
 }
 
-export class CourseRepository extends BaseRepository<Course> implements ICourseRepository {
+export class CourseRepository extends BaseRepository<Course,CourseDoc> implements ICourseRepository {
     constructor() {
         super(CourseModel, CourseMapper)
     }
@@ -160,7 +160,6 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
             sort,
             pagination = { page: 1, limit: 10 },
         } = input;
-
 
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

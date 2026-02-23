@@ -1,10 +1,10 @@
 import { IFavouriteRepository } from "@domain/interfaces/IFavouriteRepository";
 import { Favourite } from "@domain/entities/Favourite";
-import { FavouriteModel } from "../models/FavouriteModel";
+import { FavouriteDoc, FavouriteModel } from "../models/FavouriteModel";
 import { FavouriteMapper } from "../mappers/FavouriteMapper";
 import { BaseRepository } from "./BaseRepository";
 
-export class FavouriteRepositoryImpl extends BaseRepository<Favourite> implements IFavouriteRepository {
+export class FavouriteRepositoryImpl extends BaseRepository<Favourite,FavouriteDoc> implements IFavouriteRepository {
 
     constructor(){
         super(FavouriteModel,FavouriteMapper)

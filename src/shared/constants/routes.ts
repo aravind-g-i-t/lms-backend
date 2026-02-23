@@ -126,8 +126,9 @@ export const ROUTES = {
 
     VERIFY:"/verify",
 
-    WALLET:"/wallet"
+    WALLET:"/wallet",
 
+    INSTRUCTOR_DETAILS:"/instructor/details"
 
 
 } as const;

@@ -1,7 +1,8 @@
 import { InstructorWallet } from "@domain/entities/InstructorWallet";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface IInstructorWalletRepository {
-  create(input:Partial<InstructorWallet>): Promise<InstructorWallet|null>;
+export interface IInstructorWalletRepository extends IBaseRepository<InstructorWallet> {
+
   findByInstructorId(instructorId: string): Promise<InstructorWallet | null>;
   updateBalance(input: {
       instructorId: string;

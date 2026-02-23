@@ -1,8 +1,6 @@
 import { QuizAttempt } from "../entities/QuizAttempt";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface IQuizAttemptRepository {
+export interface IQuizAttemptRepository extends IBaseRepository<QuizAttempt>  {
     create(data: Partial<QuizAttempt>): Promise<QuizAttempt|null>;
-    findById(id: string): Promise<QuizAttempt | null>;
-    findOne(input:Partial<QuizAttempt>): Promise<QuizAttempt | null>;
-    updateById(id: string, data: Partial<QuizAttempt>): Promise<QuizAttempt | null>;
 }

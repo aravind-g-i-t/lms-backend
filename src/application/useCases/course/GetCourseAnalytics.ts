@@ -42,10 +42,7 @@ export class GetCourseAnalyticsUseCaseImpl
                 courseId,
                 status: EnrollmentStatus.Active
             }),
-            this.enrollmentRepo.getCount({
-                courseId,
-                completedAt:{$ne:null}
-            })
+            this.enrollmentRepo.getCompletedEnrollmentsCount(courseId),
             // this.enrollmentRepo.getEnrollmentTrend(courseId, fromDate),
         ]);
 

@@ -54,18 +54,5 @@ export class BusinessMapper {
     };
   }
 
-  // static toDocument(entity: Business): Partial<BusinessDoc> {
-  //   return {
-  //     name: entity.name,
-  //     email: entity.email,
-  //     isActive: entity.isActive,
-  //     planId: entity.planId,
-  //     planStartDate: entity.planStartDate,
-  //     planEndDate: entity.planEndDate,
-  //     maxEmployees: entity.maxEmployees,
-  //     employees: entity.employees,
-  //     password: entity.password,
-  //     profilePic: entity.profilePic,
-  //   };
-  // }
+  
 }

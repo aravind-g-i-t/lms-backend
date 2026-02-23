@@ -3,6 +3,7 @@ import { Course } from "@domain/entities/Course";
 import { Instructor } from "@domain/entities/Instructor";
 import { Learner } from "@domain/entities/Learner";
 import { UserRole } from "@domain/entities/Message";
+import { IBaseRepository } from "./IBaseRepository";
 
 export interface HydratedConversation{
     id: string;
@@ -19,14 +20,10 @@ export interface HydratedConversation{
 }
 
 
-export interface IConversationRepository {
-    create(conversation: Partial<Conversation>): Promise<Conversation|null>;
-
-    findById(id: string): Promise<Conversation | null>;
+export interface IConversationRepository extends IBaseRepository<Conversation>  {
 
     findHydratedById(id: string): Promise<HydratedConversation | null>;
 
-    findOne(input:Partial<Conversation>): Promise<Conversation | null>
 
     findAllByLearner(learnerId: string): Promise<HydratedConversation[]>;
 
@@ -48,7 +45,6 @@ export interface IConversationRepository {
         totalPages: number;
     }>
 
-    updateById(id:string,updates: Partial<Conversation>):Promise<Conversation|null>;
 
     updateLastMessage(
         conversationId: string,

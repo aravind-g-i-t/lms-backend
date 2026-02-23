@@ -1,7 +1,6 @@
 import { Wallet } from "@domain/entities/Wallet";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface IWalletRepository {
-  create(input:Partial<Wallet>): Promise<Wallet|null>;
-  findOne(input:Partial<Wallet>): Promise<Wallet | null>;
+export interface IWalletRepository extends IBaseRepository<Wallet> {
   updateBalance(learnerId: string, incrementBy: number): Promise<Wallet | null>;
 }

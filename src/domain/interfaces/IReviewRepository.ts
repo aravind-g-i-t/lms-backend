@@ -1,5 +1,6 @@
 import { Learner } from "@domain/entities/Learner";
 import { Review } from "@domain/entities/Review";
+import { IBaseRepository } from "./IBaseRepository";
 
 export interface HydratedReview {
     id: string,
@@ -18,11 +19,7 @@ export interface HydratedReview {
 }
 
 
-export interface IReviewRepository {
-    create(input: Partial<Review>): Promise<Review | null>
-    findById(id: string): Promise<Review | null>;
-    updateById(id: string, data: Partial<Review>): Promise<Review | null>
-    findOne(filter: Partial<Review>): Promise<Review | null>
+export interface IReviewRepository extends IBaseRepository<Review> {
 
     findManyWithPagination({ skip, limit, courseId, learnerId }: { skip: number; limit: number; courseId: string; learnerId?: string }): Promise<HydratedReview[]>
     getRatingSum(courseId: string): Promise<number>

@@ -1,15 +1,9 @@
 import { Coupon } from "@domain/entities/Coupon";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface ICouponRepository {
-    create(data: Partial<Coupon>): Promise<Coupon|null>;
-
-    findById(id: string): Promise<Coupon | null>;
-
-    findOne(input:Partial<Coupon>): Promise<Coupon | null>;
+export interface ICouponRepository extends IBaseRepository<Coupon> {
 
     findActive(): Promise<Coupon[]>;
-
-    updateById(id: string, data: Partial<Coupon>): Promise<Coupon | null>;
 
     incrementUsage(id: string): Promise<Coupon | null>;
 

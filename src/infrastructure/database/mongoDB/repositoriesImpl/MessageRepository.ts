@@ -1,12 +1,12 @@
 
 import { IMessageRepository } from "@domain/interfaces/IMessageRepository";
 import { Message, UserRole } from "@domain/entities/Message";
-import { MessageModel } from "../models/MessageModel";
+import { MessageDoc, MessageModel } from "../models/MessageModel";
 import { Types } from "mongoose";
 import { MessageMapper } from "../mappers/MessageMapper";
 import { BaseRepository } from "./BaseRepository";
 
-export class MessageRepositoryImpl extends BaseRepository<Message> implements IMessageRepository {
+export class MessageRepositoryImpl extends BaseRepository<Message,MessageDoc> implements IMessageRepository {
 
     constructor() {
         super(MessageModel, MessageMapper)

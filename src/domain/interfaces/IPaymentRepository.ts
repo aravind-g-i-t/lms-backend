@@ -1,4 +1,5 @@
 import { Payment } from "@domain/entities/Payment";
+import { IBaseRepository } from "./IBaseRepository";
 
 export interface MonthlyRevenue {
   year: number;
@@ -9,13 +10,7 @@ export interface MonthlyRevenue {
 }
 
 
-export interface IPaymentRepository {
-  create(data: Partial<Payment>): Promise<Payment | null>;
-  findOne(filter: Partial<Payment>): Promise<Payment | null>;
-  findMany(filter: Partial<Payment>): Promise<Payment[]>;
-  updateById(id: string, updates: Partial<Payment>): Promise<Payment | null>;
-  deleteById(id: string): Promise<boolean>;
-  findById(id: string): Promise<Payment | null>;
+export interface IPaymentRepository extends IBaseRepository<Payment> {
   getMonthlyCourseRevenue(
     startDate: Date,
     endDate: Date

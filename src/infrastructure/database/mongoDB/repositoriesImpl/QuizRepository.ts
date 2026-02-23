@@ -1,10 +1,10 @@
 import { IQuizRepository } from "@domain/interfaces/IQuizRepository";
 import { Quiz } from "@domain/entities/Quiz";
 import { QuizMapper } from "../mappers/QuizMapper";
-import { QuestionDoc, QuizModel } from "../models/QuizModel";
+import { QuestionDoc, QuizDoc, QuizModel } from "../models/QuizModel";
 import { BaseRepository } from "./BaseRepository";
 
-export class QuizRepository extends BaseRepository<Quiz> implements IQuizRepository {
+export class QuizRepository extends BaseRepository<Quiz,QuizDoc> implements IQuizRepository {
 
     constructor() {
         super(QuizModel, QuizMapper)
@@ -36,7 +36,7 @@ export class QuizRepository extends BaseRepository<Quiz> implements IQuizReposit
             order: quiz.questions.length + 1
         });
 
-        // quiz.questions.sort((a: any, b: any) => a.order - b.order);
+        
 
         quiz.totalQuestions = quiz.questions.length;
         quiz.totalPoints = quiz.questions.reduce(

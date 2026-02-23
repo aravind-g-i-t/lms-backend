@@ -36,11 +36,6 @@ export class StripeService implements IPaymentGatewayService {
         return session.id;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async constructWebhookEvent(rawBody: Buffer, sig: string): Promise<any> {
-        const secret = process.env.STRIPE_WEBHOOK_SECRET!;
-        return stripe.webhooks.constructEvent(rawBody, sig, secret);
-    }
 
     async retrieveCheckoutSession(sessionId: string) {
         return stripe.checkout.sessions.retrieve(sessionId);

@@ -10,7 +10,7 @@ interface InstructorEarnings {
   learnerName: string;
   amount: number;
   createdAt: Date;
-  releasedAt: Date;
+  releaseAt: Date;
   cancelledAt: Date | null;
   status: EarningStatus;
 }

@@ -15,6 +15,7 @@ import { IUpdateInstructorVerificationStatusUseCase } from "@application/IUseCas
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { IGetInstructorEarningsUseCase } from "@application/IUseCases/instructor/IGetInstructorEarnings";
 import { IGetInstructorDashboardUseCase } from "@application/IUseCases/instructor/IGetInstructorDashboard";
+import { IGetInstructorDetailsForLearnerUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForLearner";
 
 export class InstructorController {
     constructor(
@@ -26,7 +27,8 @@ export class InstructorController {
         private _applyForVerificationUseCase: IInstructorApplyForVeficationUseCase,
         private _updateVerificationStatusUseCase: IUpdateInstructorVerificationStatusUseCase,
         private _getInstructorEarnings:IGetInstructorEarningsUseCase,
-        private _getInstructorDashboard:IGetInstructorDashboardUseCase
+        private _getInstructorDashboard:IGetInstructorDashboardUseCase,
+        private _getInstructorDetailsForLearner:IGetInstructorDetailsForLearnerUseCase
 
     ) { }
 
@@ -295,6 +297,23 @@ export class InstructorController {
             res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Instructor dashboard data fetched successfully.",result))
         } catch (error) {
             logger.warn("Failed to fetch instructor dashboard data.")
+            next(error);
+        }
+    }
+
+    getInstructorDetailsForLearner = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to get instructor details for learner.")
+
+            const {instructorId} = req.query
+            
+            const result= await this._getInstructorDetailsForLearner.execute({ instructorId: instructorId as string });
+
+            
+            logger.info("Instructor details for learner fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Instructor details for learner fetched successfully.",result))
+        } catch (error) {
+            logger.warn("Failed to fetch instructor details for learner.")
             next(error);
         }
     }

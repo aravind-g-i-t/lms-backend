@@ -17,7 +17,7 @@ export interface PaymentDoc extends Document {
   status: PaymentStatus;
   method: PaymentMethod;
   reason: PaymentReason;
-  enrollmentId:string|null;
+  enrollmentId:Types.ObjectId |null;
   transactionId: string|null;
   paidAt: Date | null; 
   refundedAt: Date | null;
@@ -52,7 +52,7 @@ const PaymentSchema = new Schema<PaymentDoc>(
       enum: Object.values(PaymentReason),
       required: true,
     },
-    enrollmentId: { type: String,default:null},
+    enrollmentId: { type: Schema.Types.ObjectId, ref: "Enrollment", default: null },
     transactionId: { type: String ,default:null},
     paidAt: { type: Date ,default:null},
     refundedAt: { type: Date, default: null },

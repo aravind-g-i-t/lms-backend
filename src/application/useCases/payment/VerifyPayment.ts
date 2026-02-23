@@ -47,6 +47,9 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         const paymentRecord = await this.paymentRepo.findById(paymentId);
 
+        console.log("paymentRecord",paymentRecord);
+        
+
         if (!paymentRecord) {
             throw new AppError(MESSAGES.PAYMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
@@ -60,6 +63,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             return { status: "failed" };
         }
 
+
         // 2. Check payment status from Stripe
         if (session.payment_status === "paid") {
 
@@ -70,12 +74,15 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 transactionId: session.payment_intent,
                 enrollmentId
             });
+            console.log("payment",payment);
 
             if (!payment) {
                 throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
 
             const enrollment = await this.enrollmentRepo.findById(enrollmentId);
+
+            console.log("enrollment",enrollment);
 
             if (!enrollment) {
                 throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND)
@@ -104,7 +111,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 enrollmentId: enrollment.id
             });
 
-            console.log(instructorEarnings);
+            console.log("instructorEarnings", instructorEarnings);
 
 
             const instructorWallet = await this._instructorWalletReposotory.updateBalance({
@@ -112,10 +119,13 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 pendingBalance: instructorShare
             });
 
-            console.log(instructorWallet);
+            console.log("instructorWallet", instructorWallet);
 
 
             const course = await this._courseRepository.incrementEnrollment(enrollment.courseId);
+
+            console.log("course",course);
+            
 
             if (!course) {
                 throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.NOT_FOUND)
@@ -135,6 +145,9 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 });
             }
 
+            console.log("learnerProgress",learnerProgress);
+            
+
             if (!learnerProgress) {
                 throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
             }
@@ -144,6 +157,8 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 enrolledAt: new Date(),
                 progressId: learnerProgress.id
             });
+
+            console.log("updatedEnrollment",updatedEnrollment);
 
             if (!updatedEnrollment) {
                 throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)

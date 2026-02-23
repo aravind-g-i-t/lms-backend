@@ -27,6 +27,7 @@ import { GetInstructorWalletAndEarningsUseCase } from "@application/useCases/ins
 import { GetInstructorDashboardUseCase } from "@application/useCases/instructor/GetInstructorDashboard";
 import { CancelLiveSessionUseCase } from "@application/useCases/liveSession/CancelLiveSession";
 import { ReleaseInstructorEarningsUseCase } from "@application/useCases/payment/ReleaseInstructorEarnings";
+import { GetInstructorDetailsForLearnerUseCase } from "@application/useCases/instructor/GetInstructorDetailsForLearner";
 
 export const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository,s3Service);
 
@@ -75,3 +76,5 @@ export const getInstructorEarningsUseCase= new GetInstructorWalletAndEarningsUse
 export const getInstructorDashboardData= new GetInstructorDashboardUseCase(courseRepository,liveSessionRepository,instructorWalletRepository,s3Service)
 
 export const releaseInstructorEarningsUseCase= new ReleaseInstructorEarningsUseCase(instructorWalletRepository,instructorEarningsRepository)
+
+export const getInstructorDetailsForLearnerUseCase= new GetInstructorDetailsForLearnerUseCase(instructorRepository,courseRepository,s3Service)

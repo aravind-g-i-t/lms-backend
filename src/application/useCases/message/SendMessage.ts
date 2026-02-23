@@ -75,6 +75,10 @@ export class SendMessageUseCase implements ISendMessageUseCase {
             readAt: null,
         });
 
+        if (!savedMessage) {
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
+        }
+
         const mappedAttachments=await Promise.all(
             savedMessage.attachments.map(async (attachment) => {
                         const fileUrl =

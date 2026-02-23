@@ -13,7 +13,7 @@ export interface LearnerProgressDoc extends Document {
     currentChapterId: string | null;
 
     quizAttemptStatus:QuizStatus,
-    quizAttemptId:string |null
+    quizAttemptId:Types.ObjectId |null
     
     lastAccessedAt: Date | null;
     createdAt:Date;
@@ -32,7 +32,8 @@ const learnerProgressSchema = new Schema<LearnerProgressDoc>(
         currentChapterId: { type: String, default: null },
 
         quizAttemptStatus:{type:String,enum:Object.values(QuizStatus),default:QuizStatus.NOtAttended},
-        quizAttemptId:{ type: String, default: null },
+        
+        quizAttemptId:{ type: Schema.Types.ObjectId, ref: "QuizAttempt", default: null },
 
         lastAccessedAt: { type: Date, default: null }
     },

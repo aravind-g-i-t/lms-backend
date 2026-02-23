@@ -1,11 +1,7 @@
 import { Quiz } from "@domain/entities/Quiz";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface IQuizRepository {
-    create(data: Partial<Quiz>): Promise<Quiz | null>;
-    findById(id: string): Promise<Quiz | null>;
-    findOne(input:Partial<Quiz>): Promise<Quiz | null>;
-    updateById(id: string, data: Partial<Quiz>): Promise<Quiz | null>;
-    deleteById(id: string): Promise<boolean>;
+export interface IQuizRepository extends IBaseRepository<Quiz> {
     addQuestion(
         quizId: string,
         questionData: {

@@ -28,12 +28,15 @@ export class InitiateEnrollmentUseCase implements IInitiateEnrollmentUseCase {
     async execute(input: { courseId: string, learnerId: string, paymentMethod: "wallet" | "stripe", couponId: string | null }): Promise<{ sessionId?: string }> {        
 
         const { courseId, paymentMethod, learnerId, couponId } = input;
-
+        console.log(courseId,learnerId);
+        
         const activeEnrollment= await this._enrollmentRepository.findOne({
             learnerId,
             courseId,
             status:EnrollmentStatus.Active
         });
+        console.log("activeEnrollment",activeEnrollment);
+        
         if(activeEnrollment){
             throw new AppError("You have alread purchased the course",STATUS_CODES.BAD_REQUEST)
         }

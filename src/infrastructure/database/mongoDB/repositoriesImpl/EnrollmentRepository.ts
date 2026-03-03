@@ -8,7 +8,28 @@ import { PaymentDoc } from "../models/PaymentModel";
 import { FilterQuery, Types } from "mongoose";
 import { LearnerProgressDoc } from "../models/LearnerProgressModel";
 
-
+interface AggregatedLearnerEnrollments {
+  _id: Types.ObjectId;
+  learner: {
+    name: string;
+    email: string;
+    profilePic?: string;
+  };
+  enrollments: {
+    id: Types.ObjectId;
+    courseTitle: string;
+    grossAmount: number;
+    duration: number;
+    thumbnail: string;
+    paidAmount: number;
+    progressPercentage: number;
+    enrolledAt: Date;
+    status: string;
+    completedAt?: Date;
+    cancelledAt?: Date;
+    courseId: Types.ObjectId;
+  }[];
+}
 
 
 export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,EnrollmentDoc> implements IEnrollmentRepository {
@@ -299,9 +320,6 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
                 },
             },
 
-            /* ==============================
-               FACET MAGIC (IMPORTANT)
-            ============================== */
             {
                 $facet: {
                     data: [
@@ -321,8 +339,8 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
         const total = result[0].total[0]?.count ?? 0;
 
         return {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            data: data.map((doc:any) => ({
+            
+            data: data.map((doc:AggregatedLearnerEnrollments) => ({
                 id: doc._id.toString(),
                 learner: doc.learner,
                 enrollments: doc.enrollments,

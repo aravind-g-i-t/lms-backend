@@ -162,8 +162,8 @@ export class CourseRepository extends BaseRepository<Course,CourseDoc> implement
         } = input;
 
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const query: Record<string, any> = { status: "published" };
+        
+        const query: FilterQuery<CourseDoc> = { status: "published" };
 
         if (search) {
             query.title = { $regex: search, $options: "i" };

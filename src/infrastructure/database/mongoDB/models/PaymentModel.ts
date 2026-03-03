@@ -12,7 +12,7 @@ export interface PaymentDoc extends Document {
   payerType: PayerType;
   grossAmount: number;
   paidAmount: number;
-  coupon: string | null;
+  coupon: Types.ObjectId | null;
   discount: number | null;
   status: PaymentStatus;
   method: PaymentMethod;

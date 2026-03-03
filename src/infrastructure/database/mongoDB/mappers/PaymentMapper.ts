@@ -45,7 +45,7 @@ export class PaymentMapper {
         if (entity.discount !== undefined)
             data.discount = entity.discount;
         if (entity.coupon !== undefined)
-            data.coupon = entity.coupon ;
+            data.coupon = entity.coupon?new Types.ObjectId(entity.coupon):null;
         if (entity.transactionId !== undefined)
             data.transactionId = entity.transactionId;
         if (entity.refundedAt !== undefined)

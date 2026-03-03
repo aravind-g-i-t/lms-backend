@@ -32,19 +32,15 @@ import { enrollmentRepository, favouriteRepository, learnerProgressRepository, l
 import { GetUploadUrlUseCase } from "@application/useCases/shared/GetUploadUrl";
 import { GetDownloadUrlUseCase } from "@application/useCases/shared/GetDownloadUrl";
 import { UserSignupUseCase } from "@application/useCases/shared/Signup";
-import { businessRepository } from "../business/repositories";
 import { LearnerOTPVerificationUseCase } from "@application/useCases/learner/OTPVerification";
 import { InstructorOTPVerificationUseCase } from "@application/useCases/instructor/OTPVerification";
-import { BusinessOTPVerificationUseCase } from "@application/useCases/business/OTPVerification";
 import { ResendOTPUseCase } from "@application/useCases/shared/ResendOTP";
 import { InstructorSigninUseCase } from "@application/useCases/instructor/Signin";
 import { LearnerSigninUseCase } from "@application/useCases/learner/Signin";
-import { BusinessSigninUseCase } from "@application/useCases/business/Signin";
 import { UserRefreshTokenUseCase } from "@application/useCases/shared/RefreshToken";
 import { adminRepository, certificateRepository, couponRepository } from "../admin/repositories";
 import { LearnerGoogleSigninUseCase } from "@application/useCases/learner/GoogleSignin";
 import { InstructorGoogleSigninUseCase } from "@application/useCases/instructor/GoogleSignin";
-import { BusinessGoogleSigninUseCase } from "@application/useCases/business/GoogleSignin";
 import { VerifyEmailUseCase } from "@application/useCases/shared/VerifyEmail";
 import { OTPVerificationUseCase } from "@application/useCases/shared/VerifyOTP";
 import { ResetPasswordUseCase } from "@application/useCases/shared/ResetPassword";
@@ -62,13 +58,12 @@ import { VerifyPaymentUseCase } from "@application/useCases/payment/VerifyPaymen
 import { GetVideoCallTokenUseCase } from "@application/useCases/videoCall/GetVideoCallToken";
 import { GetCourseAnalyticsUseCaseImpl } from "@application/useCases/course/GetCourseAnalytics";
 
-export const userSignupUseCase=new UserSignupUseCase(learnerRepository,instructorRepository,businessRepository,cacheService,nodemailerService)
+export const userSignupUseCase=new UserSignupUseCase(learnerRepository,instructorRepository,cacheService,nodemailerService)
 
 export const learnerOTPVerificationUseCase=new LearnerOTPVerificationUseCase(cacheService,learnerRepository,walletRepository);
 
 export const instructorOTPVerificationUseCase=new InstructorOTPVerificationUseCase(cacheService,instructorRepository,instructorWalletRepository);
 
-export const businessOTPVerificationUseCase=new BusinessOTPVerificationUseCase(cacheService,businessRepository);
 
 export const resendOTPUseCase=new ResendOTPUseCase(cacheService,nodemailerService);
 
@@ -76,22 +71,20 @@ export const learnerSigninUseCase=new LearnerSigninUseCase(learnerRepository,tok
 
 export const instructorSigninUseCase=new InstructorSigninUseCase(instructorRepository,tokenService,s3Service);
 
-export const businessSigninUseCase=new BusinessSigninUseCase(businessRepository,tokenService,s3Service);
 
-export const userRefreshTokenUseCase=new UserRefreshTokenUseCase(tokenService,learnerRepository,instructorRepository,businessRepository,adminRepository);
+export const userRefreshTokenUseCase=new UserRefreshTokenUseCase(tokenService,learnerRepository,instructorRepository,adminRepository);
 
 
 export const learnerGoogleSigninUseCase=new LearnerGoogleSigninUseCase(learnerRepository,tokenService,googleAuthService,walletRepository);
 
 export const instructorGoogleSigninUseCase= new InstructorGoogleSigninUseCase(instructorRepository,tokenService,googleAuthService,instructorWalletRepository)
 
-export const businessGoogleSigninUseCase= new BusinessGoogleSigninUseCase(businessRepository,tokenService,googleAuthService);
 
-export const verifyEmailUseCase=new VerifyEmailUseCase(cacheService,nodemailerService,learnerRepository,instructorRepository,businessRepository);
+export const verifyEmailUseCase=new VerifyEmailUseCase(cacheService,nodemailerService,learnerRepository,instructorRepository);
 
 export const verifyOTPUseCase=new OTPVerificationUseCase(cacheService);
 
-export const resetPasswordUseCase= new ResetPasswordUseCase(learnerRepository,instructorRepository,businessRepository)
+export const resetPasswordUseCase= new ResetPasswordUseCase(learnerRepository,instructorRepository)
 
 export const issueCertificateUseCase=new IssueCertificateUseCase(certificateRepository,certificateTemplateService,pdfGeneratorService,s3Service);
 
@@ -132,7 +125,7 @@ export const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(
 export const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository)
 
 
-export const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service,getValidCouponsUseCase);
+export const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service,getValidCouponsUseCase,walletRepository);
 
 export const addResourceUseCase = new AddResourceUseCase(courseRepository,s3Service)
 

@@ -1,5 +1,4 @@
 import { IAuthorizationService } from "@domain/interfaces/IAuthorizationService";
-import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { logger } from "@infrastructure/logging/Logger";
@@ -11,7 +10,6 @@ export class AuthorizationService implements IAuthorizationService {
   constructor(
     private learnerRepo: ILearnerRepository,
     private instructorRepo: IInstructorRepository,
-    private businessRepo:IBusinessRepository
   ) {}
 
   async checkUserActive(userId: string, role: string): Promise<boolean> {
@@ -32,15 +30,6 @@ export class AuthorizationService implements IAuthorizationService {
       }
       
       return instructor.isActive;
-    }
-    if (role === "business") {
-      const business = await this.businessRepo.findById(userId);
-      if(!business){
-        logger.warn("Learner failed to fetch learner for status verification");
-        return false
-      }
-      
-      return business.isActive;
     }
     return false;
   }

@@ -60,14 +60,6 @@ export const MESSAGES = {
     SEND_VERIFICATION_SUCCESS: "Verification request submitted successfully.",
     INCOMPLETE_PROFILE: "Cannot apply for verification. Please complete your profile before submitting.",
 
-    BUSINESS_UPDATED: "Business details updated successfully.",
-    BUSINESS_DELETED: "Business account deleted successfully.",
-    BUSINESS_FETCHED: "Business fetched successfully",
-    BUSINESS_NOT_CREATED: "Business account creation failed. Please try again.",
-    BUSINESS_NOT_FOUND: "Business not found",
-    NOT_COMPANY_EMAIL: "Please use the company email",
-    BUSINESS_NOT_UPDATED: "Failed to update business details. Please try again",
-
 
     EMAIL_EXISTS: "Email already exists",
 
@@ -112,12 +104,18 @@ export const MESSAGES = {
 
 
     LIVE_SESSION_NOT_FOUND:"Live session not found.",
+    LIVE_SESSION_LIMIT_REACHED:"You have already scheduled 3 live sessions for today. Please try again tomorrow.",
 
 
     CONVERSATION_NOT_FOUND:"Conversation not found.",
 
 
+    INSUFFICIENT_WALLET_BALANCE:"Insufficient wallet balance.",
 
+
+    WALLET_NOT_FOUND:"Wallet not found.",
+
+    RANGE_HEADER_REQUIRED:"Range header required."
 
 } as const;
 

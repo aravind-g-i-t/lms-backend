@@ -1,5 +1,6 @@
 import { ZodType, ZodError, TypeOf } from "zod";
 import { Request, Response, NextFunction } from "express";
+import { STATUS_CODES } from "shared/constants/httpStatus";
 
 export const validateRequest =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +23,7 @@ export const validateRequest =
         if (err instanceof ZodError) {
           const error = err.issues?.[0]?.message || "Validation error";
 
-          return res.status(400).json({
+          return res.status(STATUS_CODES.BAD_REQUEST).json({
             success: false,
             message: error,
           });

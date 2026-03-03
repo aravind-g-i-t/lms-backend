@@ -1,5 +1,5 @@
 export interface UserSigninInputDTO {
-    role:'learner'|'instructor'|'business'
+    role:'learner'|'instructor'
     email: string;
     password: string;
 }
@@ -14,5 +14,5 @@ export interface UserSigninOutputDTO {
     user: UserForSignin;
     accessToken: string;
     refreshToken: string;
-    role: 'learner' | 'instructor' | 'business'
+    role: 'learner' | 'instructor' 
 }

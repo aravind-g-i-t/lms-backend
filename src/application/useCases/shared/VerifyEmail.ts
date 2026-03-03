@@ -1,6 +1,5 @@
 
 import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
-import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { ICacheService } from "@domain/interfaces/ICacheService";
 import { IEmailService } from "@domain/interfaces/IEmailService";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
@@ -14,11 +13,10 @@ import { generateOTP } from "shared/utils/generateOTP";
 
 export class VerifyEmailUseCase implements IVerifyEmailUseCase{
     constructor(
-        private cacheService:ICacheService,
-        private emailService:IEmailService,
+        private _cacheService:ICacheService,
+        private _emailService:IEmailService,
         private _learnerRepository:ILearnerRepository,
         private _instructorRepository:IInstructorRepository,
-        private _businessRepository: IBusinessRepository
     ) {}
 
     async execute(email:string,role:string):Promise<Date>{
@@ -28,12 +26,10 @@ export class VerifyEmailUseCase implements IVerifyEmailUseCase{
             case 'learner':
                 repository=this._learnerRepository;
                 break;
-            case 'instructor':
+            default:
                 repository=this._instructorRepository;
                 break;
-            default:
-                repository=this._businessRepository;
-                break;
+            
         }
         const user=await repository.findByEmail(email);
         if(!user){
@@ -41,12 +37,12 @@ export class VerifyEmailUseCase implements IVerifyEmailUseCase{
         }
             const cacheKey=`${email}:otp`;
             const otp=generateOTP();
-            await this.emailService.send(
+            await this._emailService.send(
                 email,
                 'NlightN OTP verification',
                 `Your OTP for NlightN account is ${otp}`
             );
-            await this.cacheService.set(cacheKey,otp,120);
+            await this._cacheService.set<string>(cacheKey,otp,120);
             const otpExpiresAt=new Date(Date.now() + 2 * 60 * 1000)
             
             return otpExpiresAt;

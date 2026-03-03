@@ -214,7 +214,7 @@ export class InstructorController {
 
             await this._applyForVerificationUseCase.execute(id);
 
-            logger.info("Applied for Business verification successfully.")
+            logger.info("Applied for instructor verification successfully.")
             res.status(STATUS_CODES.CREATED).json(ResponseBuilder.success(MESSAGES.SEND_VERIFICATION_SUCCESS))
         } catch (error) {
             logger.warn("Failed to apply for  instructor verification.")

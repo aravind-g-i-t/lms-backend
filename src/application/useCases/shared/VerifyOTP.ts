@@ -16,7 +16,7 @@ export class OTPVerificationUseCase implements IUserOTPVerificationUseCase{
 
     async execute(input: {otp:string,email:string}): Promise<void> {
         const { email, otp } = input;
-        const userOTP = await this._cacheService.get(`${email}:otp`)        
+        const userOTP = await this._cacheService.get<string>(`${email}:otp`)        
         if (!userOTP) {
             throw new AppError(MESSAGES.OTP_EXPIRED, STATUS_CODES.GONE)
 

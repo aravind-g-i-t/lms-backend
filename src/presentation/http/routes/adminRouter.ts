@@ -1,7 +1,5 @@
 
 import { AdminSigninRequestSchema } from "@presentation/dtos/admin/Signin";
-import { GetBusinessesRequestSchema } from "@presentation/dtos/business/GetBusinesses";
-import { GetBusinessForAdminRequestSchema } from "@presentation/dtos/business/GetBusinessForAdmin";
 import { GetCategoriesRequestSchema } from "@presentation/dtos/category/GetCategories";
 import { GetAllCouponsRequestSchema } from "@presentation/dtos/coupon/GetAllCoupons";
 import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
@@ -20,7 +18,6 @@ import { ROUTES } from "shared/constants/routes";
 import { adminAuthMiddleware } from "@setup/container/shared/userAuthMiddleware";
 import { adminController, categoryController, couponController } from "@setup/container/admin/controllers";
 import { learnerController } from "@setup/container/learner/controllers";
-import { businessController } from "@setup/container/business/controllers";
 import { instructorController } from "@setup/container/instructor/controllers";
 import { courseController } from "@setup/container/shared/controllers";
 const adminRouter=express.Router();
@@ -37,9 +34,6 @@ adminRouter.post(ROUTES.LOGOUT,(req:Request,res:Response,next:NextFunction)=>adm
 
 adminRouter.get(ROUTES.LEARNERS,adminAuthMiddleware,validateRequest(GetLearnersRequestSchema),(req:Request,res:Response,next:NextFunction)=>learnerController.getLearners(req,res,next));
 
-// Get businesses
-
-adminRouter.get(ROUTES.BUSINESSES,validateRequest(GetBusinessesRequestSchema),adminAuthMiddleware,validateRequest(GetBusinessesRequestSchema),(req:Request,res:Response,next:NextFunction)=>businessController.getBusinesses(req,res,next));
 
 // get Instructors
 
@@ -53,13 +47,8 @@ adminRouter.patch(ROUTES.LEARNER_STATUS,adminAuthMiddleware,validateRequest(Upda
 
 adminRouter.patch(ROUTES.INSTRUCTOR_STATUS,adminAuthMiddleware,validateRequest(UpdateUserStatusRequestSchema),(req:Request,res:Response,next:NextFunction)=>instructorController.updateInstructorStatus(req,res,next));
 
-// Update business status
 
-adminRouter.patch(ROUTES.BUSINESS_STATUS,adminAuthMiddleware,validateRequest(UpdateUserStatusRequestSchema),(req:Request,res:Response,next:NextFunction)=>businessController.updateBusinessStatus(req,res,next));
 
-// Get business details
-
-adminRouter.get(ROUTES.BUSINESS_DATA,adminAuthMiddleware,validateRequest(GetBusinessForAdminRequestSchema),(req:Request,res:Response,next:NextFunction)=>businessController.getBusinessDataForAdmin(req,res,next));
 
 // Get instructor details
 
@@ -73,9 +62,7 @@ adminRouter.get(ROUTES.LEARNER_DATA,adminAuthMiddleware,validateRequest(GetLearn
 
 adminRouter.patch(ROUTES.INSTRUCTOR_VERIFICATION,adminAuthMiddleware,validateRequest(UpdateUserVerificationStatusRequestSchema),(req:Request,res:Response,next:NextFunction)=>instructorController.updateVerificationStatus(req,res,next));
 
-// Update business verification status
 
-adminRouter.patch(ROUTES.BUSINESS_VERIFICATION,adminAuthMiddleware,validateRequest(UpdateUserVerificationStatusRequestSchema),(req:Request,res:Response,next:NextFunction)=>businessController.updateVerificationStatus(req,res,next));
 
 // Add category
 

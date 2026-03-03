@@ -4,7 +4,7 @@ export const OTPVerificationRequestSchema = z.object({
   body: z.object({
     email: z.email("Invalid email format"),
     otp: z.string().min(6, "OTP must be at least 6 characters"),
-    role: z.enum(["learner", "instructor", "business"]),
+    role: z.enum(["learner", "instructor"]),
   })
 });
 

@@ -17,10 +17,12 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
         const admin=await this._adminRepository.findByEmail(email);
         
         if(!admin){
-            throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)
+            throw new AppError(MESSAGES.INVALID_CREDENTIALS,STATUS_CODES.UNAUTHORIZED)
         }
 
         const passwordMatch=await comparePassword(password,admin.password);
+        console.log("passwordMatch",passwordMatch);
+        
         if(!passwordMatch){
             throw new AppError(MESSAGES.INVALID_CREDENTIALS,STATUS_CODES.UNAUTHORIZED)
 

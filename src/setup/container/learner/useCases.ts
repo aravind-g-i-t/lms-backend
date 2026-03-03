@@ -13,7 +13,7 @@ import { GetEnrollmentsUseCase } from "@application/useCases/enrollment/GetEnrol
 import { courseRepository, paymentRepository } from "../shared/repositories";
 import { instructorEarningsRepository, instructorRepository, instructorWalletRepository, liveSessionRepository } from "../instructor/repositories";
 import { categoryRepository, couponRepository } from "../admin/repositories";
-import { createPaymentUseCase, getCoursesForLearnerUseCase } from "../shared/useCases";
+import { getCoursesForLearnerUseCase } from "../shared/useCases";
 import { MarkChapterAsCompletedUseCase } from "@application/useCases/learnerProgress/MarkChapterAsCompleted";
 import { UpdateCurrentChapterUseCase } from "@application/useCases/course/UpdateCurrentChapter";
 import { GetSessionListForLearnerUseCase } from "@application/useCases/liveSession/GetSessionListForLearner";
@@ -48,13 +48,18 @@ export const createEnrollmentUseCase = new CreateEnrollmentUseCase(enrollmentRep
 
 export const initiateEnrollmentUseCase = new InitiateEnrollmentUseCase(
     courseRepository,
-    createPaymentUseCase,
+    paymentRepository,
     createEnrollmentUseCase,
     stripeService,
     instructorRepository,
     couponRepository,
     learnerRepository,
-    enrollmentRepository
+    enrollmentRepository,
+    walletRepository,
+    walletTransactionRepository,
+    instructorEarningsRepository,
+    instructorWalletRepository,
+    learnerProgressRepository
 );
 
 export const getEnrollmentsUseCase = new GetEnrollmentsUseCase(enrollmentRepository,learnerProgressRepository,s3Service);

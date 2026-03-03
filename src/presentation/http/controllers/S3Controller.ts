@@ -1,6 +1,7 @@
 import { IGetDownloadUrlUseCase } from "@application/IUseCases/shared/IGetDownloadUrl";
 import { IGetUploadUrlUseCase } from "@application/IUseCases/shared/IGetUploadUrl";
 import { Request, Response } from "express";
+import { STATUS_CODES } from "shared/constants/httpStatus";
 
 
 export class S3Controller {
@@ -35,10 +36,10 @@ export class S3Controller {
             const { key } = req.query as { key: string };
 
             const url = await this._getDownloadURLUseCase.execute(key);
-            res.status(200).json({ url });
+            res.status(STATUS_CODES.OK).json({ url });
         } catch (err) {
             console.error(err);
-            res.status(500).json({ error: "Failed to generate download URL" });
+            res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "Failed to generate download URL" });
         }
     }
 }

@@ -11,11 +11,9 @@ import { IUserOTPVerificationUseCase } from "@application/IUseCases/shared/IUser
 import { IResendOTPUseCase } from "@application/IUseCases/shared/IResendOTPUseCase";
 import { ILearnerSigninUseCase } from "@application/IUseCases/learner/ILearnerSigninUseCase";
 import { IInstructorSigninUseCase } from "@application/IUseCases/instructor/IInstructrorSigninUseCase";
-import { IBusinessSigninUseCase } from "@application/IUseCases/business/IBusinessSigninUseCase";
 import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
 import { ILearnerGoogleSigninUseCase } from "@application/IUseCases/learner/IGoogleSignin";
 import { IInstructorGoogleSigninUseCase } from "@application/IUseCases/instructor/IGoogleSignin";
-import { IBusinessGoogleSigninUseCase } from "@application/IUseCases/business/IGoogleSignin";
 import { IVerifyEmailUseCase } from "@application/IUseCases/shared/IVerifyEmail";
 import { IResetPasswordUseCase } from "@application/IUseCases/shared/IResetPassword";
 import { logger } from "@infrastructure/logging/Logger";
@@ -30,15 +28,12 @@ export class UserAuthController {
         private _userSignupUseCase: IUserSignupUseCase,
         private _learnerOTPVerificationUseCase: IUserOTPVerificationUseCase,
         private _instructorOTPVerificationUseCase: IUserOTPVerificationUseCase,
-        private _businessOTPVerificationUseCase: IUserOTPVerificationUseCase,
         private _resendOTPUseCase: IResendOTPUseCase,
         private _learnerSigninUseCase: ILearnerSigninUseCase,
         private _instructorSigninUseCase: IInstructorSigninUseCase,
-        private _businessSigninUseCase: IBusinessSigninUseCase,
         private _userRefreshTokenUseCase: IRefreshTokenUseCase,
         private _learnerGoogleSigninUseCase: ILearnerGoogleSigninUseCase,
         private _instructorGoogleSigninUseCase: IInstructorGoogleSigninUseCase,
-        private _businessGoogleSigninUseCase: IBusinessGoogleSigninUseCase,
         private _verifyEmailUseCase: IVerifyEmailUseCase,
         private _otpVerificationUseCase: IUserOTPVerificationUseCase,
         private _resetPasswordUseCase: IResetPasswordUseCase
@@ -80,10 +75,7 @@ export class UserAuthController {
                 return;
             }
 
-            await this._businessOTPVerificationUseCase.execute({ email, otp });
-            res.status(STATUS_CODES.CREATED).json(
-                ResponseBuilder.success(MESSAGES.ACCOUNT_CREATED_SUCCESS)
-            );
+        
         } catch (error) {
             next(error);
         }
@@ -108,7 +100,6 @@ export class UserAuthController {
 
             if (role === "learner") result = await this._learnerSigninUseCase.execute(req.body);
             if (role === "instructor") result = await this._instructorSigninUseCase.execute(req.body);
-            if (role === "business") result = await this._businessSigninUseCase.execute(req.body);
 
             if (!result) {
                 throw new AppError(MESSAGES.SERVER_ERROR, STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -236,14 +227,7 @@ export class UserAuthController {
                     };
                     break;
                 }
-                case "business": {
-                    const businessResult = await this._businessGoogleSigninUseCase.execute(token);
-                    result = {
-                        ...businessResult,
-                        user: businessResult.user,
-                    };
-                    break;
-                }
+                
             }
 
             if (!result) {

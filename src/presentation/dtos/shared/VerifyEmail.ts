@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const VerifyEmailRequestSchema = z.object({
     body: z.object({
-        role: z.enum(["learner", "instructor", "business"]),
+        role: z.enum(["learner", "instructor"]),
         email: z.email("Invalid email format"),
     })
 });

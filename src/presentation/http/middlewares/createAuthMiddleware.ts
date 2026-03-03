@@ -18,7 +18,7 @@ interface DecodedToken {
   iat?: number;
 }
 
-type Role= "admin"|"learner"|"instructor"|"business"
+type Role= "admin"|"learner"|"instructor";
 
 
 
@@ -32,18 +32,18 @@ export const createAuthMiddleware = (tokenService: ITokenService, authorizationS
     // const token = authHeader.split(" ")[1];
     const token = req.cookies?.accessToken;
     if(!token){
-      return res.status(401).json({ message: "No token provided" });
+      return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: "No token provided" });
     }
     let decoded: DecodedToken
 
     try {
       decoded = await tokenService.verifyAccessToken(token);
     } catch {
-      return res.status(401).json({ message: MESSAGES.INVALID_TOKEN });
+      return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: MESSAGES.INVALID_TOKEN });
     }
 
     if(!roles?.includes(decoded.role)){
-      return res.status(401).json({message:MESSAGES.UNAUTHORIZED})
+      return res.status(STATUS_CODES.UNAUTHORIZED).json({message:MESSAGES.UNAUTHORIZED})
     }
 
     if (decoded.role !== "admin") {

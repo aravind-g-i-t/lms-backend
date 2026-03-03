@@ -1,4 +1,4 @@
-import {  z } from "zod";
+import { z } from "zod";
 
 const StringToNumber = z.string().pipe(
     z.coerce.number({
@@ -33,8 +33,8 @@ const StringArraySchema = z.union([
     z.string(),
     z.array(z.string())
 ]).optional()
-.default([])
-.transform(val => {
+    .default([])
+    .transform(val => {
         // If val is a string, wrap it in an array; otherwise, return the array
         const levels = Array.isArray(val) ? val : (val ? [val] : []);
 
@@ -45,7 +45,7 @@ const StringArraySchema = z.union([
 
 export const GetCoursesForLearnerRequestSchema = z.object({
     query: z.object({
-        // Standard Parameters
+        
         limit: StringToNumber.default(10).refine(val => val > 0, {
             message: "Limit must be a positive number"
         }),
@@ -56,25 +56,32 @@ export const GetCoursesForLearnerRequestSchema = z.object({
             message: "Rating must be between 0 and 5"
         }),
 
-        // Search Parameter
+        
         search: z.string().optional().default(''),
 
-        // Array Parameters with Coercion
+        
         'instructorIds[]': ObjectIdArraySchema,
         'categoryIds[]': ObjectIdArraySchema,
-        "levels[]":StringArraySchema,
+        "levels[]": StringArraySchema,
 
-        // Price Range Array (This still requires multiple values for 'length(2)' check)
-        'priceRange[]': z.array(StringToNumber).length(2, {
-            message: "Price range must contain exactly two numbers (min and max)"
-        }),
+        
+        'priceRange[]': z.tuple([StringToNumber, StringToNumber]).optional(),
 
-        'durationRange[]': z.array(StringToNumber).length(2, {
-            message: "Duration range must contain exactly two numbers (min and max)"
-        }),
+        'durationRange[]': z.tuple([StringToNumber, StringToNumber]).optional(),
 
-        sort: z.string().default('latest'),
+        sort: z.enum([
+            "latest",
+            "popularity",
+            "price_low",
+            "price_high",
+            "rating"
+        ]).default("latest"),
 
-        learnerId:ObjectIDSchema.nullable().optional()
+        learnerId: ObjectIDSchema.nullable().optional()
     }),
 });
+
+export type GetCoursesForLearnerRequest = z.infer<
+    typeof GetCoursesForLearnerRequestSchema
+>;
+

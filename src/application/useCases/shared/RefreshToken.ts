@@ -1,7 +1,6 @@
 
 import { IRefreshTokenUseCase } from "@application/IUseCases/shared/IRefreshToken";
 import { IAdminRepository } from "@domain/interfaces/IAdminRepository";
-import { IBusinessRepository } from "@domain/interfaces/IBusinessRepository";
 import { IInstructorRepository } from "@domain/interfaces/IInstructorRepository";
 import { ILearnerRepository } from "@domain/interfaces/ILearnerRepository";
 import { ITokenService } from "@domain/interfaces/ITokenService";
@@ -19,7 +18,6 @@ export class UserRefreshTokenUseCase implements IRefreshTokenUseCase{
         private _tokenService:ITokenService,
         private _learnerRepository:ILearnerRepository,
         private _instructorRepository:IInstructorRepository,
-        private _businessRepository:IBusinessRepository, 
         private _adminRepository:IAdminRepository
     ){}
 
@@ -35,9 +33,6 @@ export class UserRefreshTokenUseCase implements IRefreshTokenUseCase{
                 break;
             case 'instructor':
                 repository=this._instructorRepository;
-                break;
-            case 'business':
-                repository=this._businessRepository;
                 break;
             default:
                 adminRepository=this._adminRepository;

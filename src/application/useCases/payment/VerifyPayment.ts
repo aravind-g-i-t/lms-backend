@@ -23,7 +23,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         private paymentRepo: IPaymentRepository,
         private enrollmentRepo: IEnrollmentRepository,
         private paymentGateway: IPaymentGatewayService,
-        private _instructorWalletReposotory: IInstructorWalletRepository,
+        private _instructorWalletRepository: IInstructorWalletRepository,
         private _instructorEarningsRepository: IInstructorEarningsRepository,
         private _learnerProgress: ILearnerProgressRepository,
         private _courseRepository: ICourseRepository,
@@ -111,16 +111,19 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 enrollmentId: enrollment.id
             });
 
-            console.log("instructorEarnings", instructorEarnings);
+            if(!instructorEarnings){
+                throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
 
 
-            const instructorWallet = await this._instructorWalletReposotory.updateBalance({
+            const instructorWallet = await this._instructorWalletRepository.updateBalance({
                 instructorId: enrollment.instructorId,
                 pendingBalance: instructorShare
             });
 
-            console.log("instructorWallet", instructorWallet);
-
+            if(!instructorWallet){
+                throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            }
 
             const course = await this._courseRepository.incrementEnrollment(enrollment.courseId);
 

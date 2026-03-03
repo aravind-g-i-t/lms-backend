@@ -11,7 +11,7 @@ export interface UserSigninDTO {
 
 export const UserSigninRequestSchema = z.object({
     body: z.object({
-        role: z.enum(["learner", "instructor", "business"]),
+        role: z.enum(["learner", "instructor"]),
         email: z.email("Invalid email format"),
         password: z.string()
             .min(6, "Password must be at least 6 characters")
@@ -24,7 +24,7 @@ export const UserSigninRequestSchema = z.object({
 export interface UserSigninResponseDTO {
     success: boolean;
     message: string;
-    role: "learner"| "instructor"| "business";
+    role: "learner"| "instructor";
     user: UserSigninDTO;
     accessToken: string;
 }

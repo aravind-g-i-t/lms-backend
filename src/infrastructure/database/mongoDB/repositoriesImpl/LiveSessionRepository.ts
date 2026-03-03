@@ -54,4 +54,25 @@ export class LiveSessionRepository extends BaseRepository<LiveSession,LiveSessio
         };
 
     }
+
+
+    async getSessionCountForTheDay(instructorId:string):Promise<number>{
+
+        const sessions=await this.model.countDocuments({
+            instructorId:instructorId,
+            scheduledAt:{
+                $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                $lte: new Date(new Date().setHours(23, 59, 59, 999))
+            },
+            status: { $ne: LiveSessionStatus.Cancelled }
+        })
+
+        console.log("count",sessions);
+
+        return sessions;
+    }
+
+
+    
+
 }

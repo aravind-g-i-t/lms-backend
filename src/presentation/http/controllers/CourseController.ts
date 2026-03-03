@@ -28,7 +28,7 @@ import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { GetCourseDeatailsForLearnerRequestSchema } from "@presentation/dtos/course/GetCourseDetailsForLearner";
 import { GetCoursesForAdminRequestSchema } from "@presentation/dtos/course/GetCoursesForAdmin";
 import { GetCoursesForInstructorRequestSchema } from "@presentation/dtos/course/GetCoursesForInstructor";
-import { GetCoursesForLearnerRequestSchema } from "@presentation/dtos/course/GetCoursesForLearner";
+import { GetCoursesForLearnerRequest, GetCoursesForLearnerRequestSchema } from "@presentation/dtos/course/GetCoursesForLearner";
 import { GetFavouritesRequestSchema } from "@presentation/dtos/course/GetFavourites";
 import { AuthenticatedRequest } from "@presentation/http/middlewares/createAuthMiddleware";
 import { NextFunction, Response } from "express";
@@ -88,7 +88,7 @@ export class CourseController {
                 whatYouWillLearn
             });
 
-            res.status(201).json(ResponseBuilder.success("Category created successfully", {
+            res.status(STATUS_CODES.CREATED).json(ResponseBuilder.success("Category created successfully", {
                 courseId
             }));
 
@@ -116,7 +116,7 @@ export class CourseController {
                 instructorId
             });
 
-            res.status(200).json(ResponseBuilder.success("Courses fetched successfully", response));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Courses fetched successfully", response));
 
         } catch (error) {
             next(error)
@@ -132,7 +132,7 @@ export class CourseController {
             const response = await this._getCourseDetailsUseCase.execute(id as string);
 
 
-            res.status(200).json(ResponseBuilder.success("Course details fetched successfully", response));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course details fetched successfully", response));
 
 
         } catch (error) {
@@ -146,7 +146,7 @@ export class CourseController {
             const { id, title, description, categoryId, level, price } = req.body;
             await this._updateCourseUseCase.execute(id, { title, description, categoryId, level, price });
 
-            res.status(200).json(ResponseBuilder.success("Course details updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course details updated successfully"));
 
 
         } catch (error) {
@@ -160,7 +160,7 @@ export class CourseController {
             const { id, thumbnail } = req.body;
             await this._updateCourseUseCase.execute(id, { thumbnail });
 
-            res.status(200).json(ResponseBuilder.success("Course thumbnail updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course thumbnail updated successfully"));
 
         } catch (error) {
             next(error)
@@ -173,7 +173,7 @@ export class CourseController {
             const { id, previewVideo } = req.body;
             await this._updateCourseUseCase.execute(id, { previewVideo });
 
-            res.status(200).json(ResponseBuilder.success("Course preview video updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course preview video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -186,7 +186,7 @@ export class CourseController {
             const { id, whatYouWillLearn } = req.body;
             await this._updateCourseUseCase.execute(id, { whatYouWillLearn });
 
-            res.status(200).json(ResponseBuilder.success("Course preview video updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course preview video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -199,7 +199,7 @@ export class CourseController {
             const { id, prerequisites } = req.body;
             await this._updateCourseUseCase.execute(id, { prerequisites });
 
-            res.status(200).json(ResponseBuilder.success("Course preview video updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course preview video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -212,7 +212,7 @@ export class CourseController {
             const { id, tags } = req.body;
             await this._updateCourseUseCase.execute(id, { tags });
 
-            res.status(200).json(ResponseBuilder.success("Course tags updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course tags updated successfully"));
 
         } catch (error) {
             next(error)
@@ -225,7 +225,7 @@ export class CourseController {
             const { id, title, description } = req.body;
             const result = await this._addModuleUseCase.execute(id, { title, description });
 
-            res.status(200).json(ResponseBuilder.success("Course details fetched successfully", {
+            res.status(STATUS_CODES.CREATED).json(ResponseBuilder.success("Course details fetched successfully", {
                 module: result
             }));
 
@@ -243,7 +243,7 @@ export class CourseController {
             }
             const result = await this._addChapterUseCase.execute(courseId, moduleId, chapter);
 
-            res.status(200).json(ResponseBuilder.success("Chapter added successfully", {
+            res.status(STATUS_CODES.CREATED).json(ResponseBuilder.success("Chapter added successfully", {
                 chapter: result
             }));
 
@@ -259,7 +259,7 @@ export class CourseController {
 
             await this._updateChapterUseCase.execute({ courseId, chapterId, moduleId, title, description });
 
-            res.status(200).json(ResponseBuilder.success("Chapter updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Chapter updated successfully"));
 
         } catch (error) {
             next(error)
@@ -275,7 +275,7 @@ export class CourseController {
                 courseId, moduleId, chapterId, video, duration
             });
 
-            res.status(200).json(ResponseBuilder.success("Video updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Video updated successfully"));
 
         } catch (error) {
             next(error)
@@ -290,7 +290,7 @@ export class CourseController {
                 courseId, moduleId, title, description
             });
 
-            res.status(200).json(ResponseBuilder.success("Module updated successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Module updated successfully"));
 
         } catch (error) {
             next(error)
@@ -304,7 +304,7 @@ export class CourseController {
             await this._deleteChapterUseCase.execute({
                 courseId, moduleId, chapterId
             });
-            res.status(200).json(ResponseBuilder.success("Chapter deleted successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Chapter deleted successfully"));
 
         } catch (error) {
             next(error)
@@ -321,7 +321,7 @@ export class CourseController {
                 moduleId
             });
 
-            res.status(200).json(ResponseBuilder.success("Module deleted successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Module deleted successfully"));
 
         } catch (error) {
             next(error)
@@ -335,7 +335,7 @@ export class CourseController {
 
             await this._submitCourseForReviewUseCase.execute(courseId);
 
-            res.status(200).json(ResponseBuilder.success("Course submitted for review successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course submitted for review successfully"));
 
         } catch (error) {
             next(error)
@@ -349,7 +349,7 @@ export class CourseController {
 
             const verification = await this._updateVerificationUseCase.execute({ courseId, status, remarks });
 
-            res.status(200).json(ResponseBuilder.success("Course verification updated successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course verification updated successfully", {
                 verification
             }));
 
@@ -373,7 +373,7 @@ export class CourseController {
                 verificationStatus
             });
 
-            res.status(200).json(ResponseBuilder.success("Courses fetched successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Courses fetched successfully", {
                 pagination: response.pagination,
                 courses: response.courses
             }));
@@ -390,7 +390,7 @@ export class CourseController {
 
             const verification = await this._updateCourseStatusUseCase.execute({ courseId, status });
 
-            res.status(200).json(ResponseBuilder.success("Course status updated successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course status updated successfully", {
                 verification
             }));
 
@@ -402,7 +402,7 @@ export class CourseController {
 
     async getCoursesForLearner(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { query } = GetCoursesForLearnerRequestSchema.parse(req);
+            const { query } = GetCoursesForLearnerRequestSchema.parse(req) as GetCoursesForLearnerRequest;
 
             const {
                 page,
@@ -417,8 +417,8 @@ export class CourseController {
                 'levels[]': levels,
                 "durationRange[]": durationRange,
                 minRating
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } = query as any
+                
+            } = query 
 
 
             const response = await this._getCoursesForLearnerUseCase.execute({
@@ -432,11 +432,11 @@ export class CourseController {
                 levels,
                 durationRange,
                 minRating,
-                learnerId
+                learnerId:learnerId??null
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Courses fetched successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Courses fetched successfully", {
                 pagination: response.pagination,
                 courses: response.courses
             }));
@@ -459,7 +459,7 @@ export class CourseController {
                 learnerId
             });
 
-            res.status(200).json(ResponseBuilder.success("Course fetched successfully", response));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course fetched successfully", response));
 
         } catch (error) {
             next(error)
@@ -476,7 +476,7 @@ export class CourseController {
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Course details fetched successfully", response));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course details fetched successfully", response));
 
         } catch (error) {
             next(error)
@@ -486,11 +486,15 @@ export class CourseController {
     async getCourseDetailsForCheckout(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const courseId = req.query.courseId as string;
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND)
+            }
 
-            const response = await this._getCourseDetailsForCheckoutUseCase.execute(courseId);
+            const response = await this._getCourseDetailsForCheckoutUseCase.execute({courseId, learnerId});
 
 
-            res.status(200).json(ResponseBuilder.success("Course details fetched successfully", response));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course details fetched successfully", response));
 
         } catch (error) {
             next(error)
@@ -513,7 +517,7 @@ export class CourseController {
                 }
             });
 
-            res.status(200).json(ResponseBuilder.success("Chapter added successfully", {
+            res.status(STATUS_CODES.CREATED).json(ResponseBuilder.success("Chapter added successfully", {
                 resource: result
             }));
 
@@ -534,7 +538,7 @@ export class CourseController {
                 resourceId
             });
 
-            res.status(200).json(ResponseBuilder.success("Chapter deleted successfully"));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Chapter deleted successfully"));
 
         } catch (error) {
             next(error)
@@ -564,7 +568,7 @@ export class CourseController {
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Courses fetched successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Courses fetched successfully", {
                 pagination: response.pagination,
                 courses: response.courses
             }));
@@ -597,7 +601,7 @@ export class CourseController {
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Video fetched successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Video fetched successfully", {
                 video: response
             }));
 
@@ -612,7 +616,8 @@ export class CourseController {
 
             const range = req.headers.range;
             if (!range) {
-                return res.status(416).send("Range header required");
+                
+                throw new AppError(MESSAGES.RANGE_HEADER_REQUIRED,STATUS_CODES.RANGE_NOT_SATISFIABLE)
             }
 
             const { courseId, moduleId, chapterId } = req.params;
@@ -651,7 +656,7 @@ export class CourseController {
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Course options fetched successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course options fetched successfully", {
                 courses: response
             }));
 
@@ -672,7 +677,7 @@ export class CourseController {
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Course options fetched successfully", {
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course options fetched successfully", {
                 courses: response
             }));
 
@@ -692,7 +697,7 @@ export class CourseController {
             });
 
 
-            res.status(200).json(ResponseBuilder.success("Course analytics fetched successfully", response));
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course analytics fetched successfully", response));
 
         } catch (error) {
             next(error);

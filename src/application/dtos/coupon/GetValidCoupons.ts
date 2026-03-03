@@ -9,4 +9,5 @@ export interface NotApplicableCoupon {
 export interface GetValidCouponsOutput {
   applicable: Coupon[];
   notApplicable: NotApplicableCoupon[];
+  
 }

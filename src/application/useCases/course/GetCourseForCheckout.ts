@@ -4,6 +4,7 @@ import { IGetValidCouponsUseCase } from "@application/IUseCases/coupon/IGetValid
 import { IGetCourseDetailsForCheckoutUseCase } from "@application/IUseCases/course/IGetCourseForCheckout";
 import { HydratedCourse, ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
+import { IWalletRepository } from "@domain/interfaces/IWalletRepository";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
@@ -12,13 +13,14 @@ export class GetCourseDetailsForCheckoutUseCase implements IGetCourseDetailsForC
     constructor(
         private _courseRepository: ICourseRepository,
         private _fileStorageService: IFileStorageService,
-        private _getValidCouponsUseCase:IGetValidCouponsUseCase
+        private _getValidCouponsUseCase:IGetValidCouponsUseCase,
+        private _walletRepository: IWalletRepository
     ) { }
-    async execute(id: string): Promise<{course:CourseForCheckout, coupons:GetValidCouponsOutput}> {
+    async execute({courseId, learnerId}: {courseId: string, learnerId: string}): Promise<{course:CourseForCheckout, coupons:GetValidCouponsOutput,walletBalance:number}> {
 
-        const course = await this._courseRepository.findHydratedCourseById(id);
+        const course = await this._courseRepository.findHydratedCourseById(courseId);
         if (!course) {
-            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.INTERNAL_SERVER_ERROR)
+            throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
         const thumbnail = course.thumbnail
             ? await this._fileStorageService.getViewURL(course.thumbnail)
@@ -31,9 +33,15 @@ export class GetCourseDetailsForCheckoutUseCase implements IGetCourseDetailsForC
         const coupons=await this._getValidCouponsUseCase.execute({
             amount:course.price
         })
+
+        const wallet=await this._walletRepository.findOne({learnerId});
+        if(!wallet){
+            throw new AppError(MESSAGES.WALLET_NOT_FOUND, STATUS_CODES.NOT_FOUND)
+        }
         return {
             course:mappedCourse,
-            coupons
+            coupons,
+            walletBalance: wallet.balance
         }
     }
 

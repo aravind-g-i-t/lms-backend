@@ -2,7 +2,6 @@
 
 export enum PayerType {
     Learner = "learner",
-    Business = "business"
 }
 
 export enum PaymentReason {

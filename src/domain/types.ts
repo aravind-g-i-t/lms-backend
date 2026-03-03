@@ -2,11 +2,7 @@ import { Instructor } from "./entities/Instructor";
 import { Learner } from "./entities/Learner";
 
 
-export interface FindAllBusinessesQuery {
-    isActive?: boolean;
-    name?: { $regex: string; $options: string };
-    "verification.status"?: string;
-}
+
 
 
 export interface FindAllInstructorsQuery {
@@ -25,19 +21,7 @@ export interface FindAllOptions {
     limit: number;
 }
 
-interface BusinessForFindAll {
-    id: string;
-    name: string;
-    email: string;
-    isActive: boolean;
-    planName?: string;
-    employeeCount: number;
-    profilePic: string|null;
-    verification: {
-        status: string,
-        remarks: string | null
-    }
-}
+
 
 export interface FindAllInstructorsOutput {
     instructors: Instructor[],
@@ -45,11 +29,7 @@ export interface FindAllInstructorsOutput {
     totalCount: number,
 }
 
-export interface FindAllBusinessesOutput {
-    businesses: BusinessForFindAll[],
-    totalPages: number,
-    totalCount: number,
-}
+
 
 export interface FindAllLearnersOutput {
     learners: Learner[],

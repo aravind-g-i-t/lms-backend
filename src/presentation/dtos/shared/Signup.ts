@@ -10,7 +10,7 @@ export interface UserSignupResponseDTO {
 
 export const UserSignupRequestSchema = z.object({
     body: z.object({
-        role: z.enum(["learner", "instructor", "business"]),
+        role: z.enum(["learner", "instructor"]),
         name: z.string()
         .min(1, "Name is required")
         .max(20, "Name should not exceed 20 characters"),

@@ -8,7 +8,7 @@ import { AppError } from "shared/errors/AppError";
 
 export class OTPService implements IOTPService {
     constructor(
-        private cacheService: ICacheService
+        private _cacheService: ICacheService
     ) { }
 
     async generateOTP(): Promise<string> {
@@ -45,7 +45,7 @@ export class OTPService implements IOTPService {
         };
         try {
             await transporter.sendMail(mailOptions);
-            await this.cacheService.set(cacheKey, otp, 120);
+            await this._cacheService.set<string>(cacheKey, otp, 120);
             return new Date(Date.now()+2*60*1000)
         } catch  {
             logger.warn("Failed to send otp via email")
@@ -57,7 +57,7 @@ export class OTPService implements IOTPService {
     async deleteOTP(email: string): Promise<void> {
         const cacheKey=`otp:${email}`;
         try { 
-            await this.cacheService.delete(cacheKey)
+            await this._cacheService.delete(cacheKey)
         } catch  {   
             logger.warn("Failed to delete OTP");
             throw new Error(`Failed to delete OTP for ${email}`)

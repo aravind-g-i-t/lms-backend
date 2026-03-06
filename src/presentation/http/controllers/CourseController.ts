@@ -399,6 +399,7 @@ export class CourseController {
         }
     }
 
+    
 
     async getCoursesForLearner(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -410,7 +411,6 @@ export class CourseController {
                 search,
                 sort,
                 learnerId,
-                // Renamed from 'categoryIds[]'
                 'categoryIds[]': categoryIds,
                 'instructorIds[]': instructorIds,
                 'priceRange[]': priceRange,

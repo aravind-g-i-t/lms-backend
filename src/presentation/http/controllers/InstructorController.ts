@@ -16,6 +16,7 @@ import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { IGetInstructorEarningsUseCase } from "@application/IUseCases/instructor/IGetInstructorEarnings";
 import { IGetInstructorDashboardUseCase } from "@application/IUseCases/instructor/IGetInstructorDashboard";
 import { IGetInstructorDetailsForLearnerUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForLearner";
+import { IGetInstructorDetailsForAdminUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForAdmin";
 
 export class InstructorController {
     constructor(
@@ -28,7 +29,8 @@ export class InstructorController {
         private _updateVerificationStatusUseCase: IUpdateInstructorVerificationStatusUseCase,
         private _getInstructorEarnings:IGetInstructorEarningsUseCase,
         private _getInstructorDashboard:IGetInstructorDashboardUseCase,
-        private _getInstructorDetailsForLearner:IGetInstructorDetailsForLearnerUseCase
+        private _getInstructorDetailsForLearner:IGetInstructorDetailsForLearnerUseCase,
+        private _getInstructorDetailsForAdmin:IGetInstructorDetailsForAdminUseCase
 
     ) { }
 
@@ -311,6 +313,26 @@ export class InstructorController {
 
             
             logger.info("Instructor details for learner fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Instructor details for learner fetched successfully.",result))
+        } catch (error) {
+            logger.warn("Failed to fetch instructor details for learner.")
+            next(error);
+        }
+    }
+
+    getInstructorDetailsForAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        try {
+            logger.info("Request recieved to get instructor details for admin.")
+
+            const {instructorId} = req.query
+
+            console.log("instructorId");
+            
+            
+            const result= await this._getInstructorDetailsForAdmin.execute({ instructorId: instructorId as string });
+
+            
+            logger.info("Instructor details for admin fetched successfully.")
             res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Instructor details for learner fetched successfully.",result))
         } catch (error) {
             logger.warn("Failed to fetch instructor details for learner.")

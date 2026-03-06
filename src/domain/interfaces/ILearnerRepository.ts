@@ -22,4 +22,6 @@ export interface ILearnerRepository{
 
     updateOne(filter:Partial<Learner>,update:Partial<Learner>,allowPassword?:boolean):Promise<Learner|null>;
 
+    countCreatedAfter(date: Date): Promise<number>;
+
 };

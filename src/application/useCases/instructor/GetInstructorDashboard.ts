@@ -28,6 +28,9 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
                 instructorIds: [instructorId]
             }
         })
+
+        console.log("Result",result);
+        
         const topCourses = await Promise.all(
             result.courses.map(async (course) => {
                 return {
@@ -40,6 +43,8 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
                 }
             })
         )
+        console.log("topCourses",topCourses);
+        
 
         const sessionList = await this._liveSessionRepository.findManyWithPagination({
             status: LiveSessionStatus.Scheduled,
@@ -49,10 +54,16 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
             filter: { instructorId }
         })
 
+        console.log("sessionList",sessionList);
+        
+
         const upcomingSessions = sessionList.sessions;
         const allCourses = await this._courseReposiitory.findMany({
             instructorId,
         });
+
+        console.log("allCourses",allCourses);
+        
         const totalCourses = allCourses.length;
         let totalEnrollments = 0;
         let totalRatings = 0;
@@ -65,6 +76,9 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
             ratingCount+=(allCourses[i].rating)?1:0
         }
         const instructorWallet = await this._instructorWalletRepository.findByInstructorId(instructorId);
+
+        console.log("instructorWallet",instructorWallet);
+        
 
         if(!instructorWallet){
             throw new AppError(MESSAGES.NOT_FOUND,STATUS_CODES.NOT_FOUND)

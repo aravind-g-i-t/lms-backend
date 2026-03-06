@@ -44,4 +44,4 @@ export const updateCategoryStatusUseCase = new UpdateCategoryStatusUseCase(categ
 
 export const getCertificatesUseCase=new GetCertificatesForLearnerUseCase(certificateRepository,s3Service);
 
-export const getAdminDashboardUseCase= new GetAdminDashboardUseCase(enrollmentRepository,learnerRepository,instructorRepository,courseRepository,paymentRepository)
+export const getAdminDashboardUseCase= new GetAdminDashboardUseCase(enrollmentRepository,learnerRepository,instructorRepository,courseRepository,paymentRepository,s3Service)

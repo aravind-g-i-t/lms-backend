@@ -88,6 +88,8 @@ export interface IEnrollmentRepository extends IBaseRepository<Enrollment> {
 
     getCompletedEnrollmentsCount(courseId: string): Promise<number>
 
+    getTopInstructorsByEnrollments(limit: number): Promise<{ instructorId: string; name:string; profilePic: string|null; enrollments: number ,}[]>
+
 
 }
 

@@ -25,4 +25,6 @@ export interface IInstructorRepository{
 
     create(instructor:Partial<Instructor>,allowPassword?:boolean):Promise<Instructor|null>;
 
+    countCreatedAfter(date: Date): Promise<number>;
+
 }

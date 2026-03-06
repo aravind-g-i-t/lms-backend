@@ -29,7 +29,7 @@ export const ROUTES = {
     INSTRUCTOR_VERIFICATION:"/instructor/verification",
     REFRESH:"/refresh",
     LEARNER_DATA:"/learner/:id",
-    INSTRUCTOR_DATA:"/instructor/:id",
+    INSTRUCTOR_DATA:"/instructor/:id/view",
 
     CATEGORY:"/category",
     CATEGORIES:"/categories",

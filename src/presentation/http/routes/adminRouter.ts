@@ -101,5 +101,7 @@ adminRouter.get(ROUTES.DASHBOARD,adminAuthMiddleware,(req:Request,res:Response,n
 
 adminRouter.get(ROUTES.COURSE_ANALYTICS,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>courseController.getCourseAnalytics(req,res,next));
 
+adminRouter.get(ROUTES.INSTRUCTOR_DETAILS,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getInstructorDetailsForAdmin(req,res,next));
+
 
 export default adminRouter;

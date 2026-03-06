@@ -80,7 +80,10 @@ export class GetCoursesForAdminUseCase implements IGetCoursesForAdminUseCase {
             instructor: {
                 id: input.instructor.id,
                 name: input.instructor.name
-            }
+            },
+            rating:input.rating,
+            enrollmentCount:input.enrollmentCount
+            
         }
     }
 }

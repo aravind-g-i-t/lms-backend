@@ -33,6 +33,8 @@ export interface CourseForAdminListing {
     verification: {
         status: VerificationStatus;
     },
+    rating:number|null,
+    enrollmentCount:number
 }
 
 export interface CourseForLearnerListing {

@@ -1,6 +1,6 @@
 
 import { InstructorController } from "@presentation/http/controllers/InstructorController";
-import { addQuestionUseCase, applyForVerificationUseCase, cancelLiveSessionUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorDetailsForLearnerUseCase, getInstructorEarningsUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
+import { addQuestionUseCase, applyForVerificationUseCase, cancelLiveSessionUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorDetailsForAdminUseCase, getInstructorDetailsForLearnerUseCase, getInstructorEarningsUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
 import { QuizController } from "@presentation/http/controllers/QuizController";
 import { getCertificatesUseCase } from "../admin/useCases";
 import { LiveSessionController } from "@presentation/http/controllers/LiveSessionController";
@@ -20,7 +20,8 @@ export const instructorController=new InstructorController(
     updateVerificationStatusUseCase,
     getInstructorEarningsUseCase,
     getInstructorDashboardData,
-    getInstructorDetailsForLearnerUseCase
+    getInstructorDetailsForLearnerUseCase,
+    getInstructorDetailsForAdminUseCase
 );
 
 export const quizController = new QuizController(

@@ -8,8 +8,8 @@ import { STATUS_CODES } from 'shared/constants/httpStatus';
 import { logger } from '@infrastructure/logging/Logger';
 
 type LearnerQuery = {
-  isActive?: boolean;
-  name?: { $regex: string; $options: string };
+    isActive?: boolean;
+    name?: { $regex: string; $options: string };
 };
 
 export class LearnerRepositoryImpl implements ILearnerRepository {
@@ -28,11 +28,11 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
     }
 
 
-    async create(signupInput: Partial<Learner>, allowPassword: false): Promise<Learner|null> {
+    async create(signupInput: Partial<Learner>, allowPassword: false): Promise<Learner | null> {
 
         const doc = new LearnerModel(signupInput);
         await doc.save();
-        if(!doc){
+        if (!doc) {
             logger.error("Failed to create Learner.");
         }
         logger.info("Learner created successfully")
@@ -68,7 +68,7 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
                 .lean(),
             LearnerModel.countDocuments(query)
         ]);
-        if(docs){
+        if (docs) {
             logger.info("Learners fetched successfully.");
         }
         const learners = docs.map(doc => LearnerMapper.toDomain(doc));
@@ -90,9 +90,9 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
         }
         learner.isActive = !learner.isActive;
         await learner.save();
-        if(!learner){
+        if (!learner) {
             logger.warn("Failed to update Learner status")
-            throw new AppError(MESSAGES.LEARNER_NOT_UPDATED,STATUS_CODES.BAD_REQUEST);
+            throw new AppError(MESSAGES.LEARNER_NOT_UPDATED, STATUS_CODES.BAD_REQUEST);
         }
         logger.info("Learner status updated successfully")
 
@@ -135,6 +135,12 @@ export class LearnerRepositoryImpl implements ILearnerRepository {
         logger.info("Learner updated successfully")
         return allowPassword ? LearnerMapper.toDomain(doc) : LearnerMapper.toSecureDomain(doc);
 
+    }
+
+    async countCreatedAfter(date: Date): Promise<number> {
+        return LearnerModel.countDocuments({
+            createdAt: { $gte: date }
+        });
     }
 
 

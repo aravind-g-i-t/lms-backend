@@ -357,4 +357,46 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
             completedAt: { $ne: null }
         }).exec();
     }
+
+    getTopInstructorsByEnrollments(limit: number): Promise<{ instructorId: string; enrollments: number ,name:string; profilePic: string|null }[]> {
+        return EnrollmentModel.aggregate([
+            {
+                $match: {
+                    status: EnrollmentStatus.Active
+                }
+            },
+            {
+                $group: {
+                    _id: "$instructorId",
+                    enrollments: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "instructors",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "instructor"
+                }
+            },
+            {
+                $unwind: "$instructor"
+            },
+            {
+                $sort: { enrollments: -1 }
+            },
+            {
+                $limit: limit
+            },
+            {
+                $project: {
+                    _id: 0,
+                    instructorId: { $toString: "$_id" },
+                    enrollments: 1,
+                    name: "$instructor.name",
+                    profilePic: "$instructor.profilePic"
+                }
+            }
+        ]);
+    }
 }

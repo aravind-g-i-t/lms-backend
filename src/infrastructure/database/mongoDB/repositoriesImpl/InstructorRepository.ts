@@ -5,32 +5,32 @@ import { logger } from "@infrastructure/logging/Logger";
 
 
 type InstructorQuery = {
-  isActive?: boolean;
-  name?: { $regex: string; $options: string };
-  "verification.status"?: string;
+    isActive?: boolean;
+    name?: { $regex: string; $options: string };
+    "verification.status"?: string;
 };
 
-export interface InstructorEntity{
-    id:string;
-    name:string;
-    email:string;
-    isActive:boolean;
-    walletBalance:number;
-    joiningDate:Date;
-    expertise:string[];
-    verification:{
-        status:"Not Submitted"|"Under Review"|"Verified"|"Rejected",
-        remarks:string|null;
+export interface InstructorEntity {
+    id: string;
+    name: string;
+    email: string;
+    isActive: boolean;
+    walletBalance: number;
+    joiningDate: Date;
+    expertise: string[];
+    verification: {
+        status: "Not Submitted" | "Under Review" | "Verified" | "Rejected",
+        remarks: string | null;
     };
-    identityProof:string|null;
-    rating:number|null;
-    designation:string |null;
-    password:string|null;
-    profilePic:string|null;
-    resume:string|null;
-    googleId:string|null;
-    website:string|null;
-    bio:string|null;
+    identityProof: string | null;
+    rating: number | null;
+    designation: string | null;
+    password: string | null;
+    profilePic: string | null;
+    resume: string | null;
+    googleId: string | null;
+    website: string | null;
+    bio: string | null;
 
 }
 
@@ -41,14 +41,14 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
             logger.warn("Failed to fetch Instructor")
             return null
         }
-        logger.info("Failed to fetch Instructor." )
+        logger.info("Failed to fetch Instructor.")
         return allowPassword ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
     }
 
-    async create(instructorInput: Partial<InstructorEntity>, allowPassword: false): Promise<InstructorEntity|null> {
+    async create(instructorInput: Partial<InstructorEntity>, allowPassword: false): Promise<InstructorEntity | null> {
         const doc = new InstructorModel(instructorInput);
         await doc.save();
-        if(!doc){
+        if (!doc) {
 
             logger.warn("Instructor creation failed.")
             return null;
@@ -72,7 +72,7 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
         query: InstructorQuery,
         options: { page: number; limit: number }
     ) {
-        
+
         const { page, limit } = options;
         const skip = (page - 1) * limit;
 
@@ -85,7 +85,7 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
                 .lean(),
             InstructorModel.countDocuments(query)
         ]);
-        
+
         const instructors = docs.map(doc => InstructorMapper.toDomain(doc));
         logger.info("Instructors fetched successfully")
         return {
@@ -96,22 +96,22 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
     }
 
 
-    async updateStatus(id: string): Promise<InstructorEntity|null> {
-        
+    async updateStatus(id: string): Promise<InstructorEntity | null> {
+
         const instructor = await InstructorModel.findById(id);
 
-        
-        if (!instructor){
+
+        if (!instructor) {
             logger.warn("Failed to fetch Instructor for status update")
             return null
         }
         instructor.isActive = !instructor.isActive;
         await instructor.save();
-        if(!instructor){
+        if (!instructor) {
             logger.info('Instructor status updated successfully')
             return null
         }
-        
+
         return InstructorMapper.toDomain(instructor);
     }
 
@@ -144,7 +144,14 @@ export class InstructorRepositoryImpl implements IInstructorRepository {
         }
         logger.info("Updated instructor successfully")
         return allowPassword
-         ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
+            ? InstructorMapper.toDomain(doc) : InstructorMapper.toSecureDomain(doc);
+    }
+
+
+    async countCreatedAfter(date: Date): Promise<number> {
+        return InstructorModel.countDocuments({
+            createdAt: { $gte: date }
+        });
     }
 }
 

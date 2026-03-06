@@ -88,7 +88,7 @@ learnerRouter.patch(ROUTES.CANCEL_ENROLLMENT,learnerAuthMiddleware,(req:Request,
 
 learnerRouter.get(ROUTES.WALLET,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.getWalletData(req,res,next));
 
-learnerRouter.get(ROUTES.INSTRUCTOR_DETAILS,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getInstructorDetailsForLearner(req,res,next));
+learnerRouter.get(ROUTES.INSTRUCTOR_DETAILS,(req:Request,res:Response,next:NextFunction)=>instructorController.getInstructorDetailsForLearner(req,res,next));
 
 
 export default learnerRouter;

@@ -1,4 +1,4 @@
-import { GetInstructorDetailsForLearnerOutputDTO, IGetInstructorDetailsForLearnerUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForLearner";
+import { GetInstructorDetailsForAdminOutputDTO, IGetInstructorDetailsForAdminUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForAdmin";
 import { CourseStatus } from "@domain/entities/Course";
 import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
@@ -7,7 +7,7 @@ import { STATUS_CODES } from "shared/constants/httpStatus";
 import { MESSAGES } from "shared/constants/messages";
 import { AppError } from "shared/errors/AppError";
 
-export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDetailsForLearnerUseCase {
+export class GetInstructorDetailsForAdminUseCase implements IGetInstructorDetailsForAdminUseCase {
     constructor(
         private instructorRepo: IInstructorRepository,
         private courseRepo: ICourseRepository,
@@ -15,7 +15,9 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
 
     ) { }
 
-    async execute(input: { instructorId: string }): Promise<GetInstructorDetailsForLearnerOutputDTO> {
+    async execute(input: { instructorId: string }): Promise<GetInstructorDetailsForAdminOutputDTO> {
+        console.log(input);
+        
         const instructor = await this.instructorRepo.findById(input.instructorId);
         if (!instructor) {
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND, STATUS_CODES.NOT_FOUND);
@@ -26,11 +28,9 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
 
         const courses = await this.courseRepo.findMany({ instructorId: input.instructorId, status:CourseStatus.Published});
 
-        console.log("courses",courses);
         
 
         const totalCourses = courses.length;
-        
         let totalEnrollments = 0;
         let ratingSum = 0;
         let ratingCount=0
@@ -39,14 +39,13 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
             ratingSum += courses[i].rating || 0;
             ratingCount+=(courses[i].rating)?1:0
         }
-        console.log(totalEnrollments,ratingSum,ratingCount);
 
-        const instructorDetails: GetInstructorDetailsForLearnerOutputDTO["instructor"] = {
+        const instructorDetails: GetInstructorDetailsForAdminOutputDTO["instructor"] = {
             id: instructor.id,
             name: instructor.name,
             email: instructor.email,
             bio: instructor.bio,
-            profilePic:instructor.profilePic? await this._fileStorageService.getViewURL(instructor.profilePic as string):null,
+            profilePic: instructor.profilePic?await this._fileStorageService.getViewURL(instructor.profilePic as string):null,
             resume: instructor.resume ? await this._fileStorageService.getDownloadURL(instructor.resume,`${instructor.name}-resume.pdf`) : null,
             website: instructor.website,
             expertise: instructor.expertise,
@@ -54,10 +53,13 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
             joiningDate: instructor.joiningDate,
             totalStudents: totalEnrollments,
             totalCourses,
-            averageRating: ratingCount > 0 ? ratingSum / ratingCount : null
+            averageRating: ratingCount > 0 ? ratingSum / ratingCount : null,
+            identityProof:instructor.identityProof? await this._fileStorageService.getDownloadURL(instructor.identityProof,`${instructor.name}-identity-proof.jpg`):null,
+            verification:instructor.verification,
+            isActive:instructor.isActive
+
         };
 
-        console.log(instructorDetails);
         
 
         const outputCourses = await Promise.all(

@@ -15,4 +15,6 @@ export interface IPaymentRepository extends IBaseRepository<Payment> {
     startDate: Date,
     endDate: Date
   ): Promise<MonthlyRevenue[]>;
+
+  getTotalRevenue(): Promise<{ totalGrossRevenue: number; instructorShare: number; companyRevenue: number }>
 }

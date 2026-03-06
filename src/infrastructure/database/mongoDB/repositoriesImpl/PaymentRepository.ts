@@ -78,4 +78,52 @@ export class PaymentRepositoryImpl extends BaseRepository<Payment,PaymentDoc> im
         return results;
     }
 
+    async getTotalRevenue(): Promise<{ totalGrossRevenue: number; instructorShare: number; companyRevenue: number }> {
+        const results = await PaymentModel.aggregate([
+            {
+                $match: {
+                    reason: PaymentReason.CourseEnrollment,
+                    status: PaymentStatus.Success,
+                }
+            },
+            {
+                $project: {
+                    grossAmount: 1,
+                    paidAmount: 1,
+                    instructorShare: {
+                        $multiply: ["$grossAmount", 0.7]
+                    },
+                    companyRevenue: {
+                        $subtract: [
+                            "$paidAmount",
+                            { $multiply: ["$grossAmount", 0.7] }
+                        ]
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalGrossRevenue: { $sum: "$paidAmount" },
+                    instructorShare: { $sum: "$instructorShare" },
+                    companyRevenue: { $sum: "$companyRevenue" }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalGrossRevenue: 1,
+                    instructorShare: 1,
+                    companyRevenue: 1
+                }
+            }
+        ]);
+
+        console.log(results[0]);
+        
+
+        return results.length > 0 ? results[0] : { totalGrossRevenue: 0, instructorShare: 0, companyRevenue: 0 };
+    }
+
+    
 }

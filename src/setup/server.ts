@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import app from "./expressApp";
 import dotenv from 'dotenv';
 import { connectMongoDB } from "@infrastructure/database/mongoDB/mongoConnection";

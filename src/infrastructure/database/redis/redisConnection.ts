@@ -1,12 +1,14 @@
 import { logger } from "@infrastructure/logging/Logger";
 import { createClient, RedisClientType } from "redis";
+
 let redisClient: RedisClientType;
 
 export async function connectRedis(): Promise<RedisClientType> {
-    try{
+    try {
         redisClient = createClient({
             url: process.env.REDIS_URL,
-        });
+        }) as RedisClientType;
+
         redisClient.on("connect", () => {
             logger.info("Connected to Redis");
         });
@@ -17,10 +19,8 @@ export async function connectRedis(): Promise<RedisClientType> {
 
         await redisClient.connect();
         return redisClient;
-    } catch  {
+    } catch {
         logger.error("Failed to connect to Redis.");
-        process.exit(1)
+        return process.exit(1);
     }
 }
-
-

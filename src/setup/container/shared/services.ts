@@ -12,12 +12,16 @@ import { TokenService } from "@infrastructure/services/TokenService";
 import { ZegoService } from "@infrastructure/services/ZegoService";
 
 
-const redisClient=await connectRedis();
 export const tokenService=new TokenService();
 export const s3Service = new S3ServiceImpl()
 export const certificateTemplateService= new CertificateTemplateService();
 
-export const cacheService:ICacheService=new CacheService(redisClient)
+export let cacheService: ICacheService;
+
+export async function initializeServices(): Promise<void> {
+    const redisClient = await connectRedis();
+    cacheService = new CacheService(redisClient);
+}
 
 export const pdfGeneratorService= new PdfGeneratorService();
 

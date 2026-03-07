@@ -14,13 +14,13 @@ export const connectMongoDB = async (): Promise<void> => {
             logger.info("Mongoose connected to DB");
         });
         
-        mongoose.connection.on("error", () => {
-            logger.error(" Mongoose connection error:");
+        mongoose.connection.on("error", (error) => {
+            logger.error(` Mongoose connection error: ${error}`);
         });
         await mongoose.connect(uri);
 
-    } catch {
-        logger.error('Mongo connection error');
+    } catch (error) {
+        logger.error(`Mongo connection error: ${error}`);
         process.exit(1);
     }
 };

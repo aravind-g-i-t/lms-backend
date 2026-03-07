@@ -4,11 +4,19 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch src/setup/server.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias -p tsconfig.json",
     "start": "cross-env NODE_ENV=production node dist/setup/server.js",
     "lint": "eslint src --ext .ts"
   },
-  "type": "module",
+  "_moduleAliases": {
+    "@domain": "dist/domain",
+    "@application": "dist/application",
+    "@infrastructure": "dist/infrastructure",
+    "@presentation": "dist/presentation",
+    "@setup": "dist/setup",
+    "shared": "dist/shared"
+  },
+  "type": "commonjs",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,6 +33,7 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.3.4",
     "mongoose": "^8.17.2",
     "morgan": "^1.10.1",
     "node": "^25.5.0",
@@ -55,6 +64,7 @@
     "globals": "^16.4.0",
     "jiti": "^2.6.1",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.54.0"

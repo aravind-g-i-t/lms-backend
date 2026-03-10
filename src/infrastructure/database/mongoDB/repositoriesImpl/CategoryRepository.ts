@@ -77,4 +77,15 @@ export class CategoryRepositoryImpl extends BaseRepository<Category,CategoryDoc>
                 logger.info("Category status updated successfully.")
         return this.mapper.toDomain(category);
     }
+
+
+    async categoryUsageCountByTheDay():Promise<number>{
+        const today= new Date(new Date().setTime(0));
+        const count= await this.model.countDocuments({
+            createdAt:{
+                $gt:today
+            }
+        });
+        return count;
+    }
 }

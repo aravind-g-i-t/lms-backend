@@ -27,7 +27,10 @@ export class UserSignupUseCase implements IUserSignupUseCase{
     ) {}
 
     async execute(signupInput:{name:string,email:string,password:string,role:string}){
+            console.log("entered sigup usecase");
+            
             const {email,role}=signupInput;
+            console.log(signupInput)
             let repository;
             if(role==='learner'){
                 repository=this._learnerRepository
@@ -42,6 +45,7 @@ export class UserSignupUseCase implements IUserSignupUseCase{
                 throw new AppError(MESSAGES.USE_GOOGLE_SIGNIN_MESSAGE,STATUS_CODES.CONFLICT)
             }
             const otp=generateOTP();            
+            console.log("otp",otp)
             await this._emailService.send(
                 email,
                 'NlightN OTP verification',
@@ -49,6 +53,7 @@ export class UserSignupUseCase implements IUserSignupUseCase{
             );
             const otpKey=`${email}:otp`;
             const signupDataKey=`${email}:signup`;            
+            console.log(this._cacheService)
             await this._cacheService.set<SignupData>(signupDataKey,signupInput,SIGNUPDATA_TTL);
             await this._cacheService.set<string>(otpKey,otp,OTP_TTL);
             const otpExpiresAt=new Date(Date.now() + 2 * 60 * 1000)

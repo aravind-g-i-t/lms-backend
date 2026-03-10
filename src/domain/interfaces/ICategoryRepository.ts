@@ -17,5 +17,6 @@ export interface ICategoryRepository extends IBaseRepository<Category> {
         options: { page: number; limit: number }): Promise<FindAllCategoriesOutput>;
   updateCategoryStatus(id: string): Promise<Category|null>;
   findActiveCategories():Promise<Category[]>
+  categoryUsageCountByTheDay():Promise<number>
 
 }

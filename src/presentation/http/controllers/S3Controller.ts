@@ -24,10 +24,10 @@ export class S3Controller {
                 folder,
             });
 
-            res.status(200).json(result);
+            res.status(STATUS_CODES.OK).json(result);
         } catch (err) {
             console.error(err);
-            res.status(500).json({ error: "Failed to generate upload URL" });
+            res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: "Failed to generate upload URL" });
         }
     }
 

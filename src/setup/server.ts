@@ -6,6 +6,7 @@ import { logger } from "@infrastructure/logging/Logger";
 import http from 'http'
 import { initializeSockets } from "./socket";
 import { startCronScheduler } from "@infrastructure/schedulers/scheduler.cron";
+import { initializeServices } from './container/shared/services';
 
 
 const env=process.env.NODE_ENV || 'production'
@@ -16,6 +17,8 @@ const PORT=process.env.PORT || 5000;
 async function startServer() {
     try {
         await connectMongoDB();
+
+        await initializeServices()
 
         startCronScheduler();
 

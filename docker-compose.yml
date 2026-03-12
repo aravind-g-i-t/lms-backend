@@ -1,0 +1,11 @@
+
+services:
+
+  app:
+    build: .
+    container_name: backend_app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production
+    restart: always

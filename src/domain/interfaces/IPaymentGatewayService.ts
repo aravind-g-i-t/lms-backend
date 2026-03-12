@@ -8,6 +8,6 @@ export interface IPaymentGatewayService {
 
  
  
-  retrieveCheckoutSession(sessionId: string): Promise<unknown>;
+  retrieveCheckoutSession(sessionId: string): Promise<any>;
 
 }

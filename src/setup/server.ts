@@ -6,7 +6,7 @@ import { logger } from "@infrastructure/logging/Logger";
 import http from 'http'
 import { initializeSockets } from "./socket";
 import { startCronScheduler } from "@infrastructure/schedulers/scheduler.cron";
-import { initializeServices } from './container/shared/services';
+import { connectRedis } from '@infrastructure/database/redis/redisConnection';
 
 
 const env=process.env.NODE_ENV || 'production'
@@ -18,7 +18,7 @@ async function startServer() {
     try {
         await connectMongoDB();
 
-        await initializeServices()
+        await connectRedis()
 
         startCronScheduler();
 

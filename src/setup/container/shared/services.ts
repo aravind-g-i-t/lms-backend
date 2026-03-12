@@ -16,12 +16,7 @@ export const tokenService=new TokenService();
 export const s3Service = new S3ServiceImpl()
 export const certificateTemplateService= new CertificateTemplateService();
 
-export let cacheService: ICacheService;
-
-export async function initializeServices(): Promise<void> {
-    const redisClient = await connectRedis();
-    cacheService = new CacheService(redisClient);
-}
+export const cacheService= new CacheService()
 
 export const pdfGeneratorService= new PdfGeneratorService();
 

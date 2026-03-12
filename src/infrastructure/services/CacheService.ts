@@ -1,18 +1,13 @@
 import { ICacheService } from "@domain/interfaces/ICacheService";
+import { getRedisClient } from "@infrastructure/database/redis/redisConnection";
 import { logger } from "@infrastructure/logging/Logger";
 
-import { RedisClientType } from "redis";
 
 export class CacheService implements ICacheService{
-    constructor(
-        private redisClient:RedisClientType
-    ){}
-
-
     
     async set<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
 
-        await this.redisClient.set(key,JSON.stringify(value),{
+        await getRedisClient().set(key,JSON.stringify(value),{
             EX:ttlSeconds
         })
 
@@ -21,7 +16,7 @@ export class CacheService implements ICacheService{
 
     async get<T>(key: string): Promise<T | null> {
 
-        const data=await this.redisClient.get(key);
+        const data=await getRedisClient().get(key);
         if(!data){
             logger.warn("Requested cached data doesnot exist");
             return null
@@ -33,7 +28,7 @@ export class CacheService implements ICacheService{
 
     async delete(key: string): Promise<void> {
 
-        await this.redisClient.del(key)
+        await getRedisClient().del(key)
 
     }
 

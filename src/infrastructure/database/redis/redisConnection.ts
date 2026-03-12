@@ -3,7 +3,7 @@ import { createClient, RedisClientType } from "redis";
 
 let redisClient: RedisClientType;
 
-export async function connectRedis(): Promise<RedisClientType> {
+export async function connectRedis(): Promise<void> {
     try {
         redisClient = createClient({
             url: process.env.REDIS_URL,
@@ -18,9 +18,13 @@ export async function connectRedis(): Promise<RedisClientType> {
         });
 
         await redisClient.connect();
-        return redisClient;
     } catch {
         logger.error("Failed to connect to Redis.");
         return process.exit(1);
     }
+}
+
+export function getRedisClient(): RedisClientType {
+    if (!redisClient) throw new Error("Redis not connected");
+    return redisClient;
 }

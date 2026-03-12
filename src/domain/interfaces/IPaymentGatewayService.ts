@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IPaymentGatewayService {
   createCheckoutSession(input: {
     amount: number;
@@ -9,6 +8,6 @@ export interface IPaymentGatewayService {
 
  
  
-  retrieveCheckoutSession(sessionId: string): Promise<any>;
+  retrieveCheckoutSession(sessionId: string): Promise<unknown>;
 
 }

@@ -1,30 +1,32 @@
+
+
 import { logger } from "@infrastructure/logging/Logger";
 import { createClient, RedisClientType } from "redis";
 
 let redisClient: RedisClientType;
 
 export async function connectRedis(): Promise<void> {
-  try {
-    redisClient = createClient({
-      url: process.env.REDIS_URL,
-      socket: {
-        tls: true
-      }
-    }) as RedisClientType;
+    try {
+        redisClient = createClient({
+            url: process.env.REDIS_URL,
+            socket: {
+                tls: true
+            }
+        }) as RedisClientType;
 
-    redisClient.on("connect", () => {
-      logger.info("Connected to Redis");
-    });
+        redisClient.on("connect", () => {
+            logger.info("Connected to Redis");
+        });
 
-    redisClient.on("error", (err) => {
-      logger.error(`Redis error: ${err}`);
-    });
+        redisClient.on("error", (err) => {
+            logger.error(`Redis error: ${err}`);
+        });
 
-    await redisClient.connect();
-  } catch {
-    logger.error("Failed to connect to Redis.");
-    process.exit(1);
-  }
+        await redisClient.connect();
+    } catch (err) {
+        logger.error(`Failed to connect to Redis: ${err}`);
+        process.exit(1);
+    }
 }
 
 export function getRedisClient(): RedisClientType {

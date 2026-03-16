@@ -616,7 +616,20 @@ export class CourseRepository extends BaseRepository<Course,CourseDoc> implement
         })
     }
 
-    
+    async getCategoryUsageCount(categoryId:string):Promise<number>{
+        
+        const thisMonth=new Date( new Date().setFullYear(new Date().getFullYear(),new Date().getMonth(),1));
+        const usageCount= await this.model.countDocuments({
+            categoryId,
+            createdAt:{
+                $gte:thisMonth
+            }
+        })
+
+        return usageCount;
+
+
+    }
 
     
 

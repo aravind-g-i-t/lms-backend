@@ -141,4 +141,6 @@ export interface ICourseRepository extends IBaseRepository<Course> {
         { categoryId: string; count: number }[]
     >;
 
+    getCategoryUsageCount(categoryId:string):Promise<number>
+
 }

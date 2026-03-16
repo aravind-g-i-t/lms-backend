@@ -34,6 +34,10 @@ export class CreateCourseUseCase implements ICreateCourseUseCase {
 
         //     }
         // }
+        const categoryUseCount= await this._courseRepository.getCategoryUsageCount(input.categoryId)
+        if(categoryUseCount>2){
+            throw new AppError("Category usage limit exceeded",STATUS_CODES.BAD_REQUEST)
+        }
 
         const course = await this._courseRepository.create({
             instructorId: input.instructorId,

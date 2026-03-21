@@ -1,44 +1,45 @@
+
 import { stripe } from "../config/stripeConfig";
-import { IPaymentGatewayService } from "@domain/interfaces/IPaymentGatewayService";
+import { IPaymentGatewayService, CheckoutSession } from "@domain/interfaces/IPaymentGatewayService";
 
 export class StripeService implements IPaymentGatewayService {
-    async createCheckoutSession({
-        amount,
-        paymentReason,
-        referenceId,
-        paymentId,
-    }: {
-        amount: number;
-        paymentReason: string;
-        referenceId: string;
-        paymentId: string;
-    }): Promise<string> {
-        const session = await stripe.checkout.sessions.create({
-            mode: "payment",
-            payment_method_types: ["card"],
-            line_items: [
-                {
-                    price_data: {
-                        currency: "inr",
-                        product_data: {
-                            name: "Course Enrollment",
-                            description: "Access to LMS Course",
-                        },
-                        unit_amount: Math.round(amount * 100),
-                    },
-                    quantity: 1,
-                },
-            ],
-            success_url: `${process.env.CLIENT_URL}/learner/payment/status?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.CLIENT_URL}/learner/checkout/${referenceId}`,
-            metadata: { paymentId, paymentReason, referenceId },
-        });
-        return session.id;
-    }
+  async createCheckoutSession({ amount, paymentReason, referenceId, paymentId }: {
+    amount: number;
+    paymentReason: string;
+    referenceId: string;
+    paymentId: string;
+  }): Promise<string> {
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: [{
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: "Course Enrollment",
+            description: "Access to LMS Course",
+          },
+          unit_amount: Math.round(amount * 100),
+        },
+        quantity: 1,
+      }],
+      success_url: `${process.env.CLIENT_URL}/learner/payment/status?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/learner/checkout/${referenceId}`,
+      metadata: { paymentId, paymentReason, referenceId },
+    });
+    return session.id;
+  }
 
+  async retrieveCheckoutSession(sessionId: string): Promise<CheckoutSession> {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    async retrieveCheckoutSession(sessionId: string) {
-        return stripe.checkout.sessions.retrieve(sessionId);
-    }
-
+    return {
+      payment_status: session.payment_status,
+      status: session.status,
+      payment_intent: typeof session.payment_intent === "string"
+        ? session.payment_intent
+        : (session.payment_intent?.id ?? null),
+      metadata: (session.metadata as CheckoutSession["metadata"]) ?? {},
+    };
+  }
 }

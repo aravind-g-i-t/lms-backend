@@ -1,18 +1,22 @@
-import { ZodType, ZodError, TypeOf } from "zod";
+import { ZodTypeAny, ZodError, TypeOf } from "zod";
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 
+interface ParsedRequest {
+  body?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+  params?: Record<string, unknown>;
+}
+
 export const validateRequest =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  <T extends ZodType<any, any>>(schema: T) =>
+  <T extends ZodTypeAny>(schema: T) =>
     (req: Request, res: Response, next: NextFunction) => {
       try {
-        const parsed: TypeOf<T> = schema.parse({
+        const parsed = schema.parse({
           body: req.body,
           query: req.query,
           params: req.params,
-        });
-
+        }) as TypeOf<T> & ParsedRequest;
 
         if (parsed.body) Object.assign(req.body, parsed.body);
         if (parsed.query) Object.assign(req.query, parsed.query);
@@ -21,7 +25,7 @@ export const validateRequest =
         next();
       } catch (err) {
         if (err instanceof ZodError) {
-          const error = err.issues?.[0]?.message || "Validation error";
+          const error = err.issues?.[0]?.message ?? "Validation error";
 
           return res.status(STATUS_CODES.BAD_REQUEST).json({
             success: false,

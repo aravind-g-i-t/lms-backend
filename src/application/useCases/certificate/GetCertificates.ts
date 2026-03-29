@@ -16,7 +16,6 @@ export class GetCertificatesForLearnerUseCase implements IGetCertificatesForLear
     }> {
         const { page, limit, learnerId } = input;
         const result = await this._certificateRepository.findAllByLearner({ learnerId, page, limit });
-        console.log("result",result);
         
         const certificates = await Promise.all(
             result.certificates.map(async (cert) => {

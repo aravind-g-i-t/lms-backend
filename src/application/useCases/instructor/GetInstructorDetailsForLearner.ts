@@ -21,12 +21,10 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND, STATUS_CODES.NOT_FOUND);
         }
 
-        console.log(instructor);
         
 
         const courses = await this.courseRepo.findMany({ instructorId: input.instructorId, status:CourseStatus.Published});
 
-        console.log("courses",courses);
         
 
         const totalCourses = courses.length;
@@ -39,7 +37,6 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
             ratingSum += courses[i].rating || 0;
             ratingCount+=(courses[i].rating)?1:0
         }
-        console.log(totalEnrollments,ratingSum,ratingCount);
 
         const instructorDetails: GetInstructorDetailsForLearnerOutputDTO["instructor"] = {
             id: instructor.id,
@@ -57,7 +54,6 @@ export class GetInstructorDetailsForLearnerUseCase implements IGetInstructorDeta
             averageRating: ratingCount > 0 ? ratingSum / ratingCount : null
         };
 
-        console.log(instructorDetails);
         
 
         const outputCourses = await Promise.all(

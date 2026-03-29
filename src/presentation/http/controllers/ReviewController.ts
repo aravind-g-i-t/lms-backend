@@ -94,11 +94,9 @@ export class ReviewController {
         next: NextFunction
     ): Promise<void> {
         try {
-            console.log("Entered controller");
 
             const { courseId, rating, reviewText } = req.body;
 
-            console.log(req.body);
             const learnerId = req.user?.id;
             if (!learnerId) {
                 throw new AppError(

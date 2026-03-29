@@ -41,11 +41,9 @@ export class UserAuthController {
 
     signup = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
         try {
-            console.log("Entered signup method");
             
             const result = await this._userSignupUseCase.execute(req.body);
 
-            console.log(this._userSignupUseCase);
             
 
             res.status(STATUS_CODES.OK).json(

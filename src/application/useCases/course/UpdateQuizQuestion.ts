@@ -13,7 +13,6 @@ export class UpdateQuizQuesitonUseCase implements IUpdateQuizQuestionUseCase {
 
     async execute(input: UpdateQuizQuestionInput): Promise<QuizQuestion> {
 
-        console.log("input",input);
         
 
         const updatedQuiz = await this._quizRepo.updateQuestion(

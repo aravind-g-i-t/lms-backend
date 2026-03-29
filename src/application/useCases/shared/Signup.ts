@@ -27,10 +27,8 @@ export class UserSignupUseCase implements IUserSignupUseCase{
     ) {}
 
     async execute(signupInput:{name:string,email:string,password:string,role:string}){
-            console.log("entered sigup usecase");
             
             const {email,role}=signupInput;
-            console.log(signupInput)
             let repository;
             if(role==='learner'){
                 repository=this._learnerRepository
@@ -53,7 +51,6 @@ export class UserSignupUseCase implements IUserSignupUseCase{
             );
             const otpKey=`${email}:otp`;
             const signupDataKey=`${email}:signup`;            
-            console.log(this._cacheService)
             await this._cacheService.set<SignupData>(signupDataKey,signupInput,SIGNUPDATA_TTL);
             await this._cacheService.set<string>(otpKey,otp,OTP_TTL);
             const otpExpiresAt=new Date(Date.now() + 2 * 60 * 1000)

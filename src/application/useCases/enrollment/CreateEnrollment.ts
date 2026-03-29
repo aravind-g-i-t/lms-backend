@@ -13,7 +13,6 @@ export class CreateEnrollmentUseCase implements ICreateEnrollmentUseCase{
     async execute(input:{learnerId:string,courseId:string, paymentId:string,status:EnrollmentStatus,instructorId:string,instructorName:string, learnerName:string; courseTitle:string,thumbnail:string,duration:number}):Promise<Enrollment>{
         const {learnerId,courseId,paymentId,status,instructorId,instructorName,thumbnail,courseTitle,duration,learnerName} = input;
 
-        console.log(input);
         
         const newEnrollment= await this._enrollmentRepository.create({
             learnerId,

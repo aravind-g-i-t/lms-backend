@@ -117,10 +117,7 @@ export class PaymentRepositoryImpl extends BaseRepository<Payment,PaymentDoc> im
                     companyRevenue: 1
                 }
             }
-        ]);
-
-        console.log(results[0]);
-        
+        ]);        
 
         return results.length > 0 ? results[0] : { totalGrossRevenue: 0, instructorShare: 0, companyRevenue: 0 };
     }

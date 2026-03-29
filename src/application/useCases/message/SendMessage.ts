@@ -117,8 +117,6 @@ export class SendMessageUseCase implements ISendMessageUseCase {
 
         const learnerProfilePic=hyderatedConversation?.learnerId.profilePic? await this._fileStorageService.getViewURL(hyderatedConversation.learnerId.profilePic):null
         const outputConversation=ConversationDTOMapper.toListing(hyderatedConversation as HydratedConversation)
-        console.log("savedMessage",savedMessage);
-        console.log("attachments", mappedAttachments);
         
         
 

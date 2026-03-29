@@ -15,7 +15,6 @@ export class DeleteMessagesForMeUseCase
     userId: string;
     messageIds: string[];
   }): Promise<void> {
-    console.log(userId,messageIds);
     
 
     await this.messageRepo.deleteForUser(messageIds, userId);

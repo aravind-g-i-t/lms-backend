@@ -25,7 +25,6 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
 
     async execute(input: { page?: number, limit: number, search?: string; sort: Sort; instructorIds?: string[]; categoryIds?: string[]; levels?: string[]; durationRange?: [number, number]; priceRange?: [number, number]; minRating?: number;learnerId:string |null}): Promise<GetCoursesForLearnerOutput> {
 
-        console.log(input);
         
         const { page, limit, search, sort, instructorIds, categoryIds, levels, durationRange, priceRange, minRating } = input;
         const result = await this._courseRepository.findAllCourses({
@@ -73,7 +72,6 @@ export class GetCoursesForLearnerUseCase implements IGetCoursesForLearnerUseCase
             })
         }
 
-        console.log(courses);
         
 
         return { pagination: result.pagination, courses };

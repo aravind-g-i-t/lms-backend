@@ -146,7 +146,6 @@ export class ConversationRepositoryImpl extends BaseRepository<Conversation,Conv
         const conversations = result[0].data.map((doc: HydratedConversationDoc) =>
             ConversationMapper.toPopulatedDomain(doc)
         );
-        console.log(conversations);
 
 
 

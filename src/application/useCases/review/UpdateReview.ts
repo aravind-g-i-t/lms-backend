@@ -22,7 +22,6 @@ export class UpdateReviewUseCase implements IUpdateReviewUseCase {
     reviewText: string | null;
   }): Promise<Review> {
     const { learnerId, courseId, rating, reviewText } = input;
-    console.log(input);
     
     const isEnrolled = await this._enrollmentRepository.findOne({
       learnerId,

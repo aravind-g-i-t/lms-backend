@@ -29,7 +29,6 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
             }
         })
 
-        console.log("Result",result);
         
         const topCourses = await Promise.all(
             result.courses.map(async (course) => {
@@ -43,7 +42,6 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
                 }
             })
         )
-        console.log("topCourses",topCourses);
         
 
         const sessionList = await this._liveSessionRepository.findManyWithPagination({
@@ -54,7 +52,6 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
             filter: { instructorId }
         })
 
-        console.log("sessionList",sessionList);
         
 
         const upcomingSessions = sessionList.sessions;
@@ -62,7 +59,6 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
             instructorId,
         });
 
-        console.log("allCourses",allCourses);
         
         const totalCourses = allCourses.length;
         let totalEnrollments = 0;
@@ -77,7 +73,6 @@ export class GetInstructorDashboardUseCase implements IGetInstructorDashboardUse
         }
         const instructorWallet = await this._instructorWalletRepository.findByInstructorId(instructorId);
 
-        console.log("instructorWallet",instructorWallet);
         
 
         if(!instructorWallet){

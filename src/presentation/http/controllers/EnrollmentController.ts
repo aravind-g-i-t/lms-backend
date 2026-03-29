@@ -108,7 +108,6 @@ export class EnrollmentController {
         try {
             const { query } = GetEnrollmentsRequestSchema.parse(req);
             const instructorId = req.user?.id;
-            console.log(instructorId);
             
             if (!instructorId) {
                 throw new AppError(

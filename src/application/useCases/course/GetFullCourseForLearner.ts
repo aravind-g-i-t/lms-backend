@@ -15,10 +15,8 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
     ) { }
 
     async execute({ courseId, learnerId }: { courseId: string; learnerId: string }): Promise<GetFullCourseForLearnerOutput> {
-        console.log("courseId", courseId);
 
         const course = await this._courseRepository.findHydratedCourseById(courseId);
-        console.log("course", course);
         if (!course) {
             throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.BAD_REQUEST)
         }
@@ -39,7 +37,6 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         const previewVideo = course.previewVideo
             ? await this._fileStorageService.getViewURL(course.previewVideo)
             : null;
-        console.log(thumbnail, previewVideo);
         const responseModules = course.modules.map((module) => ({
             id: module.id,
             title: module.title,

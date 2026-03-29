@@ -21,7 +21,6 @@ export class AdminSigninUseCase implements IAdminSigninUseCase{
         }
 
         const passwordMatch=await comparePassword(password,admin.password);
-        console.log("passwordMatch",passwordMatch);
         
         if(!passwordMatch){
             throw new AppError(MESSAGES.INVALID_CREDENTIALS,STATUS_CODES.UNAUTHORIZED)

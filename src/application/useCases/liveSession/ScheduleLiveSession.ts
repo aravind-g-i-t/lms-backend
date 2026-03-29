@@ -28,7 +28,6 @@ export class ScheduleLiveSessionUseCase implements IScheduleLiveSessionUseCase{
 
         const todaySessionCount= await this._liveSessionRepository.getSessionCountForTheDay(instructorId)
 
-        console.log("Today's session count for instructor:", todaySessionCount);
 
         if(todaySessionCount>=3){
             throw new AppError(MESSAGES.LIVE_SESSION_LIMIT_REACHED,STATUS_CODES.BAD_REQUEST)

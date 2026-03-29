@@ -613,24 +613,20 @@ export class CourseController {
     async streamVideo(req: AuthenticatedRequest, res: Response, next: NextFunction) {
 
         try {
-            console.log("Entered controller");
             
             const range = req.headers.range;
             if (!range) {
                 
                 throw new AppError(MESSAGES.RANGE_HEADER_REQUIRED,STATUS_CODES.RANGE_NOT_SATISFIABLE)
             }
-            console.log("range",range);
             
 
             const { courseId, moduleId, chapterId } = req.params;
-            console.log("params",req.params);
             
             const learnerId = req.user?.id
             if (!learnerId) {
                 throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND)
             }
-            console.log("learnerId",learnerId);
             
 
             const videoKey = await this._getVideoUseCase.execute({
@@ -639,7 +635,6 @@ export class CourseController {
                 moduleId,
                 chapterId
             });
-            console.log("videoKey",videoKey);
             
 
             await this._fileStorageService.streamVideo(videoKey, range, res);

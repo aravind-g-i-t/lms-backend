@@ -67,7 +67,6 @@ export class LiveSessionRepository extends BaseRepository<LiveSession,LiveSessio
             status: { $ne: LiveSessionStatus.Cancelled }
         })
 
-        console.log("count",sessions);
 
         return sessions;
     }

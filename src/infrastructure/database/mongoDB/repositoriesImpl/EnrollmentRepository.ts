@@ -244,7 +244,6 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
             search.learnerName = { $regex: input.search, $options: "i" }
         }
         const skip = (input.page - 1) * input.limit;
-        console.log(skip);
 
 
         const result = await EnrollmentModel.aggregate([

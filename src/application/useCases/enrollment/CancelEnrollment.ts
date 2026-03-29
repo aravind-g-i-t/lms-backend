@@ -33,13 +33,11 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
             learnerId,
             status:EnrollmentStatus.Active
         });
-        console.log("Enrollment");
         
         if(!enrollment){
             throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
         const payment= await this._paymentRepo.findById(enrollment.paymentId);
-        console.log("Payment",payment);
         
         if(!payment){
             throw new AppError(MESSAGES.PAYMENT_NOT_FOUND,STATUS_CODES.NOT_FOUND)
@@ -48,7 +46,6 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
             status:EnrollmentStatus.Cancelled,
             cancelledAt:new Date()
         });
-        console.log("enrollmentCancelled",enrollmentCancelled);
 
         if(!enrollmentCancelled){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -64,14 +61,12 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
             }
         )
 
-        console.log("CancelledEarning",cancelledEarning);
         if(!cancelledEarning){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
 
         const updatedWallet= await this._walletRepo.updateBalance(learnerId,payment.paidAmount);
 
-        console.log("updatedWallet",updatedWallet);
         if(!updatedWallet){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
         }
@@ -84,7 +79,6 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
             enrollmentId:enrollment.id
         });
 
-        console.log("walletTransaction",walletTransaction);
 
         if(!walletTransaction){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -95,7 +89,6 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
             pendingBalance:0-cancelledEarning.amount
         });
 
-        console.log("updatedInstructorWallet",updatedInstructorWallet);
 
         if(!updatedInstructorWallet){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -107,7 +100,6 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
                 refundedAt:new Date()
             }
         )
-        console.log("paymentUpdated",paymentUpdated);
 
         if(!paymentUpdated){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR)

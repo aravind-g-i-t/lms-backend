@@ -326,7 +326,6 @@ export class InstructorController {
 
             const {instructorId} = req.query
 
-            console.log("instructorId");
             
             
             const result= await this._getInstructorDetailsForAdmin.execute({ instructorId: instructorId as string });

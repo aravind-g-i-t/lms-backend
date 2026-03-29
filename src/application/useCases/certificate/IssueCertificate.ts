@@ -21,18 +21,15 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
     async execute(input: IssueCertificateInput): Promise<string> {
         const { learnerId, learnerName, courseId, courseTitle, grade ,enrollmentId,quizAttemptId,instructorName} = input;
 
-        console.log("input:",input);
         
 
         const serialNumber = `CERT-${courseId}-${Date.now()}`;
-        console.log("serialNumber",serialNumber);
         
         const issueDate = new Date().toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric"
         });
-        console.log("issueDate",issueDate);
         
 
         const html = this._templateService.generateHtml({
@@ -42,15 +39,12 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
             issueDate,
             grade: grade ?? null
         });
-        console.log("html",html);
         
 
         const pdfBuffer = await this._pdfService.generateFromHtml(html);
 
-        console.log("pdfBuffer",pdfBuffer);
         
         const fileKey = `certificates/${courseId}/${learnerId}/${serialNumber}.pdf`;
-        console.log("fileKey",fileKey);
         
         await this._storageService.uploadBuffer(fileKey, pdfBuffer, {
             contentType: "application/pdf"
@@ -69,7 +63,6 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
             learnerName,
             instructorName
         });
-        console.log(certificate,certificate);
         
 
         if(!certificate){

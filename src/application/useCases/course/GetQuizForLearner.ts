@@ -21,6 +21,8 @@ export class GetQuizForLearnerUseCase implements IGetQuizForLearnerUseCase{
         if(progress.progressPercentage!==100){
             throw new AppError(MESSAGES.QUIZ_NOT_ACCESSIBLE,STATUS_CODES.BAD_REQUEST);
         }
+        console.log("CourseId:",courseId);
+        
         
         const quiz= await this._quizRepository.findOne({courseId});
         if(!quiz){

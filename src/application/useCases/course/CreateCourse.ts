@@ -22,23 +22,9 @@ export class CreateCourseUseCase implements ICreateCourseUseCase {
         if (!instructor) {
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND, STATUS_CODES.NOT_FOUND)
         }
-        // if (instructor.verification.status !== "Verified") {
-        //     throw new AppError("Please verify your profile before submitting course for review.")
-        // }
-        // const today= new Date().getDay();
-        // const sameCategoryCourses= await this._courseRepository.findMany({categoryId:input.categoryId});
-        // let count=0;
-        // for(let i=0;i<sameCategoryCourses.length;i++){
-        //     const createdDay= new Date(sameCategoryCourses[i].createdAt).getDay;
-        //     if(createdDay===today){
-
-        //     }
-        // }
-        const categoryUseCount= await this._courseRepository.getCategoryUsageCount(input.categoryId)
-        if(categoryUseCount>2){
-            throw new AppError("Category usage limit exceeded",STATUS_CODES.BAD_REQUEST)
+        if (instructor.verification.status !== "Verified") {
+            throw new AppError("Please verify your profile before submitting course for review.",STATUS_CODES.BAD_REQUEST)
         }
-
         const course = await this._courseRepository.create({
             instructorId: input.instructorId,
             title: input.title,

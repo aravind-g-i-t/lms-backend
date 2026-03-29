@@ -47,7 +47,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         const paymentRecord = await this.paymentRepo.findById(paymentId);
 
-        console.log("paymentRecord",paymentRecord);
         
 
         if (!paymentRecord) {
@@ -74,7 +73,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 transactionId: session.payment_intent,
                 enrollmentId
             });
-            console.log("payment",payment);
 
             if (!payment) {
                 throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)
@@ -82,7 +80,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
             const enrollment = await this.enrollmentRepo.findById(enrollmentId);
 
-            console.log("enrollment",enrollment);
 
             if (!enrollment) {
                 throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND)
@@ -127,7 +124,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
             const course = await this._courseRepository.incrementEnrollment(enrollment.courseId);
 
-            console.log("course",course);
             
 
             if (!course) {
@@ -148,7 +144,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 });
             }
 
-            console.log("learnerProgress",learnerProgress);
             
 
             if (!learnerProgress) {
@@ -161,7 +156,6 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
                 progressId: learnerProgress.id
             });
 
-            console.log("updatedEnrollment",updatedEnrollment);
 
             if (!updatedEnrollment) {
                 throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)

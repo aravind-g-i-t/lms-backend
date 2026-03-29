@@ -18,7 +18,6 @@ export class WalletRepositoryImpl extends BaseRepository<Wallet,WalletDoc> imple
       { $inc: {balance:incrementBy} },
       { new: true }
     );
-    console.log(wallet);
     
     return wallet?WalletMapper.toDomain(wallet):null;
   }

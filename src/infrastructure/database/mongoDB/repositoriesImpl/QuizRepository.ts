@@ -61,7 +61,6 @@ export class QuizRepository extends BaseRepository<Quiz,QuizDoc> implements IQui
             order?: number;
         }
     ): Promise<Quiz | null> {
-        console.log(quizId, questionId, data);
 
         const quiz = await QuizModel.findById(quizId);
         if (!quiz) return null;

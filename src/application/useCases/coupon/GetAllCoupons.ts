@@ -9,7 +9,6 @@ export class GetAllCouponsUseCase implements IGetAllCouponsUseCase {
     async execute(input: GetAllCouponsInput): Promise<GetAllCouponsOutput> {
         
         
-        console.log(input);
         
         const { page, search, isActive, limit } = input;  
         

@@ -17,7 +17,6 @@ export abstract class BaseRepository<T, D> implements IBaseRepository<T> {
 
   async findOne(filter: Partial<T>): Promise<T | null> {
     const filterQuery: FilterQuery<T> = filter as FilterQuery<T>;
-    console.log("filter", filter);
     
     const doc = await this.model.findOne(filterQuery).lean();
     return doc ? this.mapper.toDomain(doc as D) : null;

@@ -49,7 +49,6 @@ export class GetLearnerEnrollmentsUseCase implements IGetLearnerEnrollmentsForIn
                 })
             );
 
-            console.log("Enrollments", learnerEnrollments);
             return {learners:learnerEnrollments,total:result.total};
 
         } catch (error) {

@@ -10,7 +10,6 @@ export class UpdateInstructorStatusUseCase implements IUpdateUserStatusUseCase{
     ){}
 
     async execute(id:string):Promise<void>{
-        console.log("entered usecase");
         
         const updated=await this._instructorRepository.updateStatus(id);
         if(!updated){

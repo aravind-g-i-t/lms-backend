@@ -11,13 +11,11 @@ export class AddToFavouritesUseCase implements IAddtoFavouritesUseCase{
 
     async execute(input: { courseId: string; learnerId: string; }): Promise<void> {
         const {courseId,learnerId}=input;
-        console.log("input",input);
         
         const exists = await this._favouriteRepository.exists({
             courseId,
             learnerId
         })
-        console.log(exists);
         
         if(exists){
             return;
@@ -26,7 +24,6 @@ export class AddToFavouritesUseCase implements IAddtoFavouritesUseCase{
             courseId,
             learnerId
         })
-        console.log(created);
         
         if(!created){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR)

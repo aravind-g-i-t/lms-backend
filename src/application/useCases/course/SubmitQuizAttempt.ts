@@ -25,22 +25,17 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
 
     async execute(input: SubmitQuizAttemptInput): Promise<SubmitQuizAttemptOutput> {
         const { quizId, courseId, learnerId, answers } = input;
-        console.log(input);
         
-        // Fetch quiz
         const quiz = await this._quizRepository.findById(quizId);
-        console.log("quiz:",quiz);
         
         if (!quiz) throw new AppError(MESSAGES.QUIZ_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
         const questionMap = new Map(quiz.questions.map(q => [q.id, q]));
-        console.log("questionMap:",questionMap);
         
 
         let score = 0;
         let correctCount = 0;
 
-        // Build answers array
         const builtAnswers = answers.map(a => {
             const q = questionMap.get(a.questionId);
             if (!q) throw new AppError(`Invalid question ID: ${a.questionId}`, 400);
@@ -60,7 +55,6 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
                 pointsEarned
             };
         });
-        console.log("builtAnswers:",builtAnswers);
         
 
         const percentage = Math.round((score / quiz.totalPoints) * 100);
@@ -68,7 +62,6 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
 
 
         const exists = await this._quizAttemptRepository.findOne({quizId, learnerId});
-        console.log("exists",exists);
         
         if (exists) throw new AppError("You can only attend the quiz once.", STATUS_CODES.FORBIDDEN);
 
@@ -88,7 +81,6 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
             answers:builtAnswers
         });
 
-        console.log("quizAttempt",quizAttempt);
         
         if(!quizAttempt){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -98,7 +90,6 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
             quizAttemptId:quizAttempt.id,
             quizAttemptStatus:passed?QuizStatus.Passed:QuizStatus.Failed
         });
-        console.log("progressUpdated",progressUpdated);
 
         if(!progressUpdated){
             throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -112,11 +103,9 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
             status: EnrollmentStatus.Active
         });
         
-        console.log("enrollment",enrollment);
         if (!enrollment) throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
         const learner = await this._learnerRepository.findById(learnerId);
-        console.log("learner",learner);
         if (!learner) throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
         let certificateId: string | null = null;
@@ -133,10 +122,8 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
                 enrollmentId: enrollment.id
             });
         }
-        console.log("certificateId",certificateId);
 
         const enrollmentUpdated= await this._enrollmentRepository.updateById(enrollment.id, { certificate: certificateId ,completedAt:new Date()});
-        console.log("enrollmentUpdated",enrollmentUpdated);
         return { quizAttempt: quizAttempt };
     }
 }

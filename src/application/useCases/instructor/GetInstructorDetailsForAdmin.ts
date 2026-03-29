@@ -16,14 +16,12 @@ export class GetInstructorDetailsForAdminUseCase implements IGetInstructorDetail
     ) { }
 
     async execute(input: { instructorId: string }): Promise<GetInstructorDetailsForAdminOutputDTO> {
-        console.log(input);
         
         const instructor = await this.instructorRepo.findById(input.instructorId);
         if (!instructor) {
             throw new AppError(MESSAGES.INSTRUCTOR_NOT_FOUND, STATUS_CODES.NOT_FOUND);
         }
 
-        console.log(instructor);
         
 
         const courses = await this.courseRepo.findMany({ instructorId: input.instructorId, status:CourseStatus.Published});

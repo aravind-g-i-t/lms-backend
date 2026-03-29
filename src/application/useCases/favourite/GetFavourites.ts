@@ -17,7 +17,6 @@ export class GetFavouritesUseCase implements IGetFavouritesUseCase {
 
     async execute(input: { page?: number, limit: number, search?: string; learnerId: string }): Promise<GetCoursesForLearnerOutput> {
 
-        console.log(input);
 
         const { page, limit, search, learnerId } = input;
         const favourites = await this._favouriteRepository.getFavouriteCourseIdsByLearner(learnerId);
@@ -44,7 +43,6 @@ export class GetFavouritesUseCase implements IGetFavouritesUseCase {
             }
         });
 
-        console.log("result",result);
         
 
 

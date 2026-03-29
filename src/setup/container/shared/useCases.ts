@@ -86,7 +86,7 @@ export const verifyOTPUseCase=new OTPVerificationUseCase(cacheService);
 
 export const resetPasswordUseCase= new ResetPasswordUseCase(learnerRepository,instructorRepository)
 
-export const issueCertificateUseCase=new IssueCertificateUseCase(certificateRepository,certificateTemplateService,pdfGeneratorService,s3Service);
+export const issueCertificateUseCase=new IssueCertificateUseCase(certificateRepository,pdfGeneratorService,s3Service);
 
 export const createCourseUseCase=new CreateCourseUseCase(courseRepository,instructorRepository)
 

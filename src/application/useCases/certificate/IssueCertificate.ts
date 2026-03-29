@@ -10,42 +10,41 @@ import { MESSAGES } from "shared/constants/messages";
 
 
 
-export class IssueCertificateUseCase implements IIssueCertificateUseCase{
+export class IssueCertificateUseCase implements IIssueCertificateUseCase {
     constructor(
         private _certificateRepository: ICertificateRepository,
-        private _templateService: ICertificateTemplateService,
         private _pdfService: IPdfGeneratorService,
         private _storageService: IFileStorageService
-    ) {}
+    ) { }
 
     async execute(input: IssueCertificateInput): Promise<string> {
-        const { learnerId, learnerName, courseId, courseTitle, grade ,enrollmentId,quizAttemptId,instructorName} = input;
+        const { learnerId, learnerName, courseId, courseTitle, grade, enrollmentId, quizAttemptId, instructorName } = input;
 
-        
+
 
         const serialNumber = `CERT-${courseId}-${Date.now()}`;
-        
+
         const issueDate = new Date().toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric"
         });
-        
 
-        const html = this._templateService.generateHtml({
+
+
+        const pdfBuffer = await this._pdfService.generateCertificate({
             learnerName,
             courseTitle,
             serialNumber,
             issueDate,
+            instructorName,
             grade: grade ?? null
         });
-        
 
-        const pdfBuffer = await this._pdfService.generateFromHtml(html);
 
-        
+
         const fileKey = `certificates/${courseId}/${learnerId}/${serialNumber}.pdf`;
-        
+
         await this._storageService.uploadBuffer(fileKey, pdfBuffer, {
             contentType: "application/pdf"
         });
@@ -53,20 +52,20 @@ export class IssueCertificateUseCase implements IIssueCertificateUseCase{
         const certificate = await this._certificateRepository.create({
             learnerId,
             courseId,
-            certificateNumber:serialNumber,
+            certificateNumber: serialNumber,
             issuedAt: new Date(),
             enrollmentId,
             quizAttemptId,
-            certificateUrl:fileKey,
+            certificateUrl: fileKey,
             grade,
             courseTitle,
             learnerName,
             instructorName
         });
-        
 
-        if(!certificate){
-            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG,STATUS_CODES.INTERNAL_SERVER_ERROR);
+
+        if (!certificate) {
+            throw new AppError(MESSAGES.SOMETHING_WENT_WRONG, STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
         return certificate.id

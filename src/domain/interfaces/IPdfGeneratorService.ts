@@ -1,3 +1,10 @@
 export interface IPdfGeneratorService {
-    generateFromHtml(html: string): Promise<Buffer>;
+    generateCertificate(data: {
+        learnerName: string;
+        courseTitle: string;
+        issueDate: string;
+        serialNumber: string;
+        instructorName: string;
+        grade?: number | null;
+    }): Promise<Buffer>
 }

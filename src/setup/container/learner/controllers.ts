@@ -1,8 +1,9 @@
 import { LearnerController } from "@presentation/http/controllers/LearnerController";
-import { addToFavouritesUseCase, cancelEnrollmentUseCase, createReviewUseCase, getEnrollmentsUseCase, getHomePageDataUseCase, getLeanerDataUseCase, getLearnerEnrollmentsForInstructorUseCase, getLearnerHomeDataUseCase, getLearnersUseCase, getReviewsForLearnerUseCase, getWalletDataUseCase, initiateEnrollmentUseCase, markChapterAsCompletedUseCase, removeFromFavouritesUseCase, updateCurrentChapterUseCase, updateLearnerDataUseCase, updateLearnerPasswordUseCase, updateLearnerStatusUseCase, updateReviewUseCase } from "./useCases";
+import { addToFavouritesUseCase, cancelEnrollmentUseCase, createReviewUseCase, getEnrollmentsUseCase, getHomePageDataUseCase, getLeanerDataUseCase, getLearnerEnrollmentsForInstructorUseCase, getLearnerHomeDataUseCase, getLearnerProfilePicUseCase, getLearnersUseCase, getReviewsForLearnerUseCase, getWalletDataUseCase, initiateEnrollmentUseCase, markChapterAsCompletedUseCase, removeFromFavouritesUseCase, updateCurrentChapterUseCase, updateLearnerDataUseCase, updateLearnerPasswordUseCase, updateLearnerStatusUseCase, updateReviewUseCase } from "./useCases";
 import { EnrollmentController } from "@presentation/http/controllers/EnrollmentController";
 import { ProgressController } from "@presentation/http/controllers/ProgressController";
 import { ReviewController } from "@presentation/http/controllers/ReviewController";
+import { s3Service } from "../shared/services";
 
 export const learnerController= new LearnerController(
     getLearnersUseCase,
@@ -14,7 +15,9 @@ export const learnerController= new LearnerController(
     removeFromFavouritesUseCase,
     getLearnerHomeDataUseCase,
     getHomePageDataUseCase,
-    getWalletDataUseCase
+    getWalletDataUseCase,
+    getLearnerProfilePicUseCase,
+    s3Service
 );
 
 export const enrollmentController = new EnrollmentController(

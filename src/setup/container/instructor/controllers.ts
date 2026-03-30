@@ -1,10 +1,11 @@
 
 import { InstructorController } from "@presentation/http/controllers/InstructorController";
-import { addQuestionUseCase, applyForVerificationUseCase, cancelLiveSessionUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorDetailsForAdminUseCase, getInstructorDetailsForLearnerUseCase, getInstructorEarningsUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
+import { addQuestionUseCase, applyForVerificationUseCase, cancelLiveSessionUseCase, createQuizUseCase, deleteQuestionUseCase, deleteQuizUseCase, endLiveSessionUseCase, getInstructorDashboardData, getInstructorDataUseCase, getInstructorDetailsForAdminUseCase, getInstructorDetailsForLearnerUseCase, getInstructorEarningsUseCase, getInstructorProfilePicUseCase, getInstructorsUseCase, getQuizForLearnerUseCase, getSessionListForInstructor, joinLiveSessionUseCase, scheduleLiveSessionUseCase, startLiveSessionUseCase, submitQuizAttemptUseCase, updateInstructorDataUseCase, updateInstructorPasswordUseCase, updateInstructorStatusUseCase, updateQuestionUseCase, updateQuizUseCase, updateVerificationStatusUseCase } from "./useCases";
 import { QuizController } from "@presentation/http/controllers/QuizController";
 import { getCertificatesUseCase } from "../admin/useCases";
 import { LiveSessionController } from "@presentation/http/controllers/LiveSessionController";
 import { getLiveSessionsForLearner } from "../learner/useCases";
+import { s3Service } from "../shared/services";
 
 
 
@@ -21,7 +22,9 @@ export const instructorController=new InstructorController(
     getInstructorEarningsUseCase,
     getInstructorDashboardData,
     getInstructorDetailsForLearnerUseCase,
-    getInstructorDetailsForAdminUseCase
+    getInstructorDetailsForAdminUseCase,
+    getInstructorProfilePicUseCase,
+    s3Service
 );
 
 export const quizController = new QuizController(

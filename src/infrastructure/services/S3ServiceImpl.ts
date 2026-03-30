@@ -117,4 +117,19 @@ export class S3ServiceImpl implements IFileStorageService {
         await this.s3.send(command);
     }
 
+    async proxyFile(key: string, res: Response) {
+        const command = new GetObjectCommand({
+            Bucket: this.bucketName,
+            Key: key,
+        });
+
+        const s3Response = await this.s3.send(command);
+        const stream = s3Response.Body as Readable;
+
+        res.setHeader("Content-Type", s3Response.ContentType || "image/jpeg");
+        res.setHeader("Cache-Control", "private, max-age=86400"); // cache 1 day in browser
+
+        stream.pipe(res);
+    }
+
 }

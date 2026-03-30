@@ -28,6 +28,7 @@ import { UpdateReviewUseCase } from "@application/useCases/review/UpdateReview";
 import { GetLearnerEnrollmentsUseCase } from "@application/useCases/enrollment/GetLearnerEnrollmentsForInstructor";
 import { CancelEnrollmentUseCase } from "@application/useCases/enrollment/CancelEnrollment";
 import { GetWalletDataUseCase } from "@application/useCases/wallet/GetWalletData";
+import { GetLearnerProfilePicUseCase } from "@application/useCases/learner/GetProfilePic";
 
 export const getLearnersUseCase=new GetLearnersUseCase(learnerRepository,s3Service)
 
@@ -91,3 +92,5 @@ export const getLearnerEnrollmentsForInstructorUseCase= new GetLearnerEnrollment
 export const cancelEnrollmentUseCase= new CancelEnrollmentUseCase(enrollmentRepository,paymentRepository,instructorEarningsRepository,walletRepository,instructorWalletRepository,walletTransactionRepository,courseRepository)
 
 export const getWalletDataUseCase= new GetWalletDataUseCase(walletRepository,walletTransactionRepository)
+
+export const getLearnerProfilePicUseCase= new GetLearnerProfilePicUseCase(learnerRepository)

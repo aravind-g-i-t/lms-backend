@@ -25,6 +25,10 @@ instructorRouter.patch(ROUTES.PROFILE,instructorAuthMiddleware,validateRequest(U
 
 instructorRouter.patch(ROUTES.IMAGE,instructorAuthMiddleware,validateRequest(UpdateUserProfileImageRequestSchema),(req:Request,res:Response,next:NextFunction)=>instructorController.updateProfileImage(req,res,next));
 
+// Get instructor profile image
+
+instructorRouter.get(ROUTES.IMAGE,instructorAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getProfilePic(req,res,next));
+
 // Update instructor expertise
 
 instructorRouter.patch(ROUTES.EXPERTISE,instructorAuthMiddleware,validateRequest(UpdateInstructorExpertiseRequestSchema),(req:Request,res:Response,next:NextFunction)=>instructorController.updateExpertise(req,res,next));

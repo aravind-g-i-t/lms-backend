@@ -29,6 +29,7 @@ import { CancelLiveSessionUseCase } from "@application/useCases/liveSession/Canc
 import { ReleaseInstructorEarningsUseCase } from "@application/useCases/payment/ReleaseInstructorEarnings";
 import { GetInstructorDetailsForLearnerUseCase } from "@application/useCases/instructor/GetInstructorDetailsForLearner";
 import { GetInstructorDetailsForAdminUseCase } from "@application/useCases/instructor/GetInstructorDetailsForAdmin";
+import { GetInstructorProfilePicUseCase } from "@application/useCases/instructor/GetProfilePic";
 
 export const getInstructorsUseCase = new GetInstructorsUseCase(instructorRepository,s3Service);
 
@@ -81,3 +82,5 @@ export const releaseInstructorEarningsUseCase= new ReleaseInstructorEarningsUseC
 export const getInstructorDetailsForLearnerUseCase= new GetInstructorDetailsForLearnerUseCase(instructorRepository,courseRepository,s3Service)
 
 export const getInstructorDetailsForAdminUseCase= new GetInstructorDetailsForAdminUseCase(instructorRepository,courseRepository,s3Service)
+
+export const getInstructorProfilePicUseCase= new GetInstructorProfilePicUseCase(instructorRepository)

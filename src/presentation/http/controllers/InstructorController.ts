@@ -17,6 +17,8 @@ import { IGetInstructorEarningsUseCase } from "@application/IUseCases/instructor
 import { IGetInstructorDashboardUseCase } from "@application/IUseCases/instructor/IGetInstructorDashboard";
 import { IGetInstructorDetailsForLearnerUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForLearner";
 import { IGetInstructorDetailsForAdminUseCase } from "@application/IUseCases/instructor/IGetInstructorDetailsForAdmin";
+import { IGetProfilePicUseCase } from "@application/IUseCases/shared/IGetProfilePic";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 export class InstructorController {
     constructor(
@@ -30,7 +32,9 @@ export class InstructorController {
         private _getInstructorEarnings:IGetInstructorEarningsUseCase,
         private _getInstructorDashboard:IGetInstructorDashboardUseCase,
         private _getInstructorDetailsForLearner:IGetInstructorDetailsForLearnerUseCase,
-        private _getInstructorDetailsForAdmin:IGetInstructorDetailsForAdminUseCase
+        private _getInstructorDetailsForAdmin:IGetInstructorDetailsForAdminUseCase,
+        private _getProfilePicUseCase: IGetProfilePicUseCase,
+        private _fileStorageService: IFileStorageService
 
     ) { }
 
@@ -338,6 +342,28 @@ export class InstructorController {
             next(error);
         }
     }
+
+    async getProfilePic(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    
+            try {
+    
+                const instructorId = req.user?.id
+                if (!instructorId) {
+                    throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND)
+                }
+    
+    
+                const profilePic = await this._getProfilePicUseCase.execute(instructorId);
+                if (!profilePic) {
+                    return res.redirect("/images/default-profile.jpg");
+                }
+                await this._fileStorageService.proxyFile(profilePic, res);
+    
+    
+            } catch (error) {
+                next(error);
+            }
+        }
 }
 
 

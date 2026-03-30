@@ -16,6 +16,8 @@ import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { IGetLearnerHomeDataUseCase } from "@application/IUseCases/course/IGetHomeData";
 import { IGetHomePageDataUseCase } from "@application/dtos/learner/IGetHomePageData";
 import { IGetWalletDataUseCase } from "@application/IUseCases/wallet/IGetWalletData";
+import { IGetProfilePicUseCase } from "@application/IUseCases/shared/IGetProfilePic";
+import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 
 export class LearnerController {
     constructor(
@@ -27,8 +29,10 @@ export class LearnerController {
         private _addToFavouritesUseCase: IAddtoFavouritesUseCase,
         private _removeFromFavouritesUseCase: IRemoveFromFavouritesUseCase,
         private _getLearnerHomeDataUseCase: IGetLearnerHomeDataUseCase,
-        private _getHomePageDataUseCase:IGetHomePageDataUseCase,
-        private _getWalletDataUseCase:IGetWalletDataUseCase
+        private _getHomePageDataUseCase: IGetHomePageDataUseCase,
+        private _getWalletDataUseCase: IGetWalletDataUseCase,
+        private _getProfilePicUseCase: IGetProfilePicUseCase,
+        private _fileStorageService: IFileStorageService
     ) { }
 
     getLearners = async (
@@ -293,9 +297,9 @@ export class LearnerController {
     ) => {
         try {
 
-            
+
             const result = await this._getHomePageDataUseCase.execute();
-            
+
 
             res.status(STATUS_CODES.OK)
                 .json(
@@ -350,8 +354,8 @@ export class LearnerController {
 
             const result = await this._getWalletDataUseCase.execute({
                 learnerId,
-                page:Number(page),
-                limit:Number(limit)
+                page: Number(page),
+                limit: Number(limit)
             });
 
             res.status(STATUS_CODES.OK)
@@ -363,4 +367,28 @@ export class LearnerController {
             next(error);
         }
     };
+
+
+    async getProfilePic(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+
+        try {
+
+
+            const learnerId = req.user?.id
+            if (!learnerId) {
+                throw new AppError(MESSAGES.LEARNER_NOT_FOUND, STATUS_CODES.NOT_FOUND)
+            }
+
+
+            const profilePic = await this._getProfilePicUseCase.execute(learnerId);
+            if (!profilePic) {
+                return res.redirect("/images/default-profile.jpg");
+            }
+            await this._fileStorageService.proxyFile(profilePic, res);
+
+
+        } catch (error) {
+            next(error);
+        }
+    }
 }

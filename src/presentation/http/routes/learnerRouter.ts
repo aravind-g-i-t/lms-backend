@@ -23,6 +23,12 @@ learnerRouter.patch(ROUTES.PROFILE,learnerAuthMiddleware,validateRequest(UpdateL
 
 learnerRouter.patch(ROUTES.IMAGE,learnerAuthMiddleware,validateRequest(UpdateUserProfileImageRequestSchema),(req:Request,res:Response,next:NextFunction)=>learnerController.updateProfileImage(req,res,next));
 
+
+
+// Get learner profile Image
+
+learnerRouter.get(ROUTES.IMAGE,learnerAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>learnerController.getProfilePic(req,res,next));
+
 // Update learner password
 
 learnerRouter.patch(ROUTES.PASSWORD,learnerAuthMiddleware,validateRequest(UpdatePasswordSchema),(req:Request,res:Response,next:NextFunction)=>learnerController.updatePassword(req,res,next));

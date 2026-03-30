@@ -24,4 +24,6 @@ export interface IFileStorageService {
 
     deleteFile(key: string): Promise<void>
 
+    proxyFile(key: string, res: Response): Promise<void>;
+
 }

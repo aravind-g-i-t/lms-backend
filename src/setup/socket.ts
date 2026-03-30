@@ -4,14 +4,9 @@ import { UserRole } from "@domain/entities/Message";
 import { MessageForListing } from "@application/dtos/message/GetConversations";
 import { sendMessageUseCase, getUnreadMessagesCountUseCase, markMessagesReadUseCase } from "./container/shared/useCases";
 import { presenceService } from "./container/shared/services";
+import { getSessionDetailsUseCase } from "./container/learner/useCases";
 
-// interface OnlineUser {
-//     userId: string;
-//     socketId: string;
-//     userType: 'learner' | 'instructor';
-// }
 
-// type CallType= "audio"|"video";
 
 export interface Attachment {
     id: string | null
@@ -43,11 +38,9 @@ export function initializeSockets(server: http.Server) {
 
 
     const userSockets = new Map<string, Set<string>>();
-    // Track socket metadata: socketId -> user info
     const socketMetadata = new Map<string, { userId: string, userType: 'learner' | 'instructor' }>();
 
     io.use((socket: AuthenticatedSocket, next) => {
-        // TODO: Validate token/session here
         next();
     });
 
@@ -95,8 +88,7 @@ export function initializeSockets(server: http.Server) {
 
             io.to(userId).emit("unread_count", unreadCount)
 
-            // Only emit status change if user wasn't online before
-            // if (!presenceService.isOnline(userId)) {
+
                 const eventName = userType === 'learner' ? 'learnerStatusChanged' : 'instructorStatusChanged';
                 const userIdKey = userType === 'learner' ? 'learnerId' : 'instructorId';
 
@@ -105,20 +97,7 @@ export function initializeSockets(server: http.Server) {
                     isOnline: true,
                     timestamp: new Date()
                 });
-            // }
 
-            // Send current online users to the newly connected user
-            // const onlineUserIds = Array.from(userSockets.keys());
-            // const onlineUsersList = onlineUserIds.map(uid => {
-            //     const socketIds = userSockets.get(uid)!;
-            //     const firstSocketId = Array.from(socketIds)[0];
-            //     const metadata = socketMetadata.get(firstSocketId);
-            //     return {
-            //         userId: uid,
-            //         userType: metadata?.userType
-            //     };
-            // });
-            // socket.emit("onlineUsers", onlineUsersList);
         });
 
         socket.on("joinChat", (conversationId: string) => {
@@ -357,20 +336,48 @@ export function initializeSockets(server: http.Server) {
 
         socket.on(
             "startLiveSession",
-            ({ sessionId, courseId }) => {
+            async ({ sessionId }) => {
                 if (!socket.userId || socket.userType !== "instructor") return;
 
                 // Join instructor to session socket room
                 socket.join(`live:${sessionId}`);
 
                 // Notify learners (you likely already know enrolled learners via courseId)
-                io.emit("liveSessionStarted", {
-                    sessionId,
-                    courseId,
-                    startedAt: new Date(),
-                });
+                // io.emit("liveSessionStarted", {
+                //     sessionId,
+                //     courseId,
+                //     startedAt: new Date(),
+                // });
 
+                const { learnerIds,sessionDetails } = await getSessionDetailsUseCase.execute(sessionId);
+                io.to(learnerIds).emit("liveSessionStarted", sessionDetails);
                 console.log("Live session started:", sessionId);
+
+            }
+        );
+
+        socket.on(
+            "cancelLiveSession",
+            async ({ sessionId }) => {
+                
+                const { learnerIds,sessionDetails } = await getSessionDetailsUseCase.execute(sessionId);
+                io.to(learnerIds).emit("liveSessionCancelled", sessionDetails);
+                console.log("Live session cancelled:", sessionId);
+
+            }
+        );
+
+        socket.on(
+            "scheduleLiveSession",
+            async ({ sessionId }) => {
+
+                const { learnerIds,sessionDetails } = await getSessionDetailsUseCase.execute(sessionId);
+
+                io.to(learnerIds).emit("liveSessionScheduled", sessionDetails);
+
+                console.log(
+                    `Live session is scheduled for ${sessionDetails.courseTitle} at ${sessionDetails.scheduledAt} and notifications sent to enrolled learners`
+                );
             }
         );
 
@@ -396,7 +403,7 @@ export function initializeSockets(server: http.Server) {
 
         socket.on(
             "endLiveSession",
-            ({ sessionId }) => {
+            async ({ sessionId }) => {
                 if (!socket.userId || socket.userType !== "instructor") return;
 
                 io.to(`live:${sessionId}`).emit("liveSessionEnded", {

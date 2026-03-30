@@ -398,4 +398,9 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
             }
         ]);
     }
+
+    async getEnrolledLearners(courseId: string): Promise<string[]> {
+        const learnerIds= await EnrollmentModel.distinct("learnerId", { courseId }).exec();
+        return learnerIds.map(id => id.toString());
+    }
 }

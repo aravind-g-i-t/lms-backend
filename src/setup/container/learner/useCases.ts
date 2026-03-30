@@ -29,6 +29,7 @@ import { GetLearnerEnrollmentsUseCase } from "@application/useCases/enrollment/G
 import { CancelEnrollmentUseCase } from "@application/useCases/enrollment/CancelEnrollment";
 import { GetWalletDataUseCase } from "@application/useCases/wallet/GetWalletData";
 import { GetLearnerProfilePicUseCase } from "@application/useCases/learner/GetProfilePic";
+import { GetSessionDetailsUseCase } from "@application/useCases/liveSession/GetSessionDetails";
 
 export const getLearnersUseCase=new GetLearnersUseCase(learnerRepository,s3Service)
 
@@ -94,3 +95,5 @@ export const cancelEnrollmentUseCase= new CancelEnrollmentUseCase(enrollmentRepo
 export const getWalletDataUseCase= new GetWalletDataUseCase(walletRepository,walletTransactionRepository)
 
 export const getLearnerProfilePicUseCase= new GetLearnerProfilePicUseCase(learnerRepository)
+
+export const getSessionDetailsUseCase= new GetSessionDetailsUseCase(liveSessionRepository,enrollmentRepository)

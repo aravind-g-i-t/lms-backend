@@ -122,7 +122,10 @@ export const ROUTES = {
 
     WALLET:"/wallet",
 
-    INSTRUCTOR_DETAILS:"/instructor/details"
+    INSTRUCTOR_DETAILS:"/instructor/details",
+
+    REVENUE_LIST:"/revenue/list",
+    REVENUE_STATS:"/revenue/stats"
 
 
 } as const;

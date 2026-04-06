@@ -18,6 +18,11 @@ import { IGetHomePageDataUseCase } from "@application/dtos/learner/IGetHomePageD
 import { IGetWalletDataUseCase } from "@application/IUseCases/wallet/IGetWalletData";
 import { IGetProfilePicUseCase } from "@application/IUseCases/shared/IGetProfilePic";
 import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
+import { UpdateLearnerProfileRequestSchema } from "@presentation/dtos/learner/UpdateProfile";
+import { UpdateUserProfileImageRequestSchema } from "@presentation/dtos/shared/UpdateProfileImage";
+import { UpdatePasswordSchema } from "@presentation/dtos/shared/UpdatePassword";
+import { UpdateUserStatusRequestSchema } from "@presentation/dtos/shared/UpdateUserStatus";
+import { GetLearnerForAdminRequestSchema } from "@presentation/dtos/learner/GetLearnerForAdmin";
 
 export class LearnerController {
     constructor(
@@ -74,7 +79,8 @@ export class LearnerController {
         next: NextFunction
     ) => {
         try {
-            const { id } = req.body;
+            const { body } = UpdateUserStatusRequestSchema.parse(req);
+            const { id } = body;
             await this._updateLearnerStatusUseCase.execute(id);
 
             res
@@ -100,8 +106,10 @@ export class LearnerController {
                 );
             }
 
+            const { body } = UpdateLearnerProfileRequestSchema.parse(req);
+
             await this._updateLearnerDataUseCase.execute(learnerId, {
-                name: req.body.name,
+                name: body.name,
             });
 
             res
@@ -127,8 +135,10 @@ export class LearnerController {
                 );
             }
 
+            const { body } = UpdateUserProfileImageRequestSchema.parse(req);
+
             await this._updateLearnerDataUseCase.execute(learnerId, {
-                profilePic: req.body.imageURL,
+                profilePic: body.imageURL,
             });
 
             res
@@ -154,7 +164,9 @@ export class LearnerController {
                 );
             }
 
-            const { currentPassword, newPassword } = req.body;
+            const { body } = UpdatePasswordSchema.parse(req);
+
+            const { currentPassword, newPassword } = body;
             await this._updatePassword.execute(
                 learnerId,
                 currentPassword,
@@ -205,7 +217,8 @@ export class LearnerController {
         next: NextFunction
     ) => {
         try {
-            const { id } = req.params;
+            const { params } = GetLearnerForAdminRequestSchema.parse(req);
+            const { id } = params;
             if (!id) {
                 throw new AppError(
                     MESSAGES.SERVER_ERROR,

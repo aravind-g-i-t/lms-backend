@@ -45,6 +45,16 @@ export interface LearnerForListing {
     profilePic: string
 }
 
+export interface RevenueListItem {
+    id: string;
+    learnerName: string;
+    courseTitle: string;
+    amount: number;
+    status: string;
+    method: string;
+    date: Date;
+}
+
 export interface LearnerEnrollmentsOutput {
     learner: LearnerForListing;
     enrollments: EnrollmentForListing[];
@@ -92,6 +102,6 @@ export interface IEnrollmentRepository extends IBaseRepository<Enrollment> {
 
     getEnrolledLearners(courseId: string): Promise<string[]>
 
-
+    getRevenueList(page: number, limit: number): Promise<{ enrollments: RevenueListItem[]; totalCount: number, totalPages: number; }>
 }
 

@@ -6,12 +6,14 @@ import { IFileStorageService } from "@domain/interfaces/IFileStorageService";
 import { STATUS_CODES } from "shared/constants/httpStatus";
 import { AppError } from "shared/errors/AppError";
 import { MESSAGES } from "shared/constants/messages";
+import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 
 export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerUseCase {
     constructor(
         private _courseRepository: ICourseRepository,
         private _fileStorageService: IFileStorageService,
-        private _progressRepository: ILearnerProgressRepository
+        private _progressRepository: ILearnerProgressRepository,
+        private _enrollmentRepository:IEnrollmentRepository
     ) { }
 
     async execute({ courseId, learnerId }: { courseId: string; learnerId: string }): Promise<GetFullCourseForLearnerOutput> {
@@ -19,6 +21,10 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
         const course = await this._courseRepository.findHydratedCourseById(courseId);
         if (!course) {
             throw new AppError(MESSAGES.COURSE_NOT_FOUND, STATUS_CODES.BAD_REQUEST)
+        }
+        const enrollment= await this._enrollmentRepository.findOne({courseId,learnerId});
+        if(!enrollment){
+            throw new AppError(MESSAGES.UNAUTHORIZED,STATUS_CODES.UNAUTHORIZED)
         }
         const progress = await this._progressRepository.findByLearnerAndCourseAndUpdate(
             learnerId,
@@ -83,7 +89,8 @@ export class GetFullCourseForLearnerUseCase implements IGetFullCourseForLearnerU
             completedChapters: progress.completedChapters,
             progressPercentage: progress.progressPercentage,
             currentChapterId: currentChapterId,
-            quizStatus: progress.quizAttemptStatus
+            quizStatus: progress.quizAttemptStatus,
+            enrolledAt: enrollment.enrolledAt
         };
 
     }

@@ -1,4 +1,4 @@
-import {  HydratedEnrollment, IEnrollmentRepository, LearnerEnrollmentsOutput } from "@domain/interfaces/IEnrollmentRepository";
+import { HydratedEnrollment, IEnrollmentRepository, LearnerEnrollmentsOutput, RevenueListItem } from "@domain/interfaces/IEnrollmentRepository";
 import { EnrollmentDoc, EnrollmentModel } from "../models/EnrollmentModel";
 import { EnrollmentMapper } from "../mappers/EnrollmentMapper";
 import { Enrollment, EnrollmentStatus } from "@domain/entities/Enrollment";
@@ -7,32 +7,36 @@ import { LearnerDoc } from "../models/LearnerModel";
 import { PaymentDoc } from "../models/PaymentModel";
 import { FilterQuery, Types } from "mongoose";
 import { LearnerProgressDoc } from "../models/LearnerProgressModel";
+import { Payment } from "@domain/entities/Payment";
+
+
+
 
 interface AggregatedLearnerEnrollments {
-  _id: Types.ObjectId;
-  learner: {
-    name: string;
-    email: string;
-    profilePic?: string;
-  };
-  enrollments: {
-    id: Types.ObjectId;
-    courseTitle: string;
-    grossAmount: number;
-    duration: number;
-    thumbnail: string;
-    paidAmount: number;
-    progressPercentage: number;
-    enrolledAt: Date;
-    status: string;
-    completedAt?: Date;
-    cancelledAt?: Date;
-    courseId: Types.ObjectId;
-  }[];
+    _id: Types.ObjectId;
+    learner: {
+        name: string;
+        email: string;
+        profilePic?: string;
+    };
+    enrollments: {
+        id: Types.ObjectId;
+        courseTitle: string;
+        grossAmount: number;
+        duration: number;
+        thumbnail: string;
+        paidAmount: number;
+        progressPercentage: number;
+        enrolledAt: Date;
+        status: string;
+        completedAt?: Date;
+        cancelledAt?: Date;
+        courseId: Types.ObjectId;
+    }[];
 }
 
 
-export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,EnrollmentDoc> implements IEnrollmentRepository {
+export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment, EnrollmentDoc> implements IEnrollmentRepository {
 
     constructor() {
         super(EnrollmentModel, EnrollmentMapper)
@@ -313,7 +317,7 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
                             status: "$status",
                             completedAt: "$completedAt",
                             cancelledAt: "$cancelledAt",
-                            courseId:"$courseId"
+                            courseId: "$courseId"
                         },
                     },
                 },
@@ -338,8 +342,8 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
         const total = result[0].total[0]?.count ?? 0;
 
         return {
-            
-            data: data.map((doc:AggregatedLearnerEnrollments) => ({
+
+            data: data.map((doc: AggregatedLearnerEnrollments) => ({
                 id: doc._id.toString(),
                 learner: doc.learner,
                 enrollments: doc.enrollments,
@@ -357,7 +361,7 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
         }).exec();
     }
 
-    getTopInstructorsByEnrollments(limit: number): Promise<{ instructorId: string; enrollments: number ,name:string; profilePic: string|null }[]> {
+    getTopInstructorsByEnrollments(limit: number): Promise<{ instructorId: string; enrollments: number, name: string; profilePic: string | null }[]> {
         return EnrollmentModel.aggregate([
             {
                 $match: {
@@ -399,8 +403,68 @@ export class EnrollmentRepositoryImpl extends BaseRepository<Enrollment,Enrollme
         ]);
     }
 
+
     async getEnrolledLearners(courseId: string): Promise<string[]> {
-        const learnerIds= await EnrollmentModel.distinct("learnerId", { courseId }).exec();
+        const learnerIds = await EnrollmentModel.distinct("learnerId", { courseId }).exec();
         return learnerIds.map(id => id.toString());
+    }
+
+
+    async getRevenueList(page: number, limit: number): Promise<{ enrollments: RevenueListItem[]; totalCount: number, totalPages: number; }> {
+
+        console.log(page,limit)
+        const items = await EnrollmentModel.aggregate([
+            {
+                $match: {
+                    status: { $in: [EnrollmentStatus.Active, EnrollmentStatus.Cancelled] }
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            },
+            {
+                $skip: (page - 1) * limit
+            },
+            {
+                $limit: limit
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "paymentId",
+                    foreignField: "_id",
+                    as: "payment"
+                }
+            },
+            {
+                $unwind: "$payment"
+            },
+        ]);
+
+        console.log(items);
+        
+
+        const totalCount = await EnrollmentModel.countDocuments({
+            status: { $in: [EnrollmentStatus.Active, EnrollmentStatus.Cancelled] }
+        }).exec();
+
+        console.log(totalCount);
+        
+
+        return {
+            enrollments: items.map((item: any) => ({
+                id: item._id.toString(),
+                learnerName: item.learnerName,
+                courseTitle: item.courseTitle,
+                amount: item.payment.paidAmount,
+                status: item.status,
+                method: item.payment.method,
+                date: item.createdAt,
+            })),
+            totalCount,
+            totalPages: Math.ceil(totalCount / limit)
+        };
+
+
     }
 }

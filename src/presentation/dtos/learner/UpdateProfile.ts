@@ -9,11 +9,5 @@ export const UpdateLearnerProfileRequestSchema = z.object({
     }),
 });
 
-export type UpdateLearnerProfileRequestDTO = z.infer<typeof UpdateLearnerProfileRequestSchema>;
 
-export interface UpdateLearnerProfileResponseDTO {
-    success: boolean,
-    message: string,
-    name: string,
-    imageURL: string | null
-}
+

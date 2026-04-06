@@ -94,6 +94,8 @@ export const MESSAGES = {
 
 
     ENROLLMENT_NOT_FOUND:"Enrollment not found.",
+    PROGRESS_LIMIT_EXCEEDED:"Cannot cancel enrollment as you have made more than 20% progress in the course.",
+    COURSE_NOT_COMPLETED:"You can only review a course after completing it",
 
 
     PAYMENT_NOT_FOUND:'Payment not found',

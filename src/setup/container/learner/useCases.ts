@@ -90,10 +90,11 @@ export const updateReviewUseCase= new UpdateReviewUseCase(reviewRepository,enrol
 
 export const getLearnerEnrollmentsForInstructorUseCase= new GetLearnerEnrollmentsUseCase(enrollmentRepository,s3Service);
 
-export const cancelEnrollmentUseCase= new CancelEnrollmentUseCase(enrollmentRepository,paymentRepository,instructorEarningsRepository,walletRepository,instructorWalletRepository,walletTransactionRepository,courseRepository)
+export const cancelEnrollmentUseCase= new CancelEnrollmentUseCase(enrollmentRepository,paymentRepository,instructorEarningsRepository,walletRepository,instructorWalletRepository,walletTransactionRepository,courseRepository,learnerProgressRepository)
 
 export const getWalletDataUseCase= new GetWalletDataUseCase(walletRepository,walletTransactionRepository)
 
 export const getLearnerProfilePicUseCase= new GetLearnerProfilePicUseCase(learnerRepository)
 
 export const getSessionDetailsUseCase= new GetSessionDetailsUseCase(liveSessionRepository,enrollmentRepository)
+

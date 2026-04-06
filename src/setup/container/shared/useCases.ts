@@ -122,7 +122,7 @@ export const getCoursesForLearnerUseCase = new GetCoursesForLearnerUseCase(cours
 
 export const getCourseDetailsForLearner = new GetCourseDetailsForLearnerUseCase(courseRepository,s3Service,enrollmentRepository,favouriteRepository,learnerProgressRepository)
 
-export const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository)
+export const getFullCourseForLearnerUseCase = new GetFullCourseForLearnerUseCase(courseRepository,s3Service,learnerProgressRepository,enrollmentRepository)
 
 
 export const getCourseDetailsForCheckout= new GetCourseDetailsForCheckoutUseCase(courseRepository,s3Service,getValidCouponsUseCase,walletRepository);

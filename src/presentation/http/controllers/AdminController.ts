@@ -10,6 +10,8 @@ import { MESSAGES } from "shared/constants/messages";
 import { ResponseBuilder } from "shared/utils/ResponseBuilder";
 import { AppError } from "shared/errors/AppError";
 import { IGetAdminDashboardUseCase } from "@application/IUseCases/admin/IGetAdminDashboard";
+import { IGetRevenueListUseCase } from "@application/IUseCases/admin/IGetRevenueList";
+import { IGetRevenueStatsUseCase } from "@application/IUseCases/admin/IGetRevenueStats";
 
 const accessTokenCookieMaxAge= parseInt(process.env.ACCESS_TOKEN_COOKIE_MAX_AGE!)
 const refreshTokenCookieMaxAge= parseInt(process.env.REFRESH_TOKEN_COOKIE_MAX_AGE!)
@@ -18,7 +20,9 @@ export class AdminController {
     constructor(
         private _adminSigninUseCase: IAdminSigninUseCase,
         private _refreshTokenUseCase: IRefreshTokenUseCase,
-        private _getAdminDashboardUseCase:IGetAdminDashboardUseCase
+        private _getAdminDashboardUseCase:IGetAdminDashboardUseCase,
+        private _getRevenueStatsUseCase:IGetRevenueStatsUseCase,
+        private _getRevenueListUseCase:IGetRevenueListUseCase
     ) { }
 
     signin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -101,36 +105,28 @@ export class AdminController {
 
     
 
-    // refreshToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-    //     try {
+    getRevenueStats = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            logger.info("Request received to get revenue stats.")
+            const result = await this._getRevenueStatsUseCase.execute();
+            logger.info("Revenue stats fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Revenue stats fetched successfully.", result))
+        } catch (error) {
+            logger.warn("Failed to fetch revenue stats.")
+            next(error)
+        }
+    }
 
-    //         const refreshToken = req.cookies?.adminRefreshToken
-
-    //         if (!refreshToken) {
-    //             res.status(STATUS_CODES.BAD_REQUEST).json({
-    //                 success: false,
-    //                 message: MESSAGES.SESSION_EXPIRED,
-    //             });
-    //             return;
-    //         }
-
-
-    //         const accessToken = await this._refreshTokenUseCase.execute(refreshToken);
-
-    //         const response: RefreshTokenResponseDTO = {
-    //             success: true,
-    //             message: MESSAGES.REFRESH_TOKEN_SUCCESS,
-    //             accessToken
-    //         }
-
-    //         res.status(STATUS_CODES.OK).json(response);
-    //     } catch (error) {
-    //         res.clearCookie("adminRefreshToken", {
-    //             httpOnly: true,
-    //             secure: process.env.NODE_ENV === "production",
-    //             sameSite: "strict",
-    //         });
-    //         next(error)
-    //     }
-    // }
+    getRevenueList = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            logger.info("Request received to get revenue list.")
+            const {page, limit} = req.query;
+            const result = await this._getRevenueListUseCase.execute( Number(page), Number(limit));
+            logger.info("Revenue list fetched successfully.")
+            res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Revenue list fetched successfully.", result))
+        } catch (error) {
+            logger.warn("Failed to fetch revenue list.")
+            next(error)
+        }
+    }
 }

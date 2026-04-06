@@ -124,6 +124,9 @@ export class SubmitQuizAttemptUseCase implements ISubmitQuizAttemptUseCase {
         }
 
         const enrollmentUpdated= await this._enrollmentRepository.updateById(enrollment.id, { certificate: certificateId ,completedAt:new Date()});
-        return { quizAttempt: quizAttempt };
+        return { 
+            quizAttempt: quizAttempt,
+            questions:quiz.questions
+        };
     }
 }

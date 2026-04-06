@@ -17,6 +17,8 @@ import { GetAdminDashboardUseCase } from "@application/useCases/admin/GetAdminDa
 import { enrollmentRepository, learnerRepository } from "../learner/repostitories";
 import { instructorRepository } from "../instructor/repositories";
 import { courseRepository, paymentRepository } from "../shared/repositories";
+import { GetRevenueListUseCase } from "@application/useCases/admin/GetRevenueList";
+import { GetRevenueStatsUseCase } from "@application/useCases/admin/GetRevenueStats";
 
 export const adminSigninUseCase=new AdminSigninUseCase(adminRepository,tokenService);
 
@@ -45,3 +47,7 @@ export const updateCategoryStatusUseCase = new UpdateCategoryStatusUseCase(categ
 export const getCertificatesUseCase=new GetCertificatesForLearnerUseCase(certificateRepository,s3Service);
 
 export const getAdminDashboardUseCase= new GetAdminDashboardUseCase(enrollmentRepository,learnerRepository,instructorRepository,courseRepository,paymentRepository,s3Service)
+
+export const getRevenueStatsUseCase= new GetRevenueStatsUseCase(paymentRepository,enrollmentRepository)
+
+export const getRevenueListUseCase= new GetRevenueListUseCase(enrollmentRepository)

@@ -103,5 +103,9 @@ adminRouter.get(ROUTES.COURSE_ANALYTICS,adminAuthMiddleware,(req:Request,res:Res
 
 adminRouter.get(ROUTES.INSTRUCTOR_DETAILS,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>instructorController.getInstructorDetailsForAdmin(req,res,next));
 
+adminRouter.get(ROUTES.REVENUE_STATS,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>adminController.getRevenueStats(req,res,next));
+
+adminRouter.get(ROUTES.REVENUE_LIST,adminAuthMiddleware,(req:Request,res:Response,next:NextFunction)=>adminController.getRevenueList(req,res,next));
+
 
 export default adminRouter;

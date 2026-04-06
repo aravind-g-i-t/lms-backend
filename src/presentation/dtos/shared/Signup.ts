@@ -10,14 +10,23 @@ export interface UserSignupResponseDTO {
 
 export const UserSignupRequestSchema = z.object({
     body: z.object({
-        role: z.enum(["learner", "instructor"]),
         name: z.string()
-        .min(1, "Name is required")
-        .max(20, "Name should not exceed 20 characters"),
-        email: z.email("Invalid email format"),
+            .min(1, "Name is required")
+            .max(20, "Name should not exceed 20 characters")
+            .regex(/^[A-Za-z\s]+$/, "Name can only contain alphabets and spaces"),
+
+        email: z.string()
+            .email("Invalid email format")
+            .max(100, "Email cannot exceed 100 characters"),
+
         password: z.string()
-            .min(6, "Password must be at least 6 characters")
-            .max(20, "Password should not exceed 20 characters"),
+            .min(8, "Password must be at least 8 characters")
+            .max(30, "Password cannot exceed 30 characters")
+            .regex(/[A-Z]/, "Must contain uppercase letter")
+            .regex(/[a-z]/, "Must contain lowercase letter")
+            .regex(/\d/, "Must contain a number")
+            .regex(/[@$!%*?&#]/, "Must contain special character"),
+
     })
 });
 

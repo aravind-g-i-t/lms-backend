@@ -18,13 +18,16 @@ export class CreateReviewUseCase implements ICreateReviewUseCase{
 
     async execute(input:{learnerId:string; courseId:string; rating:1|2|3|4|5; reviewText:string|null}):Promise<Review>{
         const {learnerId,courseId,rating,reviewText}=input
-        const isEnrolled= await this._enrollmentRepository.findOne({
+        const enrollment= await this._enrollmentRepository.findOne({
             learnerId,
             courseId,
             status:EnrollmentStatus.Active
         });
-        if(!isEnrolled){
+        if(!enrollment){
             throw new AppError(MESSAGES.UNAUTHORIZED,STATUS_CODES.UNAUTHORIZED)
+        }
+        if(!enrollment.completedAt){
+            throw new AppError(MESSAGES.COURSE_NOT_COMPLETED,STATUS_CODES.BAD_REQUEST)
         }
 
         const existingReview = await this._reviewRepository.findOne({

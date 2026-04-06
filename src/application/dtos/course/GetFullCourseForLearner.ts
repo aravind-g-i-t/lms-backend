@@ -59,5 +59,6 @@ export interface GetFullCourseForLearnerOutput {
     completedChapters:string[];
     totalChapters:number;
     currentChapterId:string|null;
-    quizStatus:QuizStatus
+    quizStatus:QuizStatus;
+    enrolledAt:Date|null;
 }

@@ -1,3 +1,4 @@
+import { QuizQuestion } from "@domain/entities/Quiz";
 import { QuizAttempt } from "@domain/entities/QuizAttempt";
 
 export interface SubmitQuizAttemptInput{
@@ -14,4 +15,5 @@ interface Answer{
 
 export interface SubmitQuizAttemptOutput{
     quizAttempt:QuizAttempt;
+    questions:QuizQuestion[]
 }

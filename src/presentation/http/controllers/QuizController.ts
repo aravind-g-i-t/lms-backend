@@ -254,9 +254,7 @@ export class QuizController {
       res
         .status(STATUS_CODES.CREATED)
         .json(
-          ResponseBuilder.success("Quiz submitted successfully", {
-            quizAttempt: result.quizAttempt,
-          })
+          ResponseBuilder.success("Quiz submitted successfully", result)
         );
     } catch (error) {
       next(error);

@@ -458,6 +458,7 @@ export class CourseController {
                 courseId: courseId as string,
                 learnerId
             });
+            
 
             res.status(STATUS_CODES.OK).json(ResponseBuilder.success("Course fetched successfully", response));
 

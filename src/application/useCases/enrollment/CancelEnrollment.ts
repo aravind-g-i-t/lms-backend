@@ -8,6 +8,7 @@ import { ICourseRepository } from "@domain/interfaces/ICourseRepository";
 import { IEnrollmentRepository } from "@domain/interfaces/IEnrollmentRepository";
 import { IInstructorEarningsRepository } from "@domain/interfaces/IInstructorEarningsRepo";
 import { IInstructorWalletRepository } from "@domain/interfaces/IInstructorWalletRepository";
+import { ILearnerProgressRepository } from "@domain/interfaces/ILearnerProgressRepo";
 import { IPaymentRepository } from "@domain/interfaces/IPaymentRepository";
 import { IWalletRepository } from "@domain/interfaces/IWalletRepository";
 import { IWalletTransactionRepository } from "@domain/interfaces/IWalletTxnRepository";
@@ -23,7 +24,8 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
         private _walletRepo:IWalletRepository,
         private _instructorWalletRepo:IInstructorWalletRepository,
         private _walletTransactionRepo:IWalletTransactionRepository,
-        private _courseRepository:ICourseRepository
+        private _courseRepository:ICourseRepository,
+        private _learnerProgressRepository:ILearnerProgressRepository
     ){}
 
     async execute(input:{courseId:string; learnerId:string}):Promise<void>{
@@ -37,6 +39,11 @@ export class CancelEnrollmentUseCase implements ICancelEnrollmentUseCase{
         if(!enrollment){
             throw new AppError(MESSAGES.ENROLLMENT_NOT_FOUND,STATUS_CODES.NOT_FOUND)
         }
+        const learnerProgress= await this._learnerProgressRepository.findOne({courseId,learnerId});
+        if(learnerProgress && learnerProgress.progressPercentage>20){
+            throw new AppError(MESSAGES.PROGRESS_LIMIT_EXCEEDED,STATUS_CODES.BAD_REQUEST)
+        }
+
         const payment= await this._paymentRepo.findById(enrollment.paymentId);
         
         if(!payment){

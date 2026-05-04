@@ -7,7 +7,7 @@ export async function connectRedis(): Promise<void> {
     try {
         redisClient = createClient({
             url: process.env.REDIS_URL,
-            socket: { tls: true },
+            socket: { tls: false },
         }) as RedisClientType;
 
         redisClient.on("connect", () => {

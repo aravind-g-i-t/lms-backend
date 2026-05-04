@@ -7,16 +7,15 @@ export async function connectRedis(): Promise<void> {
     try {
         redisClient = createClient({
             url: process.env.REDIS_URL,
-            socket: { tls: false },
-
+            socket: { tls: true },
         }) as RedisClientType;
 
         redisClient.on("connect", () => {
             logger.info("Connected to Redis");
         });
 
-        redisClient.on("error", () => {
-            logger.error("Redis error");
+        redisClient.on("error", (err) => {
+            logger.error(`Redis error: ${err.message}`);
         });
 
         await redisClient.connect();

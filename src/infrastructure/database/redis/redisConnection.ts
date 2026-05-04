@@ -19,9 +19,9 @@ export async function connectRedis(): Promise<void> {
         });
 
         await redisClient.connect();
-    } catch {
-        logger.error("Failed to connect to Redis.");
-        return process.exit(1);
+    } catch (err: any) {
+        logger.error(`Failed to connect to Redis: ${err.message}`);
+
     }
 }
 
